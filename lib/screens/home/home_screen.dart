@@ -25,9 +25,11 @@ class HomeScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _buildMoodButton(context, '😊', 'Great', Colors.green[100]!),
-                  _buildMoodButton(context, '😐', 'Okay', Colors.orange[100]!),
-                  _buildMoodButton(context, '😔', 'Low', Colors.red[100]!),
+                  _buildMoodButton(context, '😢', 'Very Low', Colors.red[100]!),
+                  _buildMoodButton(context, '😔', 'Low', Colors.orange[100]!),
+                  _buildMoodButton(context, '😐', 'Neutral', Colors.yellow[100]!),
+                  _buildMoodButton(context, '😊', 'Good', Colors.lightGreen[100]!),
+                  _buildMoodButton(context, '😄', 'Excellent', Colors.green[100]!),
                 ],
               ),
             ),
@@ -148,8 +150,8 @@ class HomeScreen extends StatelessWidget {
     return Column(
       children: [
         Container(
-          width: 60,
-          height: 60,
+          width: 58,
+          height: 58,
           decoration: BoxDecoration(
             color: color,
             borderRadius: BorderRadius.circular(30),
