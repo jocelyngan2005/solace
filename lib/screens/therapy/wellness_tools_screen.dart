@@ -285,6 +285,9 @@ class WellnessToolsScreen extends StatelessWidget {
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: 'Why do you feel this way?',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
@@ -377,6 +380,9 @@ class WellnessToolsScreen extends StatelessWidget {
                     maxLines: 2,
                     decoration: InputDecoration(
                       labelText: 'Why do you feel this way?',
+                      labelStyle: const TextStyle(
+                        fontSize: 14,
+                      ),
                       border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                     ),
                   ),
