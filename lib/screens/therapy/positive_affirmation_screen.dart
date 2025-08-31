@@ -294,6 +294,7 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
               
               // Affirmation Card
               Expanded(
+                flex: 3, // Give more space to the affirmation card
                 child: Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(28),
@@ -319,13 +320,15 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
                       
                       const SizedBox(height: 16),
                       
-                      Text(
-                        currentAffirmation,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.w500,
-                          height: 1.2,
-                          color: Theme.of(context).colorScheme.onSurface,
+                      Flexible(
+                        child: Text(
+                          currentAffirmation,
+                          textAlign: TextAlign.center,
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.w500,
+                            height: 1.2,
+                            color: Theme.of(context).colorScheme.onSurface,
+                          ),
                         ),
                       ),
                       
@@ -362,58 +365,61 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
                 ),
               ),
               
-              const SizedBox(height: 24),
+              const SizedBox(height: 16), // Reduced spacing
               
               // Daily Reminder Toggle
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.notifications_active,
-                      color: category.color,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Daily Reminders',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            'Get positive affirmations throughout the day',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                        ],
+              Flexible(
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
                       ),
-                    ),
-                    Switch(
-                      value: false,
-                      onChanged: (value) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Notification settings would open here')),
-                        );
-                      },
-                      activeColor: category.color,
-                    ),
-                  ],
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.notifications_active,
+                        color: category.color,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Daily Reminders',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              'Get positive affirmations throughout the day',
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Switch(
+                        value: false,
+                        onChanged: (value) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Notification settings would open here')),
+                          );
+                        },
+                        activeColor: category.color,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],

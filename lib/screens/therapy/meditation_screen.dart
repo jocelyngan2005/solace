@@ -67,9 +67,9 @@ class _MeditationPageState extends State<MeditationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFCB1A6),
+      backgroundColor: const Color(0xFFFFDCCC),
       appBar: AppBar(
-        title: const Text('Mindfulness & Meditation'),
+        title: const Text('Mindfulness Library'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -87,14 +87,7 @@ class _MeditationPageState extends State<MeditationPage> {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFFFB6376).withOpacity(0.6),  // Soft pink
-                      const Color(0xFFFB6376),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
+                  color: const Color(0xFFFCB1A6),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
@@ -120,14 +113,14 @@ class _MeditationPageState extends State<MeditationPage> {
                             'Find Your Peace',
                             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                               fontWeight: FontWeight.w600,
-                              color: const Color(0xFFFFF9EC),
+                              color: const Color(0xFF5D2A42),
                             ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Guided meditations for every moment',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFFFFF9EC),
+                              color: const Color(0xFF5D2A42),
                             ),
                           ),
                         ],
@@ -143,7 +136,6 @@ class _MeditationPageState extends State<MeditationPage> {
               Text(
                 'Categories',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: const Color(0xFFF0FFF1),
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -168,15 +160,15 @@ class _MeditationPageState extends State<MeditationPage> {
                             selectedCategory = category;
                           });
                         },
-                        backgroundColor: const Color(0xFF5D2A42).withOpacity(0.4),
-                        selectedColor: const Color(0xFFFB6376).withOpacity(0.4),
-                        checkmarkColor: const Color(0xFFFB6376),
+                        backgroundColor: const Color(0xFFFCB1A6),
+                        selectedColor: const Color(0xFF5D2A42),
+                        checkmarkColor: const Color(0xFFFFF9EC),
                         labelStyle: TextStyle(
-                          color: isSelected ? const Color(0xFFFB6376) : const Color(0xFF5D2A42),
+                          color: isSelected ? const Color(0xFFFFF9EC) : const Color(0xFF5D2A42),
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                         ),
                         side: BorderSide(
-                          color: isSelected ? const Color(0xFFFB6376) : Colors.transparent,
+                          color: isSelected ? const Color(0xFFFFF9EC) : Colors.transparent,
                         ),
                       ),
                     );
@@ -207,7 +199,7 @@ class _MeditationPageState extends State<MeditationPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFFFFDCCC), 
+        color: const Color(0xFFFFF9EC), 
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
