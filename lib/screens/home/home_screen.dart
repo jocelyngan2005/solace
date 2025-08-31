@@ -3,6 +3,7 @@ import 'package:fl_chart/fl_chart.dart';
 import '../../widgets/dashboard_card.dart';
 import '../../widgets/mood_chart.dart';
 import '../therapy/mood_entry_screen.dart';
+import '../../widgets/journal_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -28,26 +29,38 @@ class HomeScreen extends StatelessWidget {
                 children: [
                   _buildMoodButton(context, '😢', 'Very Low', Colors.red[100]!),
                   _buildMoodButton(context, '😔', 'Low', Colors.orange[100]!),
-                  _buildMoodButton(context, '😐', 'Neutral', Colors.yellow[100]!),
-                  _buildMoodButton(context, '😊', 'Good', Colors.lightGreen[100]!),
-                  _buildMoodButton(context, '😄', 'Excellent', Colors.green[100]!),
+                  _buildMoodButton(
+                    context,
+                    '😐',
+                    'Neutral',
+                    Colors.yellow[100]!,
+                  ),
+                  _buildMoodButton(
+                    context,
+                    '😊',
+                    'Good',
+                    Colors.lightGreen[100]!,
+                  ),
+                  _buildMoodButton(
+                    context,
+                    '😄',
+                    'Excellent',
+                    Colors.green[100]!,
+                  ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Mood chart
             DashboardCard(
               title: 'Your mood this week',
-              child: const SizedBox(
-                height: 200,
-                child: MoodChart(),
-              ),
+              child: const SizedBox(height: 200, child: MoodChart()),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // AI Insights
             DashboardCard(
               title: '🧠 AI Insights',
@@ -69,9 +82,9 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Habit progress
             DashboardCard(
               title: 'Today\'s wellness goals',
@@ -85,9 +98,9 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Upcoming deadlines
             DashboardCard(
               title: 'Upcoming deadlines',
@@ -116,9 +129,9 @@ class HomeScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Quick actions
             Row(
               children: [
@@ -128,6 +141,14 @@ class HomeScreen extends StatelessWidget {
                     'Quick Journal',
                     Icons.edit_note,
                     Theme.of(context).colorScheme.primary,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const JournalScreen(),
+                        ),
+                      );
+                    },
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -147,7 +168,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMoodButton(BuildContext context, String emoji, String label, Color color) {
+  Widget _buildMoodButton(
+    BuildContext context,
+    String emoji,
+    String label,
+    Color color,
+  ) {
     return GestureDetector(
       onTap: () {
         Navigator.push(
@@ -171,23 +197,22 @@ class HomeScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
             child: Center(
-              child: Text(
-                emoji,
-                style: const TextStyle(fontSize: 24),
-              ),
+              child: Text(emoji, style: const TextStyle(fontSize: 24)),
             ),
           ),
           const SizedBox(height: 8),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall,
-          ),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
         ],
       ),
     );
   }
 
-  Widget _buildInsightItem(IconData icon, String title, String subtitle, Color color) {
+  Widget _buildInsightItem(
+    IconData icon,
+    String title,
+    String subtitle,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -203,16 +228,10 @@ class HomeScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
+              Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
               Text(
                 subtitle,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
+                style: TextStyle(color: Colors.grey[600], fontSize: 12),
               ),
             ],
           ),
@@ -221,7 +240,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHabitProgress(String title, int current, int target, Color color) {
+  Widget _buildHabitProgress(
+    String title,
+    int current,
+    int target,
+    Color color,
+  ) {
     final progress = current / target;
     return Row(
       children: [
@@ -251,7 +275,12 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDeadlineItem(String title, String date, IconData icon, Color color) {
+  Widget _buildDeadlineItem(
+    String title,
+    String date,
+    IconData icon,
+    Color color,
+  ) {
     return Row(
       children: [
         Container(
@@ -269,23 +298,21 @@ class HomeScreen extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.w500),
           ),
         ),
-        Text(
-          date,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
+        Text(date, style: TextStyle(color: Colors.grey[600], fontSize: 12)),
       ],
     );
   }
 
-  Widget _buildQuickActionCard(BuildContext context, String title, IconData icon, Color color) {
+  Widget _buildQuickActionCard(
+    BuildContext context,
+    String title,
+    IconData icon,
+    Color color, {
+    VoidCallback? onTap,
+  }) {
     return Card(
       child: InkWell(
-        onTap: () {
-          // Handle quick action
-        },
+        onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.all(16),
