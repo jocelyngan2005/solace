@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../../widgets/dashboard_card.dart';
 import '../../widgets/mood_chart.dart';
+import '../therapy/mood_entry_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -147,28 +148,42 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildMoodButton(BuildContext context, String emoji, String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          width: 58,
-          height: 58,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Center(
-            child: Text(
-              emoji,
-              style: const TextStyle(fontSize: 24),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MoodEntryScreen(
+              onCompleted: () {},
+              selectedMood: label,
+              fromHomeScreen: true,
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
+        );
+      },
+      child: Column(
+        children: [
+          Container(
+            width: 58,
+            height: 58,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Center(
+              child: Text(
+                emoji,
+                style: const TextStyle(fontSize: 24),
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ),
     );
   }
 

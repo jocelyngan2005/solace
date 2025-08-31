@@ -10,8 +10,8 @@ class TherapyScreen extends StatefulWidget {
 }
 
 class _TherapyScreenState extends State<TherapyScreen> {
-  bool _hasCompletedEntry = false; // Track if user completed mood entry today
-
+  bool _hasCompletedEntry = false;
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,6 +100,7 @@ class _TherapyScreenState extends State<TherapyScreen> {
             });
             Navigator.pop(context);
           },
+          selectedMood: 'Neutral',
         ),
       ),
     );
