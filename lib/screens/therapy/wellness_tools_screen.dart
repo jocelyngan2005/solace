@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/breathing_exercise.dart';
+import '../../widgets/habit_tracker.dart';
 
 class WellnessToolsScreen extends StatelessWidget {
   const WellnessToolsScreen({super.key});
@@ -47,7 +48,7 @@ class WellnessToolsScreen extends StatelessWidget {
             'Mindfulness Library',
             '10 guided practices for inner peace',
             Icons.self_improvement,
-            Colors.green,
+            Colors.teal,
             () => _showMindfulnessPractices(context),
           ),
           
@@ -59,7 +60,7 @@ class WellnessToolsScreen extends StatelessWidget {
             'Grounding Techniques',
             'Connect with the present moment',
             Icons.nature_people,
-            Colors.orange,
+            Colors.green,
             () => _showGroundingTechniques(context),
           ),
           
@@ -71,7 +72,7 @@ class WellnessToolsScreen extends StatelessWidget {
             'Positive Affirmations',
             'Daily mantras for self-love',
             Icons.favorite,
-            Colors.pink,
+            Colors.orange,
             () => _showAffirmations(context),
           ),
           
@@ -85,6 +86,33 @@ class WellnessToolsScreen extends StatelessWidget {
             Icons.thermostat,
             Colors.red,
             () => _showStressCheckin(context),
+          ),
+
+          const SizedBox(height: 16),
+          
+          // Anxiety Check-in
+          _buildToolCard(
+            context,
+            'Anxiety Check-in',
+            'Quick assessment and coping tips',
+            Icons.sentiment_dissatisfied,
+            Colors.pink,
+            () => _showAnxietyCheckin(context),
+          ),
+          
+          const SizedBox(height: 16),
+
+          // Habit Tracker
+          _buildToolCard(
+            context,
+            'Habit Tracker',
+            'Monitor your daily habits',
+            Icons.check_circle,
+            Colors.purple,
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HabitTracker()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -443,4 +471,67 @@ class WellnessToolsScreen extends StatelessWidget {
       ),
     );
   }
+
+  void _showAnxietyCheckin(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Quick Anxiety Check'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Rate your current anxiety level:'),
+            SizedBox(height: 20),
+            Text('😌 1-2: Calm and relaxed'),
+            Text('😐 3-4: Slightly tense'),
+            Text('😰 5-6: Moderately anxious'),
+            Text('😵 7-8: Very anxious'),
+            Text('🚨 9-10: Overwhelmed'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showAnxietyTips(context);
+            },
+            child: const Text('Show Coping Tips'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAnxietyTips(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Stress Relief Tips'),
+        content: const SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Quick relief (right now):'),
+              Text('• Take 3 deep breaths\n• Drink some water\n• Step outside briefly\n'),
+              Text('Short-term (next hour):'),
+              Text('• Take a 5-minute walk\n• Listen to calming music\n• Do gentle stretches\n'),
+              Text('Long-term (today/this week):'),
+              Text('• Plan breaks between tasks\n• Talk to a friend\n• Practice gratitude'),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Got it'),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+
