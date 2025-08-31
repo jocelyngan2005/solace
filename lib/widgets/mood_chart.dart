@@ -70,11 +70,11 @@ class MoodChart extends StatelessWidget {
                 );
                 switch (value.toInt()) {
                   case 1:
-                    return const Text('😔', style: style);
+                    return const Text('😢', style: style);
                   case 2:
-                    return const Text('😐', style: style);
+                    return const Text('😔', style: style);
                   case 3:
-                    return const Text('🙂', style: style);
+                    return const Text('😐', style: style);
                   case 4:
                     return const Text('😊', style: style);
                   case 5:
