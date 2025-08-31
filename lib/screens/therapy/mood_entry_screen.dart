@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 
 class MoodEntryScreen extends StatefulWidget {
   final VoidCallback onCompleted;
+  final String selectedMood;
+  final bool fromHomeScreen;
 
-  const MoodEntryScreen({super.key, required this.onCompleted});
+  const MoodEntryScreen({
+    super.key,
+    required this.onCompleted,
+    required this.selectedMood,
+    this.fromHomeScreen = false,
+  });
 
   @override
   State<MoodEntryScreen> createState() => _MoodEntryScreenState();
@@ -11,7 +18,7 @@ class MoodEntryScreen extends StatefulWidget {
 
 class _MoodEntryScreenState extends State<MoodEntryScreen> {
   double _moodRating = 3.0;
-  String _selectedMood = 'Neutral';
+  late String _selectedMood;
   final TextEditingController _journalController = TextEditingController();
   final List<String> _selectedTags = [];
   bool _isVoiceMode = false;
@@ -28,6 +35,32 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
     'Stressed', 'Anxious', 'Happy', 'Excited', 'Tired', 'Motivated',
     'Overwhelmed', 'Peaceful', 'Frustrated', 'Content', 'Lonely', 'Social'
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedMood = widget.selectedMood;
+    // Sync slider value with selectedMood
+    switch (_selectedMood) {
+      case 'Very Low':
+        _moodRating = 1.0;
+        break;
+      case 'Low':
+        _moodRating = 2.0;
+        break;
+      case 'Neutral':
+        _moodRating = 3.0;
+        break;
+      case 'Good':
+        _moodRating = 4.0;
+        break;
+      case 'Excellent':
+        _moodRating = 5.0;
+        break;
+      default:
+        _moodRating = 3.0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -311,9 +344,13 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              widget.onCompleted();
+              if (widget.fromHomeScreen) {
+                Navigator.pop(context);
+              } else {
+                widget.onCompleted();
+              }
             },
-            child: const Text('Continue to Wellness Tools'),
+            child: Text(widget.fromHomeScreen ? 'Done' : 'Continue to Wellness Tools'),
           ),
         ],
       ),

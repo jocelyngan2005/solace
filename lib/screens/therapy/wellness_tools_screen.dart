@@ -412,33 +412,64 @@ class WellnessToolsScreen extends StatelessWidget {
   }
 
   void _showStressCheckin(BuildContext context) {
+    double stressLevel = 5;
+    TextEditingController reasonController = TextEditingController();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Quick Stress Check'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Rate your current stress level:'),
-            SizedBox(height: 20),
-            Text('😌 1-2: Calm and relaxed'),
-            Text('😐 3-4: Slightly tense'),
-            Text('😰 5-6: Moderately stressed'),
-            Text('😵 7-8: Very stressed'),
-            Text('🚨 9-10: Overwhelmed'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _showStressTips(context);
-            },
-            child: const Text('Show Coping Tips'),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text('Quick Stress Check'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Rate your current stress level:'),
+                  const SizedBox(height: 20),
+                  Text('Selected: ${stressLevel.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Slider(
+                    value: stressLevel,
+                    min: 1,
+                    max: 10,
+                    divisions: 9,
+                    label: stressLevel.toInt().toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        stressLevel = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text('😌 1-2: Calm and relaxed'),
+                  Text('😐 3-4: Slightly tense'),
+                  Text('😰 5-6: Moderately stressed'),
+                  Text('😵 7-8: Very stressed'),
+                  Text('🚨 9-10: Overwhelmed'),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: reasonController,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      labelText: 'Why do you feel this way?',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _showStressTips(context);
+                },
+                child: const Text('Show Coping Tips'),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
@@ -473,33 +504,64 @@ class WellnessToolsScreen extends StatelessWidget {
   }
 
   void _showAnxietyCheckin(BuildContext context) {
+    double anxietyLevel = 5;
+    TextEditingController reasonController = TextEditingController();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Quick Anxiety Check'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Rate your current anxiety level:'),
-            SizedBox(height: 20),
-            Text('😌 1-2: Calm and relaxed'),
-            Text('😐 3-4: Slightly tense'),
-            Text('😰 5-6: Moderately anxious'),
-            Text('😵 7-8: Very anxious'),
-            Text('🚨 9-10: Overwhelmed'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-              _showAnxietyTips(context);
-            },
-            child: const Text('Show Coping Tips'),
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text('Quick Anxiety Check'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text('Rate your current anxiety level:'),
+                  const SizedBox(height: 20),
+                  Text('Selected: ${anxietyLevel.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                  Slider(
+                    value: anxietyLevel,
+                    min: 1,
+                    max: 10,
+                    divisions: 9,
+                    label: anxietyLevel.toInt().toString(),
+                    onChanged: (value) {
+                      setState(() {
+                        anxietyLevel = value;
+                      });
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                  Text('😌 1-2: Calm and relaxed'),
+                  Text('😐 3-4: Slightly tense'),
+                  Text('😰 5-6: Moderately anxious'),
+                  Text('😵 7-8: Very anxious'),
+                  Text('🚨 9-10: Overwhelmed'),
+                  const SizedBox(height: 16),
+                  TextField(
+                    controller: reasonController,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      labelText: 'Why do you feel this way?',
+                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  _showAnxietyTips(context);
+                },
+                child: const Text('Show Coping Tips'),
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 
