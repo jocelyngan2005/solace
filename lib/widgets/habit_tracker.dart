@@ -40,13 +40,13 @@ class _HabitTrackerState extends State<HabitTracker> {
       'color': Colors.teal,
     },
     {
-      'name': 'Water Drank',
+      'name': 'Water',
       'desc': 'Log your daily water intake.',
       'icon': Icons.local_drink,
       'color': Colors.lightBlue,
     },
     {
-      'name': 'Beverage Drank',
+      'name': 'Beverage',
       'desc': 'Monitor your beverage consumption.',
       'icon': Icons.coffee,
       'color': Colors.brown,
