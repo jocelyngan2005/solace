@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+
+import 'grounding_toolkit/grounding_techniques.dart';
+import 'meditation_screen.dart';
+import 'positive_affirmation_screen.dart';
+import 'breathing_exercises_screen.dart';
 import '../../widgets/breathing_exercise.dart';
 import '../../widgets/habit_tracker.dart';
 
@@ -36,7 +41,7 @@ class WellnessToolsScreen extends StatelessWidget {
             Colors.blue,
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const BreathingExercise()),
+              MaterialPageRoute(builder: (context) => const BreathingExercisePage()),
             ),
           ),
           
@@ -46,10 +51,14 @@ class WellnessToolsScreen extends StatelessWidget {
           _buildToolCard(
             context,
             'Mindfulness Library',
-            '10 guided practices for inner peace',
+            'Guided practices for inner peace',
             Icons.self_improvement,
-            Colors.teal,
-            () => _showMindfulnessPractices(context),
+
+            Colors.green,
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MeditationPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -60,8 +69,12 @@ class WellnessToolsScreen extends StatelessWidget {
             'Grounding Techniques',
             'Connect with the present moment',
             Icons.nature_people,
-            Colors.green,
-            () => _showGroundingTechniques(context),
+
+            Colors.orange,
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GroundingTechniquesPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -72,8 +85,12 @@ class WellnessToolsScreen extends StatelessWidget {
             'Positive Affirmations',
             'Daily mantras for self-love',
             Icons.favorite,
-            Colors.orange,
-            () => _showAffirmations(context),
+
+            Colors.pink,
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const PositiveAffirmationPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -223,190 +240,6 @@ class WellnessToolsScreen extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.w600),
           ),
         ],
-      ),
-    );
-  }
-
-  void _showMindfulnessPractices(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.self_improvement, color: Colors.green),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Mindfulness Library',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildPracticeItem('Body Scan Meditation', '15 mins', 'Release tension throughout your body'),
-                  _buildPracticeItem('Loving Kindness', '10 mins', 'Cultivate compassion for yourself and others'),
-                  _buildPracticeItem('Mindful Walking', '5 mins', 'Bring awareness to each step'),
-                  _buildPracticeItem('Present Moment Awareness', '8 mins', 'Ground yourself in the here and now'),
-                  _buildPracticeItem('Gratitude Reflection', '7 mins', 'Focus on what you\'re thankful for'),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPracticeItem(String title, String duration, String description) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Colors.green,
-          child: Icon(Icons.play_arrow, color: Colors.white),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle: Text('$duration • $description'),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          // Simulate starting practice
-        },
-      ),
-    );
-  }
-
-  void _showGroundingTechniques(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('5-4-3-2-1 Grounding Technique'),
-        content: const SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('When you feel overwhelmed, try this:'),
-              SizedBox(height: 16),
-              Text('👁️ 5 things you can SEE\nLook around and name them'),
-              SizedBox(height: 12),
-              Text('✋ 4 things you can TOUCH\nFeel their texture'),
-              SizedBox(height: 12),
-              Text('👂 3 things you can HEAR\nListen carefully'),
-              SizedBox(height: 12),
-              Text('👃 2 things you can SMELL\nTake a deep breath'),
-              SizedBox(height: 12),
-              Text('👅 1 thing you can TASTE\nNotice any flavors'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Got it'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showAffirmations(BuildContext context) {
-    final affirmations = [
-      "I am capable of handling whatever comes my way",
-      "My mental health matters and I prioritize it",
-      "I am worthy of love and kindness, especially from myself",
-      "Each challenge is an opportunity to grow stronger",
-      "I choose to focus on what I can control",
-      "I am doing my best with what I have right now",
-    ];
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.pink.withOpacity(0.1),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.favorite, color: Colors.pink),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Daily Affirmations',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              child: PageView.builder(
-                itemCount: affirmations.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '"${affirmations[index]}"',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          '${index + 1} of ${affirmations.length}',
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
