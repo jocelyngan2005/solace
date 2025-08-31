@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/breathing_exercise.dart';
+import 'grounding_toolkit/grounding_techniques.dart';
 
 class WellnessToolsScreen extends StatelessWidget {
   const WellnessToolsScreen({super.key});
@@ -60,7 +61,10 @@ class WellnessToolsScreen extends StatelessWidget {
             'Connect with the present moment',
             Icons.nature_people,
             Colors.orange,
-            () => _showGroundingTechniques(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GroundingTechniquesPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -266,41 +270,6 @@ class WellnessToolsScreen extends StatelessWidget {
         onTap: () {
           // Simulate starting practice
         },
-      ),
-    );
-  }
-
-  void _showGroundingTechniques(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('5-4-3-2-1 Grounding Technique'),
-        content: const SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('When you feel overwhelmed, try this:'),
-              SizedBox(height: 16),
-              Text('👁️ 5 things you can SEE\nLook around and name them'),
-              SizedBox(height: 12),
-              Text('✋ 4 things you can TOUCH\nFeel their texture'),
-              SizedBox(height: 12),
-              Text('👂 3 things you can HEAR\nListen carefully'),
-              SizedBox(height: 12),
-              Text('👃 2 things you can SMELL\nTake a deep breath'),
-              SizedBox(height: 12),
-              Text('👅 1 thing you can TASTE\nNotice any flavors'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Got it'),
-          ),
-        ],
       ),
     );
   }
