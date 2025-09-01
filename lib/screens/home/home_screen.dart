@@ -1,16 +1,85 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
 import '../../widgets/dashboard_card.dart';
 import '../../widgets/mood_chart.dart';
 import '../therapy/mood_entry_screen.dart';
 import '../../widgets/journal_screen.dart';
+import '../../data/mood_entry_service.dart';
 import '../therapy/breathing_exercises_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
+  bool _hasMoodEntry = false;
+  bool _isLoading = true;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    
+    // Listen to mood entry status changes
+    MoodEntryService.moodEntryNotifier.addListener(_onMoodEntryStatusChanged);
+    
+    _checkMoodEntryStatus();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    MoodEntryService.moodEntryNotifier.removeListener(_onMoodEntryStatusChanged);
+    super.dispose();
+  }
+
+  void _onMoodEntryStatusChanged() {
+    // Refresh mood entry status when notified
+    _checkMoodEntryStatus();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Check mood entry status when app resumes
+      _checkMoodEntryStatus();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Check mood entry status when this screen becomes active
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && ModalRoute.of(context)?.isCurrent == true) {
+        _checkMoodEntryStatus();
+      }
+    });
+  }
+
+  Future<void> _checkMoodEntryStatus() async {
+    final hasEntry = await MoodEntryService.hasMoodEntryForToday();
+    if (mounted) {
+      setState(() {
+        _hasMoodEntry = hasEntry;
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Public method to refresh mood entry status
+  void refreshMoodStatus() {
+    _checkMoodEntryStatus();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     return Scaffold(
       appBar: AppBar(
         title: const Text('Good morning, Alex 👋'),
@@ -23,34 +92,16 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Quick mood check
-            DashboardCard(
-              title: 'How are you feeling?',
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildMoodButton(context, '😢', 'Very Low', Colors.red[100]!),
-                  _buildMoodButton(context, '😔', 'Low', Colors.orange[100]!),
-                  _buildMoodButton(
-                    context,
-                    '😐',
-                    'Neutral',
-                    Colors.yellow[100]!,
-                  ),
-                  _buildMoodButton(
-                    context,
-                    '😊',
-                    'Good',
-                    Colors.lightGreen[100]!,
-                  ),
-                  _buildMoodButton(
-                    context,
-                    '😄',
-                    'Excellent',
-                    Colors.green[100]!,
-                  ),
-                ],
-              ),
-            ),
+            _isLoading
+                ? DashboardCard(
+                    title: 'How are you feeling?',
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  )
+                : _hasMoodEntry
+                    ? _buildMoodCompleted()
+                    : _buildMoodSelection(),
 
             const SizedBox(height: 16),
 
@@ -184,8 +235,8 @@ class HomeScreen extends StatelessWidget {
     Color color,
   ) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => MoodEntryScreen(
@@ -195,6 +246,8 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         );
+        // Refresh mood entry status when returning from mood entry
+        _checkMoodEntryStatus();
       },
       child: Column(
         children: [
@@ -346,6 +399,104 @@ class HomeScreen extends StatelessWidget {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMoodSelection() {
+    return DashboardCard(
+      title: 'How are you feeling?',
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          _buildMoodButton(context, '😢', 'Very Low', Colors.red[100]!),
+          _buildMoodButton(context, '😔', 'Low', Colors.orange[100]!),
+          _buildMoodButton(
+            context,
+            '😐',
+            'Neutral',
+            Colors.yellow[100]!,
+          ),
+          _buildMoodButton(
+            context,
+            '😊',
+            'Good',
+            Colors.lightGreen[100]!,
+          ),
+          _buildMoodButton(
+            context,
+            '😄',
+            'Excellent',
+            Colors.green[100]!,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMoodCompleted() {
+    final moodEmoji = MoodEntryService.getTodayMoodEmoji() ?? '😊';
+    final moodLabel = MoodEntryService.getTodayMoodLabel() ?? 'Good';
+    
+    return DashboardCard(
+      title: 'Today\'s mood check ✓',
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.green[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.green[200]!, width: 1),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                moodEmoji,
+                style: const TextStyle(fontSize: 32),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Feeling $moodLabel today',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Mood logged successfully! Check your wellness tools in the therapy tab.',
+                    style: TextStyle(
+                      color: Colors.grey[600],
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green[100],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Icon(
+                Icons.check_circle,
+                color: Colors.green,
+                size: 20,
+              ),
+            ),
+          ],
         ),
       ),
     );
