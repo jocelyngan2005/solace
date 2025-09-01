@@ -4,6 +4,7 @@ import '../../widgets/mood_chart.dart';
 import '../therapy/mood_entry_screen.dart';
 import '../../widgets/journal_screen.dart';
 import '../../data/mood_entry_service.dart';
+import '../therapy/breathing_exercises_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -209,6 +210,14 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     'Breathing Exercise',
                     Icons.air,
                     Theme.of(context).colorScheme.secondary,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const BreathingExercisePage(),
+                        ),
+                      );
+                    },
                   ),
                 ),
               ],

@@ -9,12 +9,17 @@ class PhysicalGroundingPage extends StatefulWidget {
   State<PhysicalGroundingPage> createState() => _PhysicalGroundingPageState();
 }
 
-class _PhysicalGroundingPageState extends State<PhysicalGroundingPage> {
+class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
+    with TickerProviderStateMixin {
   String selectedTechnique = 'temperature';
   bool isActive = false;
   int currentStep = 0;
   Timer? exerciseTimer;
+  Timer? stepTimer;
   int countdown = 0;
+  int stepDuration = 8; // seconds per step
+  late AnimationController _timerController;
+  late Animation<double> _timerAnimation;
   
   final Map<String, PhysicalTechnique> techniques = {
     'temperature': PhysicalTechnique(
@@ -76,8 +81,26 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage> {
   List<String> userResponses = [];
 
   @override
+  void initState() {
+    super.initState();
+    _timerController = AnimationController(
+      duration: Duration(seconds: stepDuration),
+      vsync: this,
+    );
+    _timerAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _timerController,
+      curve: Curves.linear,
+    ));
+  }
+
+  @override
   void dispose() {
     exerciseTimer?.cancel();
+    stepTimer?.cancel();
+    _timerController.dispose();
     super.dispose();
   }
 
@@ -120,24 +143,47 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage> {
       return;
     }
 
+    // Reset and start the timer animation
+    _timerController.reset();
+    _timerController.forward();
+    
+    // Start countdown
+    setState(() {
+      countdown = stepDuration;
+    });
+    
+    stepTimer?.cancel();
+    stepTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!isActive) {
+        timer.cancel();
+        return;
+      }
+      
+      setState(() {
+        countdown--;
+      });
+      
+      if (countdown <= 0) {
+        timer.cancel();
+      }
+    });
+
     // For muscle relaxation, add haptic feedback
     if (selectedTechnique == 'muscle' && (currentStep == 1 || currentStep == 3 || currentStep == 4)) {
       HapticFeedback.mediumImpact();
     }
 
-    // Auto-advance after a delay for non-interactive steps
-    if (selectedTechnique != 'finger') {
-      Timer(const Duration(seconds: 8), () {
-        if (isActive && currentStep < technique.steps.length - 1) {
-          setState(() {
-            currentStep++;
-          });
-          _runStepByStep(technique);
-        } else if (isActive) {
-          _completeExercise();
-        }
-      });
-    }
+    // Auto-advance after the step duration
+    Timer(Duration(seconds: stepDuration), () {
+      if (isActive && currentStep < technique.steps.length - 1) {
+        setState(() {
+          currentStep++;
+        });
+        _runStepByStep(technique);
+      } else if (isActive) {
+        _completeExercise();
+      }
+    });
   }
 
   void _nextFingerStep() {
@@ -197,9 +243,12 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage> {
     setState(() {
       isActive = false;
       currentStep = 0;
+      countdown = 0;
       userResponses.clear();
     });
     exerciseTimer?.cancel();
+    stepTimer?.cancel();
+    _timerController.reset();
   }
 
   @override
@@ -482,20 +531,64 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                padding: const EdgeInsets.all(24),
-                decoration: BoxDecoration(
-                  color: technique.color.withOpacity(0.1),
-                  shape: BoxShape.circle,
+              // Visual Timer (only for temperature and muscle techniques)
+              if (selectedTechnique == 'temperature' || selectedTechnique == 'muscle') ...[
+                Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    // Timer circle
+                    SizedBox(
+                      width: 120,
+                      height: 120,
+                      child: AnimatedBuilder(
+                        animation: _timerAnimation,
+                        builder: (context, child) {
+                          return CircularProgressIndicator(
+                            value: _timerAnimation.value,
+                            strokeWidth: 8,
+                            backgroundColor: technique.color.withOpacity(0.2),
+                            valueColor: AlwaysStoppedAnimation<Color>(technique.color),
+                          );
+                        },
+                      ),
+                    ),
+                    // Countdown number
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '$countdown',
+                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: technique.color,
+                          ),
+                        ),
+                        Text(
+                          'seconds',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: technique.color,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                child: Icon(
-                  technique.icon,
-                  size: 48,
-                  color: technique.color,
+                const SizedBox(height: 32),
+              ] else ...[
+                Container(
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: technique.color.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    technique.icon,
+                    size: 48,
+                    color: technique.color,
+                  ),
                 ),
-              ),
-              
-              const SizedBox(height: 32),
+                const SizedBox(height: 32),
+              ],
               
               Text(
                 currentStep < technique.steps.length 
@@ -543,8 +636,8 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage> {
         
         const SizedBox(height: 24),
         
-        // Next button for manual progression
-        if (selectedTechnique != 'muscle' && selectedTechnique != 'temperature')
+        // Next button only for finger technique (manual progression)
+        if (selectedTechnique == 'finger')
           SizedBox(
             width: double.infinity,
             child: ElevatedButton(
