@@ -632,7 +632,7 @@ class _JournalScreenState extends State<JournalScreen> {
                             content: SizedBox(
                               width: 400,
                               height:
-                                  420, // <-- Adjust height for calendar view
+                                  420, 
                               child: TableCalendar(
                                 firstDay: DateTime(DateTime.now().year, 1, 1),
                                 lastDay: DateTime(DateTime.now().year, 12, 31),

@@ -544,13 +544,28 @@ class _HabitTrackerState extends State<HabitTracker> {
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
-                        child: Text(
-                          'Target bedtime: $targetBed and wake time: $targetWake',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: habit['color'],
-                                fontWeight: FontWeight.bold,
-                              ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Target bedtime: $targetBed',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: habit['color'],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.start,
+                            ),
+                            Text(
+                              'Target wake-up: $targetWake',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: habit['color'],
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  textAlign: TextAlign.start,
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -1306,7 +1321,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                         }
                       });
                     },
-                    activeColor: habit['color'], // Sync switch color with icon
+                    activeColor: habit['color'],
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -1325,7 +1340,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                         });
                       },
                       style: TextButton.styleFrom(
-                        foregroundColor: habit['color'], // Sync manual entry button color
+                        foregroundColor:
+                            habit['color'], // Sync manual entry button color
                       ),
                       child: const Text('Manual Entry'),
                     ),
@@ -1342,7 +1358,7 @@ class _HabitTrackerState extends State<HabitTracker> {
           ),
         ),
       ),
-      );
+    );
   }
 
   // Exercise tracker card
@@ -1475,7 +1491,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: habit['color'], // Sync add button color with icon
+                    backgroundColor:
+                        habit['color'], // Sync add button color with icon
                     foregroundColor: Colors.white,
                   ),
                   child: const Text('Add'),
@@ -1860,7 +1877,10 @@ class _HabitTrackerState extends State<HabitTracker> {
                           context,
                           title: 'Custom Habits',
                           cards: _customHabits
-                              .map((habit) => _buildCustomHabitCard(context, habit))
+                              .map(
+                                (habit) =>
+                                    _buildCustomHabitCard(context, habit),
+                              )
                               .toList(),
                         ),
                       ],
@@ -1891,12 +1911,16 @@ class _HabitTrackerState extends State<HabitTracker> {
                             Container(
                               padding: const EdgeInsets.all(12),
                               decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.primary.withOpacity(0.1),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Text(
                                 'Keep up the good work! Consistency is key to building healthy habits.',
-                                style: const TextStyle(fontStyle: FontStyle.italic),
+                                style: const TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                ),
                               ),
                             ),
                           ],
@@ -1917,9 +1941,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                     ),
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                    textStyle: Theme.of(context).textTheme.titleMedium
+                        ?.copyWith(fontWeight: FontWeight.bold),
                   ),
                   child: const Text('Save'),
                 ),

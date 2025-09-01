@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../data/mood_entry_service.dart';
 
 class MoodEntryScreen extends StatefulWidget {
   final VoidCallback onCompleted;
@@ -428,7 +429,10 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
     }
   }
 
-  void _completeEntry() {
+  void _completeEntry() async {
+    // Save mood entry completion status
+    await MoodEntryService.markMoodEntryCompleted(moodLabel: _selectedMood);
+    
     // Simulate saving the entry
     showDialog(
       context: context,
