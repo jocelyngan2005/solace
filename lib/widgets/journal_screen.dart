@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:table_calendar/table_calendar.dart'; // Add this import at the top
+import 'package:table_calendar/table_calendar.dart';
 
 class JournalEntry {
   final String date;
@@ -9,7 +9,7 @@ class JournalEntry {
   final String anxietyLevel;
   final String stressReason;
   final String anxietyReason;
-  final List<String> moodDescriptions; // <-- Update field name
+  final List<String> moodDescriptions;
   final String moodWhy;
 
   JournalEntry({
@@ -20,7 +20,7 @@ class JournalEntry {
     required this.anxietyLevel,
     required this.stressReason,
     required this.anxietyReason,
-    required this.moodDescriptions, // <-- Update field name
+    required this.moodDescriptions,
     required this.moodWhy,
   });
 }
@@ -42,7 +42,7 @@ class _JournalScreenState extends State<JournalScreen> {
     anxietyLevel: "Low",
     stressReason: "Upcoming project deadline",
     anxietyReason: "Presentation tomorrow",
-    moodDescriptions: ["Happy", "Motivated"], // Example descriptions
+    moodDescriptions: ["Happy", "Motivated"],
     moodWhy: "I completed my tasks and got enough rest.",
   );
 
@@ -570,15 +570,18 @@ class _JournalScreenState extends State<JournalScreen> {
               const SizedBox(height: 8),
               GestureDetector(
                 onTap: () => _editEntry(todaysEntry, null),
-                child: Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  color: colorScheme.primaryContainer,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: _buildJournalDetails(todaysEntry),
+                child: Container(
+                  width: double.infinity,
+                  child: Card(
+                    elevation: 2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    color: colorScheme.primaryContainer,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: _buildJournalDetails(todaysEntry),
+                    ),
                   ),
                 ),
               ),
@@ -1087,27 +1090,30 @@ class _JournalScreenState extends State<JournalScreen> {
                     final entry = pastEntries[index];
                     return GestureDetector(
                       onTap: () => _editEntry(entry, index),
-                      child: Card(
-                        elevation: 1,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        color: colorScheme.surfaceVariant,
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                entry.date,
-                                style: textTheme.labelLarge?.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w600,
+                      child: Container(
+                        width: double.infinity,
+                        child: Card(
+                          elevation: 1,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          color: colorScheme.surfaceVariant,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  entry.date,
+                                  style: textTheme.labelLarge?.copyWith(
+                                    color: colorScheme.primary,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                                 ),
-                              ),
-                              const SizedBox(height: 4),
-                              _buildJournalDetails(entry),
-                            ],
+                                const SizedBox(height: 4),
+                                _buildJournalDetails(entry),
+                              ],
+                            ),
                           ),
                         ),
                       ),

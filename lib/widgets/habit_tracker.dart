@@ -21,13 +21,13 @@ class _HabitTrackerState extends State<HabitTracker> {
   List<Map<String, TimeOfDay>> _naps = [];
 
   // Health Habits trackers
-  List<String> _meals = []; // Stores meal names/times
-  int _waterIntake = 0; // Number of glasses
-  int _fruitServings = 0; // Number of fruit servings
+  List<String> _meals = [];
+  int _waterIntake = 0;
+  int _fruitServings = 0;
 
   // Movement & Exercise trackers
   int _steps = 0;
-  List<Map<String, dynamic>> _exercises = []; // Each: {'type': String, 'duration': int (minutes)}
+  List<Map<String, dynamic>> _exercises = [];
 
   // Goals for each tracker
   double _sleepGoal = 8.0;
@@ -38,27 +38,26 @@ class _HabitTrackerState extends State<HabitTracker> {
   int _waterGoal = 8;
   int _fruitGoal = 2;
   int _stepsGoal = 10000;
-  int _exerciseGoal = 30; // minutes
+  int _exerciseGoal = 30;
 
-  // Default habits as lists so they can be rearranged/deleted
   final List<Map<String, dynamic>> _sleepHabits = [
     {
       'name': 'Sleep Hours',
       'desc': 'Monitor your daily sleep duration.',
       'icon': Icons.bedtime,
-      'color': Colors.indigo, // Updated to match icon's theme
+      'color': Colors.indigo,
     },
     {
       'name': 'Bedtime Patterns',
       'desc': 'Track your bedtime and wake-up routines.',
       'icon': Icons.schedule,
-      'color': Colors.deepPurple, // Updated to match icon's theme
+      'color': Colors.deepPurple,
     },
     {
       'name': 'Nap Breaks',
       'desc': 'Log and review your nap times.',
       'icon': Icons.snooze,
-      'color': Colors.orange, // Matches icon
+      'color': Colors.orange,
     },
   ];
 
@@ -67,19 +66,19 @@ class _HabitTrackerState extends State<HabitTracker> {
       'name': 'Meals',
       'desc': 'Track your meal times and nutrition.',
       'icon': Icons.restaurant,
-      'color': Colors.redAccent, // Updated to match icon's theme
+      'color': Colors.redAccent,
     },
     {
       'name': 'Water',
       'desc': 'Log your daily water intake.',
       'icon': Icons.local_drink,
-      'color': Colors.blue, // Updated to match icon's theme
+      'color': Colors.blue,
     },
     {
       'name': 'Fruits',
       'desc': 'Track your daily fruit servings.',
       'icon': Icons.apple,
-      'color': Colors.green, // Updated to match icon's theme
+      'color': Colors.green,
     },
   ];
 
@@ -88,13 +87,13 @@ class _HabitTrackerState extends State<HabitTracker> {
       'name': 'Steps',
       'desc': 'Track your daily step count.',
       'icon': Icons.directions_walk,
-      'color': Colors.deepPurple, // Matches icon
+      'color': Colors.deepPurple,
     },
     {
       'name': 'Exercise',
       'desc': 'Log your sports and exercise activities.',
       'icon': Icons.sports_soccer,
-      'color': Colors.indigo, // Matches icon
+      'color': Colors.indigo,
     },
   ];
 
@@ -105,7 +104,6 @@ class _HabitTrackerState extends State<HabitTracker> {
     IconData selectedIcon = Icons.star;
     Color selectedColor = Colors.purple;
 
-    // Add more tracker types here
     final trackerTypes = [
       'Checkbox',
       'Counter',
@@ -120,7 +118,6 @@ class _HabitTrackerState extends State<HabitTracker> {
     ];
     String selectedTrackerType = trackerTypes[0];
 
-    // Add more icons here
     final iconOptions = [
       {'icon': Icons.star, 'color': Colors.purple},
       {'icon': Icons.favorite, 'color': Colors.red},
@@ -168,7 +165,10 @@ class _HabitTrackerState extends State<HabitTracker> {
                     spacing: 8,
                     children: iconOptions.map((option) {
                       return IconButton(
-                        icon: Icon(option['icon'] as IconData, color: option['color'] as Color),
+                        icon: Icon(
+                          option['icon'] as IconData,
+                          color: option['color'] as Color,
+                        ),
                         onPressed: () {
                           setStateDialog(() {
                             selectedIcon = option['icon'] as IconData;
@@ -181,12 +181,14 @@ class _HabitTrackerState extends State<HabitTracker> {
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
                     value: selectedTrackerType,
-                    decoration: const InputDecoration(labelText: 'Tracker Type'),
+                    decoration: const InputDecoration(
+                      labelText: 'Tracker Type',
+                    ),
                     items: trackerTypes
-                        .map((type) => DropdownMenuItem(
-                              value: type,
-                              child: Text(type),
-                            ))
+                        .map(
+                          (type) =>
+                              DropdownMenuItem(value: type, child: Text(type)),
+                        )
                         .toList(),
                     onChanged: (value) {
                       setStateDialog(() {
@@ -197,7 +199,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   const SizedBox(height: 8),
                   TextField(
                     controller: goalController,
-                    decoration: const InputDecoration(labelText: 'Goal (optional)'),
+                    decoration: const InputDecoration(
+                      labelText: 'Goal (optional)',
+                    ),
                     keyboardType: TextInputType.number,
                   ),
                 ],
@@ -223,24 +227,24 @@ class _HabitTrackerState extends State<HabitTracker> {
                         'trackerValue': selectedTrackerType == 'Checkbox'
                             ? false
                             : selectedTrackerType == 'Counter'
-                                ? 0
-                                : selectedTrackerType == 'Timer'
-                                    ? Duration.zero
-                                    : selectedTrackerType == 'Text Log'
-                                        ? ''
-                                        : selectedTrackerType == 'Rating'
-                                            ? 0
-                                            : selectedTrackerType == 'Progress'
-                                                ? 0.0
-                                                : selectedTrackerType == 'Dropdown'
-                                                    ? ''
-                                                    : selectedTrackerType == 'Date Picker'
-                                                        ? null
-                                                        : selectedTrackerType == 'Time Picker'
-                                                            ? null
-                                                            : selectedTrackerType == 'Switch'
-                                                                ? false
-                                                                : null,
+                            ? 0
+                            : selectedTrackerType == 'Timer'
+                            ? Duration.zero
+                            : selectedTrackerType == 'Text Log'
+                            ? ''
+                            : selectedTrackerType == 'Rating'
+                            ? 0
+                            : selectedTrackerType == 'Progress'
+                            ? 0.0
+                            : selectedTrackerType == 'Dropdown'
+                            ? ''
+                            : selectedTrackerType == 'Date Picker'
+                            ? null
+                            : selectedTrackerType == 'Time Picker'
+                            ? null
+                            : selectedTrackerType == 'Switch'
+                            ? false
+                            : null,
                         'goal': goalController.text.isNotEmpty
                             ? num.tryParse(goalController.text)
                             : null,
@@ -311,13 +315,19 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
-  Widget _buildEditableList(String title, List<Map<String, dynamic>> habits, void Function(void Function()) setStateDialog) {
+  Widget _buildEditableList(
+    String title,
+    List<Map<String, dynamic>> habits,
+    void Function(void Function()) setStateDialog,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
         SizedBox(
@@ -383,23 +393,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target sleep: ${_sleepGoal.toStringAsFixed(1)} hrs',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -412,7 +421,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   icon: const Icon(Icons.flag, size: 20),
                   tooltip: 'Set Goal',
                   onPressed: () async {
-                    final controller = TextEditingController(text: _sleepGoal.toString());
+                    final controller = TextEditingController(
+                      text: _sleepGoal.toString(),
+                    );
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -420,7 +431,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                         content: TextField(
                           controller: controller,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Goal (hours)'),
+                          decoration: const InputDecoration(
+                            labelText: 'Goal (hours)',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -430,7 +443,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                _sleepGoal = double.tryParse(controller.text) ?? _sleepGoal;
+                                _sleepGoal =
+                                    double.tryParse(controller.text) ??
+                                    _sleepGoal;
                               });
                               Navigator.pop(context);
                             },
@@ -448,17 +463,28 @@ class _HabitTrackerState extends State<HabitTracker> {
               'How many hours did you sleep last night?',
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            Slider(
-              value: _sleepHours,
-              min: 0,
-              max: 12,
-              divisions: 24,
-              label: '${_sleepHours.toStringAsFixed(1)} hrs',
-              onChanged: (value) {
-                setState(() {
-                  _sleepHours = value;
-                });
-              },
+            SliderTheme(
+              data: SliderTheme.of(context).copyWith(
+                activeTrackColor: habit['color'],
+                thumbColor: habit['color'],
+                valueIndicatorColor: habit['color'],
+                valueIndicatorTextStyle: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              child: Slider(
+                value: _sleepHours,
+                min: 0,
+                max: 12,
+                divisions: 24,
+                label: '${_sleepHours.toStringAsFixed(1)} hrs',
+                onChanged: (value) {
+                  setState(() {
+                    _sleepHours = value;
+                  });
+                },
+              ),
             ),
             Align(
               alignment: Alignment.centerRight,
@@ -476,8 +502,12 @@ class _HabitTrackerState extends State<HabitTracker> {
   // Bedtime Patterns tracker card
   Widget _buildBedtimePatternsTrackerCard(BuildContext context) {
     final habit = _sleepHabits[1];
-    String targetBed = _bedTimeGoal != null ? _bedTimeGoal!.format(context) : '23:00';
-    String targetWake = _wakeTimeGoal != null ? _wakeTimeGoal!.format(context) : '07:00';
+    String targetBed = _bedTimeGoal != null
+        ? _bedTimeGoal!.format(context)
+        : '23:00';
+    String targetWake = _wakeTimeGoal != null
+        ? _wakeTimeGoal!.format(context)
+        : '07:00';
 
     return Card(
       child: Padding(
@@ -502,23 +532,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target bedtime: $targetBed and wake time: $targetWake',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -533,12 +562,14 @@ class _HabitTrackerState extends State<HabitTracker> {
                   onPressed: () async {
                     final pickedBed = await showTimePicker(
                       context: context,
-                      initialTime: _bedTimeGoal ?? TimeOfDay(hour: 23, minute: 0),
+                      initialTime:
+                          _bedTimeGoal ?? TimeOfDay(hour: 23, minute: 0),
                     );
                     if (pickedBed != null) {
                       final pickedWake = await showTimePicker(
                         context: context,
-                        initialTime: _wakeTimeGoal ?? TimeOfDay(hour: 7, minute: 0),
+                        initialTime:
+                            _wakeTimeGoal ?? TimeOfDay(hour: 7, minute: 0),
                       );
                       setState(() {
                         _bedTimeGoal = pickedBed;
@@ -638,23 +669,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target naps: $_napGoal',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -667,7 +697,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   icon: const Icon(Icons.flag, size: 20),
                   tooltip: 'Set Nap Goal',
                   onPressed: () async {
-                    final controller = TextEditingController(text: _napGoal.toString());
+                    final controller = TextEditingController(
+                      text: _napGoal.toString(),
+                    );
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -675,7 +707,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                         content: TextField(
                           controller: controller,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Goal (naps)'),
+                          decoration: const InputDecoration(
+                            labelText: 'Goal (naps)',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -685,7 +719,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                _napGoal = int.tryParse(controller.text) ?? _napGoal;
+                                _napGoal =
+                                    int.tryParse(controller.text) ?? _napGoal;
                               });
                               Navigator.pop(context);
                             },
@@ -702,6 +737,10 @@ class _HabitTrackerState extends State<HabitTracker> {
             ElevatedButton.icon(
               icon: const Icon(Icons.add),
               label: const Text('Log Nap'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: habit['color'],
+                foregroundColor: Colors.white,
+              ),
               onPressed: () async {
                 final start = await showTimePicker(
                   context: context,
@@ -725,20 +764,25 @@ class _HabitTrackerState extends State<HabitTracker> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Logged Naps:', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ..._naps.map((nap) => ListTile(
-                        title: Text(
-                          '${nap['start']!.format(context)} - ${nap['end']!.format(context)}',
-                        ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            setState(() {
-                              _naps.remove(nap);
-                            });
-                          },
-                        ),
-                      )),
+                  const Text(
+                    'Logged Naps:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  ..._naps.map(
+                    (nap) => ListTile(
+                      title: Text(
+                        '${nap['start']!.format(context)} - ${nap['end']!.format(context)}',
+                      ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            _naps.remove(nap);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
           ],
@@ -776,23 +820,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target meals: $_mealGoal',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -805,7 +848,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   icon: const Icon(Icons.flag, size: 20),
                   tooltip: 'Set Goal',
                   onPressed: () async {
-                    final controller = TextEditingController(text: _mealGoal.toString());
+                    final controller = TextEditingController(
+                      text: _mealGoal.toString(),
+                    );
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -813,7 +858,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                         content: TextField(
                           controller: controller,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Goal (meals)'),
+                          decoration: const InputDecoration(
+                            labelText: 'Goal (meals)',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -823,7 +870,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                _mealGoal = int.tryParse(controller.text) ?? _mealGoal;
+                                _mealGoal =
+                                    int.tryParse(controller.text) ?? _mealGoal;
                               });
                               Navigator.pop(context);
                             },
@@ -836,6 +884,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                 ),
               ],
             ),
+            SizedBox(height: 8),
             Wrap(
               spacing: 8,
               children: mealOptions.map((meal) {
@@ -845,7 +894,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                   selected: logged,
                   selectedColor: chipColor.withOpacity(0.2),
                   checkmarkColor: chipColor,
-                  backgroundColor: Colors.white, // <-- updated from grey to white
+                  backgroundColor: Colors.white,
                   labelStyle: TextStyle(
                     color: logged ? chipColor : Colors.black,
                     fontWeight: FontWeight.w600,
@@ -902,23 +951,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target water: $_waterGoal glasses',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -931,7 +979,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   icon: const Icon(Icons.flag, size: 20),
                   tooltip: 'Set Goal',
                   onPressed: () async {
-                    final controller = TextEditingController(text: _waterGoal.toString());
+                    final controller = TextEditingController(
+                      text: _waterGoal.toString(),
+                    );
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -939,7 +989,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                         content: TextField(
                           controller: controller,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Goal (glasses)'),
+                          decoration: const InputDecoration(
+                            labelText: 'Goal (glasses)',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -949,7 +1001,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                _waterGoal = int.tryParse(controller.text) ?? _waterGoal;
+                                _waterGoal =
+                                    int.tryParse(controller.text) ?? _waterGoal;
                               });
                               Navigator.pop(context);
                             },
@@ -1017,23 +1070,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target fruits: $_fruitGoal servings',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1046,7 +1098,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   icon: const Icon(Icons.flag, size: 20),
                   tooltip: 'Set Goal',
                   onPressed: () async {
-                    final controller = TextEditingController(text: _fruitGoal.toString());
+                    final controller = TextEditingController(
+                      text: _fruitGoal.toString(),
+                    );
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -1054,7 +1108,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                         content: TextField(
                           controller: controller,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Goal (servings)'),
+                          decoration: const InputDecoration(
+                            labelText: 'Goal (servings)',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -1064,7 +1120,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                _fruitGoal = int.tryParse(controller.text) ?? _fruitGoal;
+                                _fruitGoal =
+                                    int.tryParse(controller.text) ?? _fruitGoal;
                               });
                               Navigator.pop(context);
                             },
@@ -1135,23 +1192,21 @@ class _HabitTrackerState extends State<HabitTracker> {
                       children: [
                         Text(
                           habit['name'],
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w600),
                         ),
                         const SizedBox(height: 4),
                         Text(
                           habit['desc'],
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: Colors.grey[600]),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             'Target steps: $_stepsGoal',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   color: habit['color'],
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1164,7 +1219,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                     icon: const Icon(Icons.flag, size: 20),
                     tooltip: 'Set Target Steps',
                     onPressed: () async {
-                      final controller = TextEditingController(text: _stepsGoal.toString());
+                      final controller = TextEditingController(
+                        text: _stepsGoal.toString(),
+                      );
                       await showDialog(
                         context: context,
                         builder: (context) => AlertDialog(
@@ -1172,7 +1229,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                           content: TextField(
                             controller: controller,
                             keyboardType: TextInputType.number,
-                            decoration: const InputDecoration(labelText: 'Goal (steps)'),
+                            decoration: const InputDecoration(
+                              labelText: 'Goal (steps)',
+                            ),
                           ),
                           actions: [
                             TextButton(
@@ -1182,7 +1241,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                             ElevatedButton(
                               onPressed: () {
                                 setState(() {
-                                  _stepsGoal = int.tryParse(controller.text) ?? _stepsGoal;
+                                  _stepsGoal =
+                                      int.tryParse(controller.text) ??
+                                      _stepsGoal;
                                 });
                                 Navigator.pop(context);
                               },
@@ -1245,6 +1306,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                         }
                       });
                     },
+                    activeColor: habit['color'], // Sync switch color with icon
                   ),
                   const SizedBox(width: 8),
                   Text(
@@ -1253,6 +1315,20 @@ class _HabitTrackerState extends State<HabitTracker> {
                         : 'Manual entry',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
+                  if (_linkedToPhone)
+                    TextButton(
+                      onPressed: () {
+                        setStateCard(() {
+                          setState(() {
+                            _linkedToPhone = false;
+                          });
+                        });
+                      },
+                      style: TextButton.styleFrom(
+                        foregroundColor: habit['color'], // Sync manual entry button color
+                      ),
+                      child: const Text('Manual Entry'),
+                    ),
                 ],
               ),
               Align(
@@ -1298,23 +1374,22 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         habit['name'],
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         habit['desc'],
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4.0),
                         child: Text(
                           'Target: $_exerciseGoal min exercise',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
                                 color: habit['color'],
                                 fontWeight: FontWeight.bold,
                               ),
@@ -1327,7 +1402,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   icon: const Icon(Icons.flag, size: 20),
                   tooltip: 'Set Exercise Goal',
                   onPressed: () async {
-                    final controller = TextEditingController(text: _exerciseGoal.toString());
+                    final controller = TextEditingController(
+                      text: _exerciseGoal.toString(),
+                    );
                     await showDialog(
                       context: context,
                       builder: (context) => AlertDialog(
@@ -1335,7 +1412,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                         content: TextField(
                           controller: controller,
                           keyboardType: TextInputType.number,
-                          decoration: const InputDecoration(labelText: 'Goal (minutes)'),
+                          decoration: const InputDecoration(
+                            labelText: 'Goal (minutes)',
+                          ),
                         ),
                         actions: [
                           TextButton(
@@ -1345,7 +1424,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                           ElevatedButton(
                             onPressed: () {
                               setState(() {
-                                _exerciseGoal = int.tryParse(controller.text) ?? _exerciseGoal;
+                                _exerciseGoal =
+                                    int.tryParse(controller.text) ??
+                                    _exerciseGoal;
                               });
                               Navigator.pop(context);
                             },
@@ -1375,9 +1456,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                   child: TextField(
                     controller: durationController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      labelText: 'Minutes',
-                    ),
+                    decoration: const InputDecoration(labelText: 'Minutes'),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -1395,6 +1474,10 @@ class _HabitTrackerState extends State<HabitTracker> {
                       durationController.clear();
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: habit['color'], // Sync add button color with icon
+                    foregroundColor: Colors.white,
+                  ),
                   child: const Text('Add'),
                 ),
               ],
@@ -1404,19 +1487,24 @@ class _HabitTrackerState extends State<HabitTracker> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Logged Activities:', style: TextStyle(fontWeight: FontWeight.bold)),
-                  ..._exercises.map((ex) => ListTile(
-                        title: Text('${ex['type']}'),
-                        subtitle: Text('${ex['duration']} min'),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: () {
-                            setState(() {
-                              _exercises.remove(ex);
-                            });
-                          },
-                        ),
-                      )),
+                  const Text(
+                    'Logged Activities:',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  ..._exercises.map(
+                    (ex) => ListTile(
+                      title: Text('${ex['type']}'),
+                      subtitle: Text('${ex['duration']} min'),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          setState(() {
+                            _exercises.remove(ex);
+                          });
+                        },
+                      ),
+                    ),
+                  ),
                 ],
               ),
           ],
@@ -1425,7 +1513,10 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
-  Widget _buildCustomHabitCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildCustomHabitCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final trackerType = habit['trackerType'];
     final color = habit['color'];
     final icon = habit['icon'];
@@ -1456,24 +1547,23 @@ class _HabitTrackerState extends State<HabitTracker> {
                     children: [
                       Text(
                         name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         desc,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodyMedium
-                            ?.copyWith(color: Colors.grey[600]),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
                       ),
                       if (goal != null)
                         Padding(
                           padding: const EdgeInsets.only(top: 4.0),
                           child: Text(
                             'Goal: $goal',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
                                   color: Colors.deepPurple,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -1507,7 +1597,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                     onPressed: () {
                       setState(() {
                         if ((habit['trackerValue'] ?? 0) > 0) {
-                          habit['trackerValue'] = (habit['trackerValue'] ?? 0) - 1;
+                          habit['trackerValue'] =
+                              (habit['trackerValue'] ?? 0) - 1;
                         }
                       });
                     },
@@ -1517,7 +1608,8 @@ class _HabitTrackerState extends State<HabitTracker> {
                     icon: const Icon(Icons.add),
                     onPressed: () {
                       setState(() {
-                        habit['trackerValue'] = (habit['trackerValue'] ?? 0) + 1;
+                        habit['trackerValue'] =
+                            (habit['trackerValue'] ?? 0) + 1;
                       });
                     },
                   ),
@@ -1526,21 +1618,30 @@ class _HabitTrackerState extends State<HabitTracker> {
             else if (trackerType == 'Timer')
               Row(
                 children: [
-                  Text('Time: ${_formatDuration(habit['trackerValue'] ?? Duration.zero)}'),
+                  Text(
+                    'Time: ${_formatDuration(habit['trackerValue'] ?? Duration.zero)}',
+                  ),
                   const Spacer(),
                   ElevatedButton(
                     onPressed: () async {
                       final picked = await showTimePicker(
                         context: context,
                         initialTime: TimeOfDay(
-                          hour: (habit['trackerValue'] as Duration?)?.inHours ?? 0,
-                          minute: (habit['trackerValue'] as Duration?)?.inMinutes.remainder(60) ?? 0,
+                          hour:
+                              (habit['trackerValue'] as Duration?)?.inHours ??
+                              0,
+                          minute:
+                              (habit['trackerValue'] as Duration?)?.inMinutes
+                                  .remainder(60) ??
+                              0,
                         ),
                       );
                       if (picked != null) {
                         setState(() {
-                          habit['trackerValue'] =
-                              Duration(hours: picked.hour, minutes: picked.minute);
+                          habit['trackerValue'] = Duration(
+                            hours: picked.hour,
+                            minutes: picked.minute,
+                          );
                         });
                       }
                     },
@@ -1551,7 +1652,9 @@ class _HabitTrackerState extends State<HabitTracker> {
             else if (trackerType == 'Text Log')
               TextField(
                 decoration: const InputDecoration(labelText: 'Log'),
-                controller: TextEditingController(text: habit['trackerValue'] ?? ''),
+                controller: TextEditingController(
+                  text: habit['trackerValue'] ?? '',
+                ),
                 onChanged: (value) {
                   setState(() {
                     habit['trackerValue'] = value;
@@ -1565,7 +1668,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                     IconButton(
                       icon: Icon(
                         Icons.star,
-                        color: (habit['trackerValue'] ?? 0) >= i ? Colors.amber : Colors.grey,
+                        color: (habit['trackerValue'] ?? 0) >= i
+                            ? Colors.amber
+                            : Colors.grey,
                       ),
                       onPressed: () {
                         setState(() {
@@ -1591,18 +1696,21 @@ class _HabitTrackerState extends State<HabitTracker> {
                       });
                     },
                   ),
-                  Text('Progress: ${((habit['trackerValue'] ?? 0.0) * 100).toInt()}%'),
+                  Text(
+                    'Progress: ${((habit['trackerValue'] ?? 0.0) * 100).toInt()}%',
+                  ),
                 ],
               )
             else if (trackerType == 'Dropdown')
               DropdownButton<String>(
-                value: habit['trackerValue'] == '' ? null : habit['trackerValue'],
+                value: habit['trackerValue'] == ''
+                    ? null
+                    : habit['trackerValue'],
                 hint: const Text('Select option'),
                 items: ['Option 1', 'Option 2', 'Option 3']
-                    .map((opt) => DropdownMenuItem(
-                          value: opt,
-                          child: Text(opt),
-                        ))
+                    .map(
+                      (opt) => DropdownMenuItem(value: opt, child: Text(opt)),
+                    )
                     .toList(),
                 onChanged: (value) {
                   setState(() {
@@ -1689,6 +1797,7 @@ class _HabitTrackerState extends State<HabitTracker> {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Habit Tracker'),
@@ -1709,51 +1818,113 @@ class _HabitTrackerState extends State<HabitTracker> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Sleep & Rest Habits section
-                _buildSection(
-                  context,
-                  title: 'Sleep & Rest Habits',
-                  cards: [
-                    _buildSleepHoursTrackerCard(context),
-                    _buildBedtimePatternsTrackerCard(context),
-                    _buildNapBreaksTrackerCard(context),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                _buildSection(
-                  context,
-                  title: 'Health Habits',
-                  cards: [
-                    _buildMealsTrackerCard(context),
-                    _buildWaterTrackerCard(context),
-                    _buildFruitsTrackerCard(context),
-                  ],
-                ),
-                const SizedBox(height: 24),
-                _buildSection(
-                  context,
-                  title: 'Movement & Exercise Habits',
-                  cards: [
-                    _buildStepsTrackerCard(context),
-                    _buildExerciseTrackerCard(context),
-                  ],
-                ),
-                if (_customHabits.isNotEmpty) ...[
-                  const SizedBox(height: 24),
-                  _buildSection(
-                    context,
-                    title: 'Custom Habits',
-                    cards: _customHabits
-                        .map((habit) => _buildCustomHabitCard(context, habit))
-                        .toList(),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Sleep & Rest Habits section
+                      _buildSection(
+                        context,
+                        title: 'Sleep & Rest Habits',
+                        cards: [
+                          _buildSleepHoursTrackerCard(context),
+                          _buildBedtimePatternsTrackerCard(context),
+                          _buildNapBreaksTrackerCard(context),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      _buildSection(
+                        context,
+                        title: 'Health Habits',
+                        cards: [
+                          _buildMealsTrackerCard(context),
+                          _buildWaterTrackerCard(context),
+                          _buildFruitsTrackerCard(context),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      _buildSection(
+                        context,
+                        title: 'Movement & Exercise Habits',
+                        cards: [
+                          _buildStepsTrackerCard(context),
+                          _buildExerciseTrackerCard(context),
+                        ],
+                      ),
+                      if (_customHabits.isNotEmpty) ...[
+                        const SizedBox(height: 24),
+                        _buildSection(
+                          context,
+                          title: 'Custom Habits',
+                          cards: _customHabits
+                              .map((habit) => _buildCustomHabitCard(context, habit))
+                              .toList(),
+                        ),
+                      ],
+                    ],
                   ),
-                ],
-              ],
-            ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        title: const Text('Habits Saved! 🎉'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              'Your habit entries have been saved successfully.',
+                            ),
+                            const SizedBox(height: 12),
+                            Container(
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                'Keep up the good work! Consistency is key to building healthy habits.',
+                                style: const TextStyle(fontStyle: FontStyle.italic),
+                              ),
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Done'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
+                    textStyle: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  child: const Text('Save'),
+                ),
+              ),
+            ],
           ),
         ),
       ),
