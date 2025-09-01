@@ -139,7 +139,6 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
     final category = affirmationCategories[selectedMood]!;
     
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
       appBar: AppBar(
         title: const Text('Positive Affirmations'),
         backgroundColor: Colors.transparent,
@@ -163,58 +162,19 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      category.color.withOpacity(0.1),
-                      category.color.withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: category.color.withOpacity(0.15),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.favorite,
-                        color: category.color,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Daily Affirmations',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: category.color,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Personalized positive thoughts for you',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Text(
+            'Daily Affirmations',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Personalized positive thoughts for you',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+          ),
               
               const SizedBox(height: 24),
               
@@ -295,72 +255,78 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
               // Affirmation Card
               Expanded(
                 flex: 3, // Give more space to the affirmation card
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(28),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: category.color.withOpacity(0.1),
-                        blurRadius: 20,
-                        offset: const Offset(0, 8),
-                      ),
-                    ],
+                child: Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(
-                        Icons.format_quote,
-                        size: 42,
-                        color: category.color.withOpacity(0.3),
-                      ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      Flexible(
-                        child: Text(
-                          currentAffirmation,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            height: 1.2,
-                            color: Theme.of(context).colorScheme.onSurface,
-                          ),
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 24),
-                      
-                      // Action Buttons
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          _buildActionButton(
-                            icon: favoriteAffirmations.contains(currentAffirmation)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                            label: 'Favorite',
-                            color: Colors.red[300]!,
-                            onTap: _toggleFavorite,
-                          ),
-                          _buildActionButton(
-                            icon: Icons.refresh,
-                            label: 'New',
-                            color: category.color,
-                            onTap: _generateNewAffirmation,
-                          ),
-                          _buildActionButton(
-                            icon: Icons.share,
-                            label: 'Share',
-                            color: Colors.blue[300]!,
-                            onTap: _shareAffirmation,
-                          ),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(28),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          category.color.withOpacity(0.1),
+                          category.color.withOpacity(0.05),
                         ],
                       ),
-                    ],
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.format_quote,
+                          size: 42,
+                          color: category.color.withOpacity(0.7),
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        Flexible(
+                          child: Text(
+                            currentAffirmation,
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              height: 1.2,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        // Action Buttons
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildActionButton(
+                              icon: favoriteAffirmations.contains(currentAffirmation)
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                              label: 'Favorite',
+                              color: Colors.red,
+                              onTap: _toggleFavorite,
+                            ),
+                            _buildActionButton(
+                              icon: Icons.refresh,
+                              label: 'New',
+                              color: Colors.purple,
+                              onTap: _generateNewAffirmation,
+                            ),
+                            _buildActionButton(
+                              icon: Icons.share,
+                              label: 'Share',
+                              color: Colors.blue,
+                              onTap: _shareAffirmation,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -369,25 +335,19 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
               
               // Daily Reminder Toggle
               Flexible(
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
+                child: Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.notifications_active,
-                        color: category.color,
-                      ),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.notifications_active,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: Column(
@@ -416,11 +376,12 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
                             const SnackBar(content: Text('Notification settings would open here')),
                           );
                         },
-                        activeColor: category.color,
+                        activeColor: Theme.of(context).colorScheme.primary,
                       ),
                     ],
                   ),
                 ),
+              ),
               ),
             ],
           ),

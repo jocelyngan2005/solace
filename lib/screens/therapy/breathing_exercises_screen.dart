@@ -19,7 +19,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 4,
       hold2: 4,
       description: 'Equal counts for balance and focus. Perfect for reducing stress and improving concentration.',
-      color: const Color(0xFF5FB3BF),
+      color: Colors.blue,
     ),
     '4-7-8 Breathing': BreathingTechnique(
       name: '4-7-8 Breathing',
@@ -28,7 +28,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 8,
       hold2: 0,
       description: 'Promotes deep relaxation and helps with sleep. Excellent for calming anxiety.',
-      color: const Color(0xFF8B5FBF),
+      color: Colors.purple,
     ),
     'Deep Belly': BreathingTechnique(
       name: 'Deep Belly',
@@ -37,7 +37,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 6,
       hold2: 2,
       description: 'Gentle diaphragmatic breathing that activates the body\'s relaxation response.',
-      color: const Color(0xFF7FB35F),
+      color: Colors.green,
     ),
     'Calming Breath': BreathingTechnique(
       name: 'Calming Breath',
@@ -46,14 +46,13 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 6,
       hold2: 2,
       description: 'Extended exhale helps activate the parasympathetic nervous system for deep calm.',
-      color: const Color(0xFFBF7A5F),
+      color: Colors.orange,
     ),
   };
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
       appBar: AppBar(
         title: const Text('Breathing Exercises'),
         backgroundColor: Colors.transparent,
@@ -70,58 +69,19 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF5FB3BF).withOpacity(0.1),
-                      const Color(0xFF5FB3BF).withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF5FB3BF).withOpacity(0.15),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.air,
-                        color: Color(0xFF5FB3BF),
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Breathe & Relax',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF5FB3BF),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Choose a breathing technique to calm your mind',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Text(
+            'Breathe and Relax',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Choose a breathing technique to calm your mind',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+          ),
               
               const SizedBox(height: 28),
               
@@ -138,14 +98,14 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF5FB3BF).withOpacity(0.1),
+                      color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: DropdownButton<int>(
                       value: selectedCycles,
                       underline: const SizedBox(),
                       style: TextStyle(
-                        color: const Color(0xFF5FB3BF),
+                        color: Theme.of(context).colorScheme.onPrimary,
                         fontWeight: FontWeight.w600,
                       ),
                       items: [3, 5, 8, 10, 15].map((cycles) => 
@@ -216,20 +176,20 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
           },
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.all(16),
             child: Row(
               children: [
                 // Technique Icon
                 Container(
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     color: technique.color.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(16),
+                    borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
                     Icons.air,
                     color: technique.color,
-                    size: 32,
+                    size: 24,
                   ),
                 ),
                 

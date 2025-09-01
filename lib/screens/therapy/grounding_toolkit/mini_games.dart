@@ -41,19 +41,19 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
     'categories': CognitiveGame(
       name: 'Categories Game',
       icon: Icons.category,
-      color: const Color(0xFF8B5FBF),
+      color: Colors.purple,
       instructions: 'Try to name at least 5 items in the given category',
     ),
     'alphabet': CognitiveGame(
       name: 'Alphabet Game',
       icon: Icons.abc,
-      color: const Color(0xFF5FB3BF),
+      color: Colors.orange,
       instructions: 'Name something that starts with each letter A-Z',
     ),
     'math': CognitiveGame(
       name: 'Math Mini-Tasks',
       icon: Icons.calculate,
-      color: const Color(0xFF7FB35F),
+      color: Colors.pinkAccent,
       instructions: 'Solve simple math problems to redirect your thoughts',
     ),
   };
@@ -259,7 +259,6 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
     final game = games[selectedGame]!;
     
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
       appBar: AppBar(
         title: const Text('Cognitive Grounding'),
         backgroundColor: Colors.transparent,
@@ -285,58 +284,19 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
               // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      game.color.withOpacity(0.1),
-                      game.color.withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: game.color.withOpacity(0.15),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(
-                        Icons.games,
-                        color: game.color,
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Mini Games',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: game.color,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Focus your mind with engaging mini-games',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+             Text(
+            'Mini Games',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Focus your mind with engaging mini-games',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+          ),
               
               const SizedBox(height: 24),
               

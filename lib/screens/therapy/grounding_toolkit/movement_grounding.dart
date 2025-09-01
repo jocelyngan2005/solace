@@ -24,7 +24,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
       name: 'Mindful Walking',
       description: 'Focus on each step and your connection to the ground',
       icon: Icons.directions_walk,
-      color: const Color(0xFF7FB35F),
+      color: Colors.green,
       duration: 120, // 2 minutes
       instructions: [
         'Stand up straight and take a deep breath',
@@ -40,7 +40,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
       name: 'Stretch & Count',
       description: 'Slow stretching movements with mindful counting',
       icon: Icons.accessibility_new,
-      color: const Color(0xFF5FB3BF),
+      color: Colors.blue,
       duration: 90, // 1.5 minutes
       instructions: [
         'Stand with feet shoulder-width apart',
@@ -56,7 +56,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
       name: 'Bilateral Tapping',
       description: 'Alternate tapping to reorient your nervous system',
       icon: Icons.touch_app,
-      color: const Color(0xFF8B5FBF),
+      color: Colors.purple,
       duration: 60, // 1 minute
       instructions: [
         'Sit comfortably with feet flat on the floor',
@@ -193,7 +193,6 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
     final exercise = exercises[selectedExercise]!;
     
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
       appBar: AppBar(
         title: const Text('Movement Grounding'),
         backgroundColor: Colors.transparent,
@@ -222,22 +221,15 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
               Container(
                 padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      exercise.color.withOpacity(0.1),
-                      exercise.color.withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
+                  color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(
                   children: [
                    Icon(
                         Icons.info_outline,
-                        color: exercise.color,
-                        size: 24,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 16,
                       ),
                     const SizedBox(width: 12),
                     Expanded(

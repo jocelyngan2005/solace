@@ -31,7 +31,7 @@ class ResourcesScreen extends StatelessWidget {
                     context,
                     'Student Affairs Office',
                     'Academic coaching and student support',
-                    '03-7967-4000',
+                    'student_affairs@university.edu',
                     Icons.school,
                     Colors.blue,
                   ),
@@ -44,6 +44,8 @@ class ResourcesScreen extends StatelessWidget {
                     Icons.accessibility,
                     Colors.green,
                   ),
+                  const SizedBox(height: 16),
+                  _buildCounselorDirectoryCard(context),
                 ],
               ),
             ),
@@ -103,11 +105,11 @@ class ResourcesScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,                          
                           ),
                         ),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Befrienders KL', '03-7627-2929'),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Life Line Association', '15995'),
-                        const SizedBox(height: 6),
+                        const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Malaysian Mental Health Association', '03-2780-6803'),
                       ],
                     ),
@@ -136,7 +138,7 @@ class ResourcesScreen extends StatelessWidget {
                     context,
                     'Student Mental Health Unit',
                     '300m away • Walk-in hours: 9AM-4PM',
-                    '03-7967-2100',
+                    'student_mental_health@university.edu',
                     Icons.psychology,
                     Colors.purple,
                   ),
@@ -211,9 +213,60 @@ class ResourcesScreen extends StatelessWidget {
     );
   }
 
+  Widget _buildCounselorDirectoryCard(BuildContext context) {
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: InkWell(
+        onTap: () => _showCounselorDirectory(context),
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.purple.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Icon(Icons.people, color: Colors.purple, size: 20),
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Campus Counselor Directory',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    Text(
+                      'View available counselors and their contact details',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildResourceItem(BuildContext context, String title, String description, String contact, IconData icon, Color color) {
-    final isPhoneNumber = contact.startsWith('03-') || contact.startsWith('01-') || contact.startsWith('04-') || contact.startsWith('05-') || contact.startsWith('06-') || contact.startsWith('07-') || contact.startsWith('08-') || contact.startsWith('09-');
-    
+    final isPhoneNumber = contact.startsWith('03-') ||
+        contact.startsWith('01-') ||
+        contact.startsWith('04-') ||
+        contact.startsWith('05-') ||
+        contact.startsWith('06-') ||
+        contact.startsWith('07-') ||
+        contact.startsWith('08-') ||
+        contact.startsWith('09-');
+    final isEmail = contact.contains('@');
+
     return Row(
       children: [
         Container(
@@ -244,17 +297,21 @@ class ResourcesScreen extends StatelessWidget {
                       child: Text(
                         contact,
                         style: TextStyle(
-                          color: Colors.grey[600], 
+                          color: Colors.grey[600],
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                    if (isPhoneNumber)
+                    if (isPhoneNumber || isEmail)
                       IconButton(
                         onPressed: () => _copyToClipboard(context, contact),
-                        icon: Icon(Icons.copy, size: 16, color: Colors.grey[600]),
-                        tooltip: 'Copy phone number',
+                        icon: Icon(Icons.copy, size: 12, color: Colors.grey[600]),
+                        tooltip: isPhoneNumber
+                            ? 'Copy phone number'
+                            : isEmail
+                                ? 'Copy email'
+                                : 'Copy',
                         padding: EdgeInsets.zero,
                         constraints: const BoxConstraints(),
                       ),
@@ -344,6 +401,113 @@ class ResourcesScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showCounselorDirectory(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Campus Counselor Directory'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Available counselors and their specializations:',
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+              ),
+              const SizedBox(height: 16),
+              _buildCounselorItem(
+                context,
+                'Dr. Sarah Hamza',
+                'Anxiety & Depression Specialist',
+                'sarahhamza@university.edu',
+              ),
+              const SizedBox(height: 12),
+              _buildCounselorItem(
+                context,
+                'Dr. Michael Tan',
+                'Academic Stress & Study Skills',
+                'michaeltan@university.edu',
+              ),
+              const SizedBox(height: 12),
+              _buildCounselorItem(
+                context,
+                'Ms. Priya Kumar',
+                'Relationship & Social Issues',
+                'priyakumar@university.edu',
+              ),
+              const SizedBox(height: 12),
+              _buildCounselorItem(
+                context,
+                'Dr. Ahmad Rahman',
+                'Career Counseling & Life Planning',
+                'ahmadrahman@university.edu',
+              ),
+              const SizedBox(height: 12),
+              _buildCounselorItem(
+                context,
+                'Ms. Lisa Wong',
+                'Crisis Intervention & Trauma',
+                'lisa.wong@university.edu',
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCounselorItem(BuildContext context, String name, String specialization, String email) {
+    return Row(
+      children: [
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
+              ),
+              Text(
+                specialization,
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                email,
+                style: TextStyle(
+                  color: Colors.blue[600],
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          onPressed: () => _copyToClipboard(context, email),
+          icon: Icon(Icons.copy, size: 16, color: Colors.grey[600]),
+          tooltip: 'Copy email',
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      ],
     );
   }
 

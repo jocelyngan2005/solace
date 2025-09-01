@@ -18,42 +18,42 @@ class _MeditationPageState extends State<MeditationPage> {
       duration: '5 min',
       category: 'Stress Relief',
       description: 'Release tension and find inner calm',
-      color: const Color(0xFF8B5FBF),
+      color: Colors.purple,
     ),
     MeditationSession(
       title: 'Exam Confidence',
       duration: '3 min',
       category: 'Anxiety',
       description: 'Build confidence before tests',
-      color: const Color(0xFF5FB3BF),
+      color: Colors.teal,
     ),
     MeditationSession(
       title: 'Peaceful Sleep',
       duration: '10 min',
       category: 'Sleep Aid',
       description: 'Gentle guidance to restful sleep',
-      color: const Color(0xFF7FB35F),
+      color: Colors.green,
     ),
     MeditationSession(
       title: 'Morning Motivation',
       duration: '4 min',
       category: 'Confidence Boost',
       description: 'Start your day with positive energy',
-      color: const Color(0xFFBF7A5F),
+      color: Colors.amber,
     ),
     MeditationSession(
       title: 'Study Break Reset',
       duration: '2 min',
       category: 'Stress Relief',
       description: 'Quick mental refresh between studies',
-      color: const Color(0xFF8B5FBF),
+      color: Colors.purple,
     ),
     MeditationSession(
       title: 'Pre-Presentation Calm',
       duration: '3 min',
       category: 'Anxiety',
       description: 'Steady your nerves before speaking',
-      color: const Color(0xFF5FB3BF),
+      color: Colors.teal,
     ),
   ];
 
@@ -67,7 +67,6 @@ class _MeditationPageState extends State<MeditationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFFDCCC),
       appBar: AppBar(
         title: const Text('Mindfulness Library'),
         backgroundColor: Colors.transparent,
@@ -84,51 +83,19 @@ class _MeditationPageState extends State<MeditationPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFCB1A6),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFFF9EC).withOpacity(0.3),
-                        shape: BoxShape.circle,
-                      ),
-                      child: const Icon(
-                        Icons.self_improvement,
-                        color: Color(0xFFFFF9EC),
-                        size: 32,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Find Your Peace',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF5D2A42),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Guided meditations for every moment',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: const Color(0xFF5D2A42),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Text(
+            'Find Your Peace',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Guided meditations for every moment',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+          ),
               
               const SizedBox(height: 24),
               
@@ -160,15 +127,15 @@ class _MeditationPageState extends State<MeditationPage> {
                             selectedCategory = category;
                           });
                         },
-                        backgroundColor: const Color(0xFFFCB1A6),
-                        selectedColor: const Color(0xFF5D2A42),
-                        checkmarkColor: const Color(0xFFFFF9EC),
+                        backgroundColor: Colors.grey[200],
+                        selectedColor: Theme.of(context).colorScheme.primary,
+                        checkmarkColor: Theme.of(context).colorScheme.onPrimary,
                         labelStyle: TextStyle(
-                          color: isSelected ? const Color(0xFFFFF9EC) : const Color(0xFF5D2A42),
+                          color: isSelected ? Theme.of(context).colorScheme.onPrimary : Theme.of(context).colorScheme.onSurface,
                           fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                         ),
                         side: BorderSide(
-                          color: isSelected ? const Color(0xFFFFF9EC) : Colors.transparent,
+                          color: isSelected ? Theme.of(context).colorScheme.primary : Colors.transparent,
                         ),
                       ),
                     );
@@ -196,19 +163,12 @@ class _MeditationPageState extends State<MeditationPage> {
   }
   
   Widget _buildSessionCard(MeditationSession session) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFFFFF9EC), 
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
       ),
+      color: Theme.of(context).colorScheme.surface,
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: Container(
@@ -225,16 +185,18 @@ class _MeditationPageState extends State<MeditationPage> {
         ),
         title: Text(
           session.title,
-          style: const TextStyle(
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w600,
-            fontSize: 16,
           ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const SizedBox(height: 4),
-            Text(session.description),
+            Text(
+              session.description,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
             const SizedBox(height: 8),
             Row(
               children: [
@@ -246,8 +208,7 @@ class _MeditationPageState extends State<MeditationPage> {
                   ),
                   child: Text(
                     session.duration,
-                    style: TextStyle(
-                      fontSize: 12,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w500,
                       color: session.color,
                     ),
@@ -257,15 +218,14 @@ class _MeditationPageState extends State<MeditationPage> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.grey[100],
+                    color: Theme.of(context).colorScheme.surfaceVariant,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
                     session.category,
-                    style: TextStyle(
-                      fontSize: 12,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       fontWeight: FontWeight.w500,
-                      color: Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
@@ -275,7 +235,7 @@ class _MeditationPageState extends State<MeditationPage> {
         ),
         trailing: Icon(
           Icons.arrow_forward_ios,
-          color: Colors.grey[400],
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
           size: 16,
         ),
         onTap: () {

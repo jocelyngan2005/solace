@@ -26,7 +26,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       name: 'Temperature Reset',
       description: 'Use temperature to bring focus to the present',
       icon: Icons.ac_unit,
-      color: const Color(0xFF5FB3BF),
+      color: Colors.lightBlueAccent,
       steps: [
         'Find something cold to hold (ice cube, cold water, etc.)',
         'Hold the cold object for 30 seconds',
@@ -40,7 +40,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       name: 'Progressive Muscle Relaxation',
       description: 'Tense and release muscle groups systematically',
       icon: Icons.fitness_center,
-      color: const Color(0xFF8B5FBF),
+      color: Colors.deepPurple,
       steps: [
         'Start with your hands - make tight fists',
         'Hold tension for 5 seconds, then release',
@@ -55,7 +55,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       name: '5-Finger Grounding',
       description: 'Touch each finger while focusing on positives',
       icon: Icons.back_hand,
-      color: const Color(0xFF7FB35F),
+      color: Colors.green,
       steps: [
         'Touch your thumb to your index finger',
         'Name something you\'re grateful for',
@@ -256,7 +256,6 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
     final technique = techniques[selectedTechnique]!;
     
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
       appBar: AppBar(
         title: const Text('Physical Grounding'),
         backgroundColor: Colors.transparent,
@@ -277,41 +276,36 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Header
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                    technique.color.withOpacity(0.1),
-                    technique.color.withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                Card(
+                  elevation: 2,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Row(
-                  children: [
-                    Icon(
-                    Icons.info_outline,
-                    color: technique.color,
-                    size: 24,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          color: Theme.of(context).colorScheme.primary,
+                          size: 16,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Use your body to anchor yourself in the present',
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                    child: Text(
-                      'Use your body to anchor yourself in the present',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                      ),
-                    ),
-                    ),
-                  ],
                   ),
                 ),
                 
@@ -332,86 +326,74 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                     final tech = entry.value;
                     final isSelected = selectedTechnique == key;
                     
-                    return Container(
-                      margin: const EdgeInsets.only(bottom: 12),
-                      child: Material(
-                        color: Colors.transparent,
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              selectedTechnique = key;
-                            });
-                          },
-                          borderRadius: BorderRadius.circular(16),
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: isSelected ? tech.color.withOpacity(0.1) : Colors.white,
-                              borderRadius: BorderRadius.circular(16),
-                              border: Border.all(
-                                color: isSelected ? tech.color : Colors.grey[300]!,
-                                width: 2,
+                    return Card(
+                      elevation: isSelected ? 4 : 2,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        side: isSelected ? BorderSide(
+                          color: Theme.of(context).colorScheme.primary,
+                          width: 2,
+                        ) : BorderSide.none,
+                      ),
+                      child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            selectedTechnique = key;
+                          });
+                        },
+                        borderRadius: BorderRadius.circular(16),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(12),
+                                decoration: BoxDecoration(
+                                  color: tech.color.withOpacity(0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: Icon(
+                                  tech.icon,
+                                  color: tech.color,
+                                  size: 24,
+                                ),
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withOpacity(0.05),
-                                  blurRadius: 8,
-                                  offset: const Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(12),
-                                  decoration: BoxDecoration(
-                                    color: tech.color.withOpacity(0.15),
-                                    shape: BoxShape.circle,
-                                  ),
-                                  child: Icon(
-                                    tech.icon,
-                                    color: tech.color,
-                                    size: 24,
-                                  ),
-                                ),
-                                const SizedBox(width: 16),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        tech.name,
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                          color: isSelected ? tech.color : null,
-                                        ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      tech.name,
+                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: isSelected ? tech.color : null,
                                       ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        tech.description,
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                        ),
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      tech.description,
+                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                       ),
-                                      const SizedBox(height: 8),
-                                      Text(
-                                        '${tech.duration} minutes',
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: tech.color,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      '${tech.duration} minutes',
+                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        color: tech.color,
+                                        fontWeight: FontWeight.w500,
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
-                                if (isSelected)
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: tech.color,
-                                  ),
-                              ],
-                            ),
+                              ),
+                              if (isSelected)
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                            ],
                           ),
                         ),
                       ),
@@ -426,8 +408,8 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                     child: ElevatedButton(
                       onPressed: _startExercise,
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: technique.color,
-                        foregroundColor: Colors.white,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),

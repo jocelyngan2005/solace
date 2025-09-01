@@ -161,51 +161,19 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      const Color(0xFF7FB35F).withOpacity(0.1),
-                      const Color(0xFF7FB35F).withOpacity(0.05),
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                    Icon(
-                        Icons.info_outline,
-                        color: Color(0xFF7FB35F),
-                        size: 24,
-                      ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            '5-4-3-2-1 Technique',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF7FB35F),
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            'Ground yourself using your five senses',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Text(
+            '5-4-3-2-1 Technique',
+            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Ground yourself using your five senses',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[600],
+            ),
+          ),
               
               const SizedBox(height: 24),
               
