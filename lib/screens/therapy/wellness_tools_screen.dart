@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'grounding_toolkit/grounding_techniques.dart';
 import 'meditation_screen.dart';
 import 'positive_affirmation_screen.dart';
 import 'breathing_exercises_screen.dart';
-import '../../widgets/breathing_exercise.dart';
 import '../../widgets/habit_tracker.dart';
 
 class WellnessToolsScreen extends StatelessWidget {
