@@ -1,42 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Pastel color palette
-  static const Color pastelBlue = Color(0xFFB8E0D2);
-  static const Color softLavender = Color(0xFFD6B2FF);
-  static const Color warmBeige = Color(0xFFF5F5DC);
-  static const Color softMint = Color(0xFFB8F2E6);
-  static const Color paleRose = Color(0xFFFFD3E1);
-  static const Color lightPeach = Color(0xFFFFE5CC);
+  // Updated color palette based on the uploaded palette image
+  static const Color primaryColor = Color(0xFFA596F5); // Light purple from palette
+  static const Color secondaryColor = Color(0xFF95A663); // Olive green from palette
+  static const Color accentColor = Color(0xFFFD904E); // Orange from palette
+  static const Color darkBrown = Color(0xFF4A3427); // Dark brown from palette
+  static const Color lightGray = Color(0xFFC9C8D0); // Light gray from palette
+  static const Color mutedPink = Color(0xFFB9998D); // Muted pink/brown from palette
+  static const Color oliveGray = Color(0xFF848767); // Olive gray from palette
+  static const Color mediumGray = Color(0xFFAAAAAD); // Gray from palette
+  
+  // Background colors from palette
+  static const Color backgroundColor = Color(0xFFF7F3F1); // Light beige from palette
+  static const Color surfaceColor = Color(0xFFFEFEFE); // Very light beige/white from palette
   
   // Text colors
-  static const Color darkGray = Color(0xFF2C3E50);
-  static const Color mediumGray = Color(0xFF7F8C8D);
-  static const Color lightGray = Color(0xFFECF0F1);
+  static const Color darkText = Color(0xFF4A3427); // Dark brown from palette
+  static const Color mediumText = Color(0xFF848767); // Olive gray from palette
+  static const Color lightText = Color(0xFFAAAAAD); // Gray from palette
   
   static ThemeData lightTheme = ThemeData(
     useMaterial3: true,
-    fontFamily: 'Inter',
     
     colorScheme: const ColorScheme.light(
-      primary: pastelBlue,
-      secondary: softLavender,
-      surface: Colors.white,
-      onSurface: darkGray,
-      onPrimary: darkGray,
-      onSecondary: darkGray,
-      tertiary: softMint,
-      outline: lightGray,
+      primary: primaryColor,
+      secondary: secondaryColor,
+      surface: surfaceColor,
+      onSurface: darkText,
+      onPrimary: surfaceColor,
+      onSecondary: surfaceColor,
+      tertiary: accentColor,
+      outline: lightText,
+      background: backgroundColor,
     ),
     
-    scaffoldBackgroundColor: Colors.white,
+    scaffoldBackgroundColor: backgroundColor,
     
-    appBarTheme: const AppBarTheme(
-      backgroundColor: Colors.white,
+    appBarTheme: AppBarTheme(
+      backgroundColor: backgroundColor,
       elevation: 0,
-      iconTheme: IconThemeData(color: darkGray),
-      titleTextStyle: TextStyle(
-        color: darkGray,
+      iconTheme: const IconThemeData(color: darkText),
+      titleTextStyle: GoogleFonts.poppins(
+        color: darkText,
         fontSize: 20,
         fontWeight: FontWeight.w600,
       ),
@@ -47,14 +54,14 @@ class AppTheme {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
       ),
-      color: Colors.white,
-      shadowColor: Colors.black.withOpacity(0.1),
+      color: surfaceColor,
+      shadowColor: darkBrown.withOpacity(0.1),
     ),
     
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: pastelBlue,
-        foregroundColor: darkGray,
+        backgroundColor: primaryColor,
+        foregroundColor: surfaceColor,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
@@ -64,60 +71,81 @@ class AppTheme {
     ),
     
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: softLavender,
-      foregroundColor: darkGray,
+      backgroundColor: secondaryColor,
+      foregroundColor: surfaceColor,
       elevation: 4,
     ),
     
-    textTheme: const TextTheme(
-      headlineLarge: TextStyle(
+    textTheme: GoogleFonts.poppinsTextTheme().copyWith(
+      headlineLarge: GoogleFonts.poppins(
         fontSize: 28,
         fontWeight: FontWeight.bold,
-        color: darkGray,
+        color: darkText,
       ),
-      headlineMedium: TextStyle(
+      headlineMedium: GoogleFonts.poppins(
         fontSize: 24,
         fontWeight: FontWeight.w600,
-        color: darkGray,
+        color: darkText,
       ),
-      headlineSmall: TextStyle(
+      headlineSmall: GoogleFonts.poppins(
         fontSize: 20,
         fontWeight: FontWeight.w600,
-        color: darkGray,
+        color: darkText,
       ),
-      titleLarge: TextStyle(
+      titleLarge: GoogleFonts.poppins(
         fontSize: 18,
         fontWeight: FontWeight.w600,
-        color: darkGray,
+        color: darkText,
       ),
-      titleMedium: TextStyle(
+      titleMedium: GoogleFonts.poppins(
         fontSize: 16,
         fontWeight: FontWeight.w500,
-        color: darkGray,
+        color: darkText,
       ),
-      bodyLarge: TextStyle(
+      bodyLarge: GoogleFonts.poppins(
         fontSize: 16,
-        color: darkGray,
+        color: darkText,
       ),
-      bodyMedium: TextStyle(
+      bodyMedium: GoogleFonts.poppins(
         fontSize: 14,
-        color: mediumGray,
+        color: mediumText,
       ),
-      labelLarge: TextStyle(
+      labelLarge: GoogleFonts.poppins(
         fontSize: 14,
         fontWeight: FontWeight.w500,
-        color: darkGray,
+        color: darkText,
       ),
     ),
     
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-      backgroundColor: Colors.white,
-      selectedItemColor: pastelBlue,
-      unselectedItemColor: mediumGray,
+      backgroundColor: surfaceColor,
+      selectedItemColor: primaryColor,
+      unselectedItemColor: mediumText,
       type: BottomNavigationBarType.fixed,
       elevation: 8,
-      selectedLabelStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-      unselectedLabelStyle: const TextStyle(fontSize: 12),
+      selectedLabelStyle: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500),
+      unselectedLabelStyle: GoogleFonts.poppins(fontSize: 12),
     ),
   );
+
+  // Mood colors using the palette colors
+  static const Map<String, Color> moodColors = {
+    'excited': primaryColor, // Light purple
+    'joyful': accentColor,  // Orange
+    'grateful': secondaryColor, // Olive green
+    'energized': primaryColor, // Light purple
+    'sensitive': lightGray, // Light gray
+    'confused': mutedPink,  // Muted pink/brown
+    'bored': secondaryColor,     // Olive green
+    'stressed': oliveGray,  // Olive gray
+    'angry': accentColor,     // Orange
+    'insecure': mutedPink,  // Muted pink/brown
+    'hurt': mediumGray,      // Gray
+    'guilty': accentColor,    // Orange
+  };
+
+  // Get mood color by name
+  static Color getMoodColor(String moodName) {
+    return moodColors[moodName.toLowerCase()] ?? primaryColor;
+  }
 }

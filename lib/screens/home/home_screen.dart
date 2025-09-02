@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import '../../widgets/dashboard_card.dart';
 import '../../widgets/mood_chart.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -9,134 +7,196 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Good morning, Alex 👋'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
+      backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Quick mood check
-            DashboardCard(
-              title: 'How are you feeling?',
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  _buildMoodButton(context, '😊', 'Great', Colors.green[100]!),
-                  _buildMoodButton(context, '😐', 'Okay', Colors.orange[100]!),
-                  _buildMoodButton(context, '😔', 'Low', Colors.red[100]!),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Mood chart
-            DashboardCard(
-              title: 'Your mood this week',
-              child: const SizedBox(
-                height: 200,
-                child: MoodChart(),
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // AI Insights
-            DashboardCard(
-              title: '🧠 AI Insights',
-              child: Column(
-                children: [
-                  _buildInsightItem(
-                    Icons.trending_down,
-                    'Your mood has been trending down this week',
-                    'Consider scheduling some downtime this weekend',
-                    Colors.orange,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildInsightItem(
-                    Icons.school,
-                    'Exam week is approaching',
-                    'Remember to balance study time with rest',
-                    Colors.blue,
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Habit progress
-            DashboardCard(
-              title: 'Today\'s wellness goals',
-              child: Column(
-                children: [
-                  _buildHabitProgress('Mindful minutes', 15, 20, Colors.green),
-                  const SizedBox(height: 12),
-                  _buildHabitProgress('Sleep hours', 7, 8, Colors.blue),
-                  const SizedBox(height: 12),
-                  _buildHabitProgress('Journal entries', 1, 1, Colors.purple),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Upcoming deadlines
-            DashboardCard(
-              title: 'Upcoming deadlines',
-              child: Column(
-                children: [
-                  _buildDeadlineItem(
-                    'Psychology Essay',
-                    'Due in 3 days',
-                    Icons.assignment,
-                    Colors.orange,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildDeadlineItem(
-                    'Math Midterm',
-                    'Due in 1 week',
-                    Icons.calculate,
-                    Colors.blue,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildDeadlineItem(
-                    'Group Project',
-                    'Due in 2 weeks',
-                    Icons.group,
-                    Colors.green,
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Quick actions
-            Row(
-              children: [
-                Expanded(
-                  child: _buildQuickActionCard(
-                    context,
-                    'Quick Journal',
-                    Icons.edit_note,
-                    Theme.of(context).colorScheme.primary,
-                  ),
+            // Main header card containing profile, greeting, and feeling input
+            Container(
+              padding: const EdgeInsets.fromLTRB(24, 90, 24, 24), // Increased top padding from 60 to 80
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: const BorderRadius.only(
+                  bottomLeft: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: _buildQuickActionCard(
-                    context,
-                    'Breathing Exercise',
-                    Icons.air,
-                    Theme.of(context).colorScheme.secondary,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 10,
+                    offset: const Offset(0, 2),
                   ),
-                ),
-              ],
+                ],
+              ),
+                child: Column(
+                  children: [
+                    // Header row with profile, greeting, and notification
+                    Row(
+                      children: [
+                        // Profile avatar
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFFD4B5A0),
+                            border: Border.all(color: Colors.white, width: 2),
+                          ),
+                          child: const Icon(Icons.person, color: Colors.white, size: 24),
+                        ),
+                        const SizedBox(width: 16),
+                        // Greeting and status
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Hi, Jocelyn!',
+                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight : FontWeight.bold,
+                                  color: Colors.black87,
+                                  fontSize: 36 
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFFE8E8E8),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: const Text(
+                                      'member',
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Colors.purple.withOpacity(0.15),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Container(
+                                          width: 12,
+                                          height: 12,
+                                          decoration: const BoxDecoration(
+                                            color: Colors.purple,
+                                            shape: BoxShape.rectangle,
+                                          ),
+                                        ),
+                                        const SizedBox(width: 4),
+                                        const Text(
+                                          '80%',
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.purple,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                  const Text('😊', style: TextStyle(fontSize: 16)),
+                                  const SizedBox(width: 4),
+                                  const Text(
+                                    'Happy',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.grey,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        // Notification icon
+                        Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                            color: Colors.transparent,
+                          ),
+                          child: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 20),
+                        ),
+                      ],
+                    ),
+                    
+                    const SizedBox(height: 20),
+                    
+                    // Feeling input section
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF8F8F8),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          const Expanded(
+                            child: Text(
+                              'How are you feeling today?',
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          const Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
+                        ],
+                      ),
+                  ),
+                ],
+              ),
+            ),            const SizedBox(height: 24),
+            
+            // Main content sections
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Motivational Quote
+                  _buildMotivationalQuoteCard(),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Mindfulness Metrics
+                  _buildMindfulnessMetricsSection(),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Mood Tracker
+                  _buildMoodTrackerSection(),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Academic Overview
+                  _buildAcademicOverviewSection(),
+                  
+                  const SizedBox(height: 24),
+                  
+                  // Help button
+                  _buildHelpButton(),
+                  
+                  const SizedBox(height: 100), // Bottom padding for navigation
+                ],
+              ),
             ),
           ],
         ),
@@ -144,157 +204,405 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMoodButton(BuildContext context, String emoji, String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          width: 60,
-          height: 60,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Center(
-            child: Text(
-              emoji,
-              style: const TextStyle(fontSize: 24),
+  Widget _buildMotivationalQuoteCard() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFB8E6B8), Color(0xFFA8D5A8)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Motivational Quote of the Day',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: Color(0xFF2D5016),
             ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
-      ],
+          const SizedBox(height: 16),
+          const Text(
+            'Progress is progress,\nno matter how small.',
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF2D5016),
+              height: 1.3,
+            ),
+          ),
+          const SizedBox(height: 16),
+        ],
+      ),
     );
   }
 
-  Widget _buildInsightItem(IconData icon, String title, String subtitle, Color color) {
-    return Row(
+  Widget _buildMindfulnessMetricsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: color, size: 20),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.w500),
-              ),
-              Text(
-                subtitle,
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 12,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHabitProgress(String title, int current, int target, Color color) {
-    final progress = current / target;
-    return Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(title, style: const TextStyle(fontWeight: FontWeight.w500)),
-              const SizedBox(height: 4),
-              LinearProgressIndicator(
-                value: progress,
-                backgroundColor: color.withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation<Color>(color),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(width: 12),
-        Text(
-          '$current/$target',
+        const Text(
+          'Mindfulness Metrics',
           style: TextStyle(
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.black87,
           ),
         ),
-      ],
-    );
-  }
-
-  Widget _buildDeadlineItem(String title, String date, IconData icon, Color color) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: color, size: 20),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Text(
-            title,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-        ),
-        Text(
-          date,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildQuickActionCard(BuildContext context, String title, IconData icon, Color color) {
-    return Card(
-      child: InkWell(
-        onTap: () {
-          // Handle quick action
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            // Mindful Minutes Card
+            Expanded(
+              child: Container(
+                height: 160,
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
+                  color: const Color(0xFF7FB069),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: Icon(icon, color: color, size: 24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.favorite, color: Colors.white, size: 16),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Mindful Minutes',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    const Text(
+                      '80%',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 32,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Text(
+                      'achieved',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w500,
-                  fontSize: 12,
+            ),
+            const SizedBox(width: 12),
+            // Journal Streak Card
+            Expanded(
+              child: Container(
+                height: 160,
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF8B7ED8),
+                  borderRadius: BorderRadius.circular(16),
                 ),
-                textAlign: TextAlign.center,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.calendar_month, color: Colors.white, size: 16),
+                        const SizedBox(width: 8),
+                        const Text(
+                          'Journal Streak',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      '10/31 days',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const Spacer(),
+                    // Calendar grid
+                    _buildMiniCalendar(),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMiniCalendar() {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 7,
+        mainAxisSpacing: 2,
+        crossAxisSpacing: 2,
+        childAspectRatio: 1,
+      ),
+      itemCount: 28,
+      itemBuilder: (context, index) {
+        final isCompleted = index < 10;
+        return Container(
+          decoration: BoxDecoration(
+            color: isCompleted ? Colors.white : Colors.white.withOpacity(0.3),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildMoodTrackerSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.emoji_emotions, color: Colors.amber, size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Mood Tracker',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
             ],
+          ),
+          const SizedBox(height: 16),
+          // Mood chart with emojis
+          SizedBox(
+            height: 120,
+            child: const MoodChart(),
+          ),
+          const SizedBox(height: 16),
+          const Text(
+            'Your mood has been trending up this week, keep building on that momentum with some mindful breaks.',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+              height: 1.4,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAcademicOverviewSection() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Academic Overview',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              const Icon(Icons.school, color: Colors.black87, size: 20),
+              const SizedBox(width: 8),
+              const Text(
+                'Upcoming Deadlines',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          _buildDeadlineItem('Psychology Essay', 'urgent', 'Due in 1 day'),
+          _buildDeadlineItem('Philosophy Essay', 'urgent', 'Due in 2 day'),
+          _buildDeadlineItem('English Essay', '', 'Due in 7 day'),
+          _buildDeadlineItem('Humanities Essay', '', 'Due in 10 day'),
+          const SizedBox(height: 16),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: const Color(0xFFFFF3CD),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              'Exam week is approaching!\nRemember to balance study time with rest.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Color(0xFF856404),
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDeadlineItem(String title, String urgency, String dueDate) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        children: [
+          Container(
+            width: 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: urgency == 'urgent' ? Colors.red : Colors.grey,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.black87,
+              ),
+            ),
+          ),
+          if (urgency == 'urgent')
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Text(
+                'urgent',
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          const SizedBox(width: 8),
+          Text(
+            dueDate,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHelpButton() {
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        onPressed: () {
+          // Handle help action
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFFFFB347),
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 0,
+        ),
+        child: const Text(
+          'Help! I\'m too stressed!',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
           ),
         ),
       ),
     );
   }
+}
+
+// Custom painter for the hills decoration
+class HillsPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = const Color(0xFF90C695)
+      ..style = PaintingStyle.fill;
+
+    final path = Path();
+    path.moveTo(0, size.height * 0.7);
+    
+    // Create rolling hills
+    for (double i = 0; i <= size.width; i += size.width / 6) {
+      path.quadraticBezierTo(
+        i + size.width / 12,
+        size.height * 0.4,
+        i + size.width / 6,
+        size.height * 0.7,
+      );
+    }
+    
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
+
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

@@ -207,7 +207,7 @@ class WellnessToolsScreen extends StatelessWidget {
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.7,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFFEFEFE),
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(
@@ -258,7 +258,7 @@ class WellnessToolsScreen extends StatelessWidget {
       child: ListTile(
         leading: const CircleAvatar(
           backgroundColor: Colors.green,
-          child: Icon(Icons.play_arrow, color: Colors.white),
+          child: Icon(Icons.play_arrow, color: Color(0xFFFEFEFE)),
         ),
         title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
         subtitle: Text('$duration • $description'),
@@ -321,7 +321,7 @@ class WellnessToolsScreen extends StatelessWidget {
       builder: (context) => Container(
         height: MediaQuery.of(context).size.height * 0.6,
         decoration: const BoxDecoration(
-          color: Colors.white,
+          color: Color(0xFFFEFEFE),
           borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
         ),
         child: Column(

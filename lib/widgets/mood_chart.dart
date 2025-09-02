@@ -114,7 +114,7 @@ class MoodChart extends StatelessWidget {
                   radius: 4,
                   color: Theme.of(context).colorScheme.primary,
                   strokeWidth: 2,
-                  strokeColor: Colors.white,
+                  strokeColor: Color(0xFFFEFEFE),
                 );
               },
             ),

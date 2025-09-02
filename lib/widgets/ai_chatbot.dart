@@ -47,7 +47,7 @@ class _ChatbotModalState extends State<ChatbotModal> {
     return Container(
       height: MediaQuery.of(context).size.height * 0.8,
       decoration: const BoxDecoration(
-        color: Colors.white,
+        color: Color(0xFFFEFEFE),
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       child: Column(
@@ -63,7 +63,7 @@ class _ChatbotModalState extends State<ChatbotModal> {
               children: [
                 const CircleAvatar(
                   backgroundColor: Color(0xFFB8E0D2),
-                  child: Icon(Icons.psychology_rounded, color: Colors.white),
+                  child: Icon(Icons.psychology_rounded, color: Color(0xFFFEFEFE)),
                 ),
                 const SizedBox(width: 12),
                 const Text(
@@ -113,7 +113,7 @@ class _ChatbotModalState extends State<ChatbotModal> {
                         borderSide: BorderSide.none,
                       ),
                       filled: true,
-                      fillColor: Colors.white,
+                      fillColor: Color(0xFFFEFEFE),
                       contentPadding: const EdgeInsets.symmetric(
                         horizontal: 16,
                         vertical: 8,
@@ -127,7 +127,7 @@ class _ChatbotModalState extends State<ChatbotModal> {
                   backgroundColor: Theme.of(context).colorScheme.primary,
                   child: IconButton(
                     onPressed: () => _sendMessage(_controller.text),
-                    icon: const Icon(Icons.send, color: Colors.white),
+                    icon: const Icon(Icons.send, color: Color(0xFFFEFEFE)),
                   ),
                 ),
               ],
@@ -222,7 +222,7 @@ class ChatBubble extends StatelessWidget {
             const CircleAvatar(
               radius: 16,
               backgroundColor: Color(0xFFB8E0D2),
-              child: Icon(Icons.psychology_rounded, size: 16, color: Colors.white),
+              child: Icon(Icons.psychology_rounded, size: 16, color: Color(0xFFFEFEFE)),
             ),
             const SizedBox(width: 8),
           ],
@@ -238,7 +238,7 @@ class ChatBubble extends StatelessWidget {
               child: Text(
                 message.text,
                 style: TextStyle(
-                  color: message.isUser ? Colors.white : Colors.black87,
+                  color: message.isUser ? Color(0xFFFEFEFE) : Colors.black87,
                   fontSize: 14,
                 ),
               ),
@@ -249,7 +249,7 @@ class ChatBubble extends StatelessWidget {
             CircleAvatar(
               radius: 16,
               backgroundColor: Colors.grey[300],
-              child: const Icon(Icons.person, size: 16, color: Colors.white),
+              child: const Icon(Icons.person, size: 16, color: Color(0xFFFEFEFE)),
             ),
           ],
         ],

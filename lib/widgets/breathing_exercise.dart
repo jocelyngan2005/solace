@@ -135,7 +135,7 @@ class _BreathingExerciseState extends State<BreathingExercise>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.white,
+              Color(0xFFFEFEFE),
               (_colorAnimation.value ?? _phaseColors[0]).withOpacity(0.1),
             ],
           ),
@@ -177,7 +177,7 @@ class _BreathingExerciseState extends State<BreathingExercise>
                               style: const TextStyle(
                                 fontSize: 36,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Color(0xFFFEFEFE),
                               ),
                             ),
                           ),
@@ -205,7 +205,7 @@ class _BreathingExerciseState extends State<BreathingExercise>
                       margin: const EdgeInsets.symmetric(horizontal: 32),
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Color(0xFFFEFEFE),
                         borderRadius: BorderRadius.circular(16),
                         boxShadow: [
                           BoxShadow(
@@ -286,7 +286,7 @@ class _BreathingExerciseState extends State<BreathingExercise>
                     backgroundColor: _isActive 
                       ? Colors.red[400]
                       : Theme.of(context).colorScheme.primary,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Color(0xFFFEFEFE),
                   ),
                 ),
               ),
