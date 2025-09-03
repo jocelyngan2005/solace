@@ -54,7 +54,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                 borderRadius: BorderRadius.circular(12),
               ),
               indicatorSize: TabBarIndicatorSize.tab,
-              labelColor: AppTheme.darkGray,
+              labelColor: AppTheme.darkText,
               unselectedLabelColor: AppTheme.mediumGray,
               dividerColor: Colors.transparent,
               tabs: const [
@@ -128,7 +128,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
-                color: AppTheme.darkGray,
+                color: AppTheme.darkText,
               ),
             ),
             const SizedBox(height: 12),
@@ -142,7 +142,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
             style: TextStyle(
               fontSize: 20,
               fontWeight: FontWeight.bold,
-              color: AppTheme.darkGray,
+              color: AppTheme.darkText,
             ),
           ),
           const SizedBox(height: 12),
@@ -233,7 +233,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
               widthFactor: stats['completionRate'].toDouble(),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppTheme.pastelBlue,
+                  color: AppTheme.primaryColor,
                   borderRadius: BorderRadius.circular(4),
                 ),
               ),
@@ -298,7 +298,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
           ),
         ],
         border: Border.all(
-          color: AppTheme.pastelBlue.withOpacity(0.3),
+          color: AppTheme.primaryColor.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -324,20 +324,20 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: AppTheme.lightPeach,
+                            color: AppTheme.accentColor,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Icon(Icons.star, size: 12, color: AppTheme.darkGray),
+                              Icon(Icons.star, size: 12, color: AppTheme.darkText),
                               const SizedBox(width: 4),
                               Text(
                                 'FEATURED',
                                 style: TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  color: AppTheme.darkGray,
+                                  color: AppTheme.darkText,
                                 ),
                               ),
                             ],
@@ -370,7 +370,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.darkGray,
+                        color: AppTheme.darkText,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -393,8 +393,8 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                 child: ElevatedButton(
                   onPressed: () => _startChallenge(challenge),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.pastelBlue,
-                    foregroundColor: AppTheme.darkGray,
+                    backgroundColor: AppTheme.primaryColor,
+                    foregroundColor: AppTheme.darkText,
                     elevation: 0,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -407,8 +407,8 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
               OutlinedButton(
                 onPressed: () => _showChallengeDetails(challenge),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppTheme.pastelBlue),
-                  foregroundColor: AppTheme.darkGray,
+                  side: BorderSide(color: AppTheme.primaryColor),
+                  foregroundColor: AppTheme.darkText,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -443,12 +443,12 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: _selectedCategory == null 
-                      ? AppTheme.pastelBlue 
+                      ? AppTheme.primaryColor 
                       : Colors.grey[100],
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
                     color: _selectedCategory == null 
-                        ? AppTheme.pastelBlue 
+                        ? AppTheme.primaryColor 
                         : Colors.grey[300]!,
                     width: 1,
                   ),
@@ -460,7 +460,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                     fontWeight: FontWeight.w500,
                     color: _selectedCategory == null 
                         ? Colors.white 
-                        : AppTheme.darkGray,
+                        : AppTheme.darkText,
                   ),
                 ),
               ),
@@ -495,7 +495,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                       fontWeight: FontWeight.w500,
                       color: isSelected 
                           ? Colors.white 
-                          : AppTheme.darkGray,
+                          : AppTheme.darkText,
                     ),
                   ),
                 ),
@@ -541,7 +541,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
-                        color: AppTheme.darkGray,
+                        color: AppTheme.darkText,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -559,7 +559,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
                   color: challenge.daysRemaining <= 2 
-                      ? AppTheme.paleRose.withOpacity(0.5) 
+                      ? AppTheme.mutedPink.withOpacity(0.5) 
                       : AppTheme.lightGray.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(8),
                 ),
@@ -567,7 +567,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                   '${challenge.daysRemaining} days left',
                   style: TextStyle(
                     color: challenge.daysRemaining <= 2 
-                        ? AppTheme.darkGray 
+                        ? AppTheme.darkText 
                         : AppTheme.mediumGray,
                     fontWeight: FontWeight.w600,
                     fontSize: 12,
@@ -590,13 +590,13 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                           'Progress: ${challenge.currentProgress}/${challenge.targetCount}',
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
-                            color: AppTheme.darkGray,
+                            color: AppTheme.darkText,
                           ),
                         ),
                         Text(
                           '${(challenge.progressPercentage * 100).toInt()}%',
                           style: TextStyle(
-                            color: AppTheme.pastelBlue,
+                            color: AppTheme.primaryColor,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -614,7 +614,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                         widthFactor: challenge.progressPercentage,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: AppTheme.pastelBlue,
+                            color: AppTheme.primaryColor,
                             borderRadius: BorderRadius.circular(3),
                           ),
                         ),
@@ -632,8 +632,8 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                 child: ElevatedButton(
                   onPressed: () => _showChallengeDetails(challenge),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: AppTheme.pastelBlue,
-                    foregroundColor: AppTheme.darkGray,
+                    backgroundColor: AppTheme.primaryColor,
+                    foregroundColor: AppTheme.darkText,
                     elevation: 0,
                   ),
                   child: const Text('View Details'),
@@ -643,8 +643,8 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
               OutlinedButton(
                 onPressed: () => _updateProgress(challenge),
                 style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppTheme.pastelBlue),
-                  foregroundColor: AppTheme.darkGray,
+                  side: BorderSide(color: AppTheme.primaryColor),
+                  foregroundColor: AppTheme.darkText,
                 ),
                 child: const Text('Update Progress'),
               ),
@@ -665,14 +665,14 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, size: 12, color: AppTheme.darkGray),
+          Icon(icon, size: 12, color: AppTheme.darkText),
           const SizedBox(width: 4),
           Text(
             text,
             style: TextStyle(
               fontSize: 11,
               fontWeight: FontWeight.w500,
-              color: AppTheme.darkGray,
+              color: AppTheme.darkText,
             ),
           ),
         ],
@@ -704,7 +704,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
           challenge.title,
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: AppTheme.darkGray,
+            color: AppTheme.darkText,
           ),
         ),
         subtitle: Column(
@@ -723,7 +723,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                 _buildInfoChip(
                   Icons.schedule,
                   '${challenge.durationDays} days',
-                  AppTheme.pastelBlue,
+                  AppTheme.primaryColor,
                 ),
                 _buildInfoChip(
                   Icons.star_outline,
@@ -741,7 +741,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
                     style: TextStyle(
                       fontSize: 10,
                       fontWeight: FontWeight.bold,
-                      color: AppTheme.darkGray,
+                      color: AppTheme.darkText,
                     ),
                   ),
                 ),
@@ -753,11 +753,11 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
           onPressed: () => _startChallenge(challenge),
           icon: Icon(
             Icons.arrow_forward_ios,
-            color: AppTheme.pastelBlue,
+            color: AppTheme.primaryColor,
             size: 20,
           ),
           style: IconButton.styleFrom(
-            backgroundColor: AppTheme.pastelBlue.withOpacity(0.1),
+            backgroundColor: AppTheme.primaryColor.withOpacity(0.1),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
             ),
@@ -782,7 +782,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
           ),
         ],
         border: Border.all(
-          color: AppTheme.pastelBlue.withOpacity(0.3),
+          color: AppTheme.primaryColor.withOpacity(0.3),
           width: 1,
         ),
       ),
@@ -790,14 +790,14 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
         contentPadding: const EdgeInsets.all(16),
         leading: Icon(
           Icons.check_circle_outline, 
-          color: AppTheme.pastelBlue, 
+          color: AppTheme.primaryColor, 
           size: 28
         ),
         title: Text(
           challenge.title,
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            color: AppTheme.darkGray,
+            color: AppTheme.darkText,
           ),
         ),
         subtitle: Column(
@@ -836,10 +836,10 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
         trailing: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppTheme.pastelBlue.withOpacity(0.1),
+            color: AppTheme.primaryColor.withOpacity(0.1),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Icon(Icons.check_circle, color: AppTheme.pastelBlue, size: 20),
+          child: Icon(Icons.check_circle, color: AppTheme.primaryColor, size: 20),
         ),
         onTap: () => _showChallengeDetails(challenge),
       ),
@@ -877,7 +877,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w600,
-                color: AppTheme.darkGray,
+                color: AppTheme.darkText,
               ),
             ),
             const SizedBox(height: 8),
@@ -893,8 +893,8 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
             ElevatedButton(
               onPressed: onAction,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppTheme.pastelBlue,
-                foregroundColor: AppTheme.darkGray,
+                backgroundColor: AppTheme.primaryColor,
+                foregroundColor: AppTheme.darkText,
                 elevation: 0,
                 padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               ),
@@ -926,28 +926,28 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
   Color _getCategoryColor(ChallengeType type) {
     switch (type) {
       case ChallengeType.habit:
-        return AppTheme.pastelBlue;
+        return AppTheme.primaryColor;
       case ChallengeType.wellbeing:
-        return AppTheme.softMint;
+        return AppTheme.secondaryColor;
       case ChallengeType.mindfulness:
-        return AppTheme.softLavender;
+        return AppTheme.primaryColor;
       case ChallengeType.social:
-        return AppTheme.paleRose;
+        return AppTheme.mutedPink;
       case ChallengeType.academic:
-        return AppTheme.lightPeach;
+        return AppTheme.accentColor;
       case ChallengeType.creativity:
-        return AppTheme.warmBeige;
+        return AppTheme.mutedPink;
     }
   }
 
   Color _getDifficultyColor(ChallengeDifficulty difficulty) {
     switch (difficulty) {
       case ChallengeDifficulty.beginner:
-        return AppTheme.softMint;
+        return AppTheme.secondaryColor;
       case ChallengeDifficulty.intermediate:
-        return AppTheme.lightPeach;
+        return AppTheme.accentColor;
       case ChallengeDifficulty.advanced:
-        return AppTheme.paleRose;
+        return AppTheme.mutedPink;
     }
   }
 
@@ -958,8 +958,8 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
       setState(() {});
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Started "${challenge.title}" challenge!', style: TextStyle(color: AppTheme.darkGray)),
-          backgroundColor: AppTheme.pastelBlue,
+          content: Text('Started "${challenge.title}" challenge!', style: TextStyle(color: AppTheme.darkText)),
+          backgroundColor: AppTheme.primaryColor,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
@@ -969,7 +969,7 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: const Text('Could not start challenge. You may have too many active challenges.'),
-          backgroundColor: AppTheme.paleRose,
+          backgroundColor: AppTheme.mutedPink,
           behavior: SnackBarBehavior.floating,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
@@ -1004,9 +1004,9 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
           SnackBar(
             content: Text(
               '🎉 Challenge "${challenge.title}" completed!',
-              style: TextStyle(color: AppTheme.darkGray),
+              style: TextStyle(color: AppTheme.darkText),
             ),
-            backgroundColor: AppTheme.pastelBlue,
+            backgroundColor: AppTheme.primaryColor,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
@@ -1016,9 +1016,9 @@ class _WeeklyChallengesScreenState extends State<WeeklyChallengesScreen>
           SnackBar(
             content: Text(
               'Progress updated!',
-              style: TextStyle(color: AppTheme.darkGray),
+              style: TextStyle(color: AppTheme.darkText),
             ),
-            backgroundColor: AppTheme.pastelBlue,
+            backgroundColor: AppTheme.primaryColor,
             behavior: SnackBarBehavior.floating,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),
