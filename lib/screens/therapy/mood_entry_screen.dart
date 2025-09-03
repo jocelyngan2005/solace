@@ -21,7 +21,8 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
   double _moodRating = 3.0;
   late String _selectedMood;
   final TextEditingController _journalController = TextEditingController();
-  final List<String> _selectedTags = [];
+  final List<String> _selectedMoodDescriptions = [];
+  final List<String> _selectedMoodReasons = [];
   bool _isVoiceMode = false;
 
   final Map<String, String> _moodEmojis = {
@@ -230,16 +231,16 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                       spacing: 8,
                       runSpacing: 8,
                       children: _moodTags.map((tag) {
-                        final isSelected = _selectedTags.contains(tag);
+                        final isSelected = _selectedMoodDescriptions.contains(tag);
                         return FilterChip(
                           label: Text(tag),
                           selected: isSelected,
                           onSelected: (selected) {
                             setState(() {
                               if (selected) {
-                                _selectedTags.add(tag);
+                                _selectedMoodDescriptions.add(tag);
                               } else {
-                                _selectedTags.remove(tag);
+                                _selectedMoodDescriptions.remove(tag);
                               }
                             });
                           },
@@ -273,16 +274,16 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                       spacing: 8,
                       runSpacing: 8,
                       children: _reasonTags.map((tag) {
-                        final isSelected = _selectedTags.contains(tag);
+                        final isSelected = _selectedMoodReasons.contains(tag);
                         return FilterChip(
                           label: Text(tag),
                           selected: isSelected,
                           onSelected: (selected) {
                             setState(() {
                               if (selected) {
-                                _selectedTags.add(tag);
+                                _selectedMoodReasons.add(tag);
                               } else {
-                                _selectedTags.remove(tag);
+                                _selectedMoodReasons.remove(tag);
                               }
                             });
                           },
@@ -430,8 +431,13 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
   }
 
   void _completeEntry() async {
-    // Save mood entry completion status
-    await MoodEntryService.markMoodEntryCompleted(moodLabel: _selectedMood);
+    // Save mood entry completion status with all details
+    await MoodEntryService.markMoodEntryCompleted(
+      moodLabel: _selectedMood,
+      journalText: _journalController.text.trim().isNotEmpty ? _journalController.text.trim() : null,
+      moodDescriptions: _selectedMoodDescriptions.isNotEmpty ? _selectedMoodDescriptions : null,
+      moodWhy: _selectedMoodReasons.isNotEmpty ? _selectedMoodReasons.join(', ') : null,
+    );
     
     // Simulate saving the entry
     showDialog(

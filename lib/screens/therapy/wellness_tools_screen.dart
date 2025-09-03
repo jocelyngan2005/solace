@@ -6,6 +6,7 @@ import 'meditation_screen.dart';
 import 'positive_affirmation_screen.dart';
 import 'breathing_exercises_screen.dart';
 import '../../widgets/habit_tracker.dart';
+import '../../data/mood_entry_service.dart';
 
 class WellnessToolsScreen extends StatelessWidget {
   const WellnessToolsScreen({super.key});
@@ -300,7 +301,13 @@ class WellnessToolsScreen extends StatelessWidget {
             ),
             actions: [
               TextButton(
-                onPressed: () {
+                onPressed: () async {
+                  // Sync stress level with MoodEntryService
+                  await MoodEntryService.markMoodEntryCompleted(
+                    stressLevel: stressLevel,
+                    stressReason: reasonController.text.trim().isNotEmpty ? reasonController.text.trim() : null,
+                  );
+                  
                   Navigator.pop(context);
                   _showStressVisualization(context, stressLevel);
                 },
@@ -650,7 +657,13 @@ class WellnessToolsScreen extends StatelessWidget {
             ),
             actions: [
               TextButton(
-                onPressed: () {
+                onPressed: () async {
+                  // Sync anxiety level with MoodEntryService
+                  await MoodEntryService.markMoodEntryCompleted(
+                    anxietyLevel: anxietyLevel,
+                    anxietyReason: reasonController.text.trim().isNotEmpty ? reasonController.text.trim() : null,
+                  );
+                  
                   Navigator.pop(context);
                   _showAnxietyVisualization(context, anxietyLevel);
                 },
