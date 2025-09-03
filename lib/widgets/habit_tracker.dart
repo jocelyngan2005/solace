@@ -368,8 +368,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Sleep Hours tracker card
-  Widget _buildSleepHoursTrackerCard(BuildContext context) {
-    final habit = _sleepHabits[0];
+  Widget _buildSleepHoursTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -500,8 +499,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Bedtime Patterns tracker card
-  Widget _buildBedtimePatternsTrackerCard(BuildContext context) {
-    final habit = _sleepHabits[1];
+  Widget _buildBedtimePatternsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     String targetBed = _bedTimeGoal != null
         ? _bedTimeGoal!.format(context)
         : '23:00';
@@ -659,8 +657,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Nap Breaks tracker card
-  Widget _buildNapBreaksTrackerCard(BuildContext context) {
-    final habit = _sleepHabits[2];
+  Widget _buildNapBreaksTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -807,8 +804,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Meals tracker card
-  Widget _buildMealsTrackerCard(BuildContext context) {
-    final habit = _healthHabits[0];
+  Widget _buildMealsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     final mealOptions = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
     final Color chipColor = habit['color'];
 
@@ -941,8 +937,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Water tracker card
-  Widget _buildWaterTrackerCard(BuildContext context) {
-    final habit = _healthHabits[1];
+  Widget _buildWaterTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1060,8 +1055,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Fruits tracker card
-  Widget _buildFruitsTrackerCard(BuildContext context) {
-    final habit = _healthHabits[2];
+  Widget _buildFruitsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1179,8 +1173,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Steps tracker card
-  Widget _buildStepsTrackerCard(BuildContext context) {
-    final habit = _movementHabits[0];
+  Widget _buildStepsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     bool _linkedToPhone = false;
 
     return StatefulBuilder(
@@ -1362,8 +1355,7 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Exercise tracker card
-  Widget _buildExerciseTrackerCard(BuildContext context) {
-    final habit = _movementHabits[1];
+  Widget _buildExerciseTrackerCard(BuildContext context, Map<String, dynamic> habit) {
     final TextEditingController typeController = TextEditingController();
     final TextEditingController durationController = TextEditingController();
 
@@ -1807,6 +1799,30 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
+  Widget _buildDynamicHabitCard(BuildContext context, Map<String, dynamic> habit) {
+    final habitName = habit['name'];
+    switch (habitName) {
+      case 'Sleep Hours':
+        return _buildSleepHoursTrackerCard(context, habit);
+      case 'Bedtime Patterns':
+        return _buildBedtimePatternsTrackerCard(context, habit);
+      case 'Nap Breaks':
+        return _buildNapBreaksTrackerCard(context, habit);
+      case 'Meals':
+        return _buildMealsTrackerCard(context, habit);
+      case 'Water':
+        return _buildWaterTrackerCard(context, habit);
+      case 'Fruits':
+        return _buildFruitsTrackerCard(context, habit);
+      case 'Steps':
+        return _buildStepsTrackerCard(context, habit);
+      case 'Exercise':
+        return _buildExerciseTrackerCard(context, habit);
+      default:
+        return _buildCustomHabitCard(context, habit);
+    }
+  }
+
   String _formatDuration(Duration duration) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     return '${twoDigits(duration.inHours)}:${twoDigits(duration.inMinutes.remainder(60))}';
@@ -1814,7 +1830,6 @@ class _HabitTrackerState extends State<HabitTracker> {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Habit Tracker'),
@@ -1846,30 +1861,19 @@ class _HabitTrackerState extends State<HabitTracker> {
                       _buildSection(
                         context,
                         title: 'Sleep & Rest Habits',
-                        cards: [
-                          _buildSleepHoursTrackerCard(context),
-                          _buildBedtimePatternsTrackerCard(context),
-                          _buildNapBreaksTrackerCard(context),
-                        ],
+                        cards: _sleepHabits.map((habit) => _buildDynamicHabitCard(context, habit)).toList(),
                       ),
                       const SizedBox(height: 24),
                       _buildSection(
                         context,
                         title: 'Health Habits',
-                        cards: [
-                          _buildMealsTrackerCard(context),
-                          _buildWaterTrackerCard(context),
-                          _buildFruitsTrackerCard(context),
-                        ],
+                        cards: _healthHabits.map((habit) => _buildDynamicHabitCard(context, habit)).toList(),
                       ),
                       const SizedBox(height: 24),
                       _buildSection(
                         context,
                         title: 'Movement & Exercise Habits',
-                        cards: [
-                          _buildStepsTrackerCard(context),
-                          _buildExerciseTrackerCard(context),
-                        ],
+                        cards: _movementHabits.map((habit) => _buildDynamicHabitCard(context, habit)).toList(),
                       ),
                       if (_customHabits.isNotEmpty) ...[
                         const SizedBox(height: 24),
@@ -1981,56 +1985,4 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
-  Widget _buildToolCard(
-    BuildContext context,
-    String title,
-    String subtitle,
-    IconData icon,
-    Color color,
-    VoidCallback onTap,
-  ) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: color, size: 24),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      subtitle,
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-              ),
-              const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 }
