@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/dashboard_card.dart';
+import 'resources_screen.dart';
 
 class AcademicScreen extends StatefulWidget {
   const AcademicScreen({super.key});
@@ -42,7 +43,7 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
         children: [
           _buildCalendarTab(),
           _buildFocusModeTab(),
-          _buildResourcesTab(),
+          const ResourcesScreen(),
         ],
       ),
     );
@@ -274,174 +275,6 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildResourcesTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Professional Help
-          DashboardCard(
-            title: '🏥 Professional Support',
-            child: Column(
-              children: [
-                _buildResourceItem(
-                  'Campus Counseling Center',
-                  'Free mental health services for students',
-                  '📞 (555) 123-4567',
-                  Icons.local_hospital,
-                  Colors.red,
-                ),
-                const SizedBox(height: 12),
-                _buildResourceItem(
-                  'Student Success Center',
-                  'Academic coaching and study support',
-                  '📧 success@university.edu',
-                  Icons.school,
-                  Colors.blue,
-                ),
-                const SizedBox(height: 12),
-                _buildResourceItem(
-                  'Disability Services',
-                  'Academic accommodations and support',
-                  '📞 (555) 123-4568',
-                  Icons.accessibility,
-                  Colors.green,
-                ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Crisis Resources
-          DashboardCard(
-            title: '🆘 Crisis Support',
-            child: Column(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.red[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.red[200]!),
-                  ),
-                  child: const Column(
-                    children: [
-                      Text(
-                        'If you\'re in immediate danger, call 911',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.red,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'National Suicide Prevention Lifeline: 988',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      Text(
-                        'Crisis Text Line: Text HOME to 741741',
-                        style: TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Location-based Help (Simulated)
-          DashboardCard(
-            title: '📍 Local Resources',
-            child: Column(
-              children: [
-                _buildResourceItem(
-                  'University Health Center',
-                  '0.3 miles away • Open 24/7',
-                  'Building A, Room 100',
-                  Icons.local_hospital,
-                  Colors.red,
-                ),
-                const SizedBox(height: 12),
-                _buildResourceItem(
-                  'Student Mental Health Clinic',
-                  '0.5 miles away • Walk-in hours: 9-5',
-                  'Student Union, 3rd Floor',
-                  Icons.psychology,
-                  Colors.purple,
-                ),
-                const SizedBox(height: 12),
-                _buildResourceItem(
-                  'Campus Recreation Center',
-                  '0.2 miles away • Free fitness classes',
-                  'Wellness through movement',
-                  Icons.fitness_center,
-                  Colors.orange,
-                ),
-              ],
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Quick Actions
-          Row(
-            children: [
-              Expanded(
-                child: Card(
-                  child: InkWell(
-                    onTap: () => _showEmergencyContacts(context),
-                    borderRadius: BorderRadius.circular(16),
-                    child: const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Icon(Icons.emergency, color: Colors.red, size: 32),
-                          SizedBox(height: 8),
-                          Text(
-                            'Emergency\nContacts',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Card(
-                  child: InkWell(
-                    onTap: () => _showCampusMap(context),
-                    borderRadius: BorderRadius.circular(16),
-                    child: const Padding(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        children: [
-                          Icon(Icons.map, color: Colors.blue, size: 32),
-                          SizedBox(height: 8),
-                          Text(
-                            'Campus\nMap',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontWeight: FontWeight.w600),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildWeekOverview() {
     return Row(
       children: [
@@ -646,106 +479,9 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
     );
   }
 
-  Widget _buildResourceItem(String title, String description, String contact, IconData icon, Color color) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: color, size: 20),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(fontWeight: FontWeight.w600),
-              ),
-              Text(
-                description,
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
-              ),
-              if (contact.isNotEmpty)
-                Text(
-                  contact,
-                  style: TextStyle(
-                    color: color,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
   String _formatTime(int seconds) {
     final minutes = seconds ~/ 60;
     final remainingSeconds = seconds % 60;
     return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
-  }
-
-  void _showEmergencyContacts(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Emergency Contacts'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('🚨 Emergency: 911'),
-            Text('🆘 Suicide Prevention: 988'),
-            Text('💬 Crisis Text: 741741'),
-            SizedBox(height: 8),
-            Text('Campus Security: (555) 123-4567'),
-            Text('Campus Health: (555) 123-4568'),
-            Text('Student Counseling: (555) 123-4569'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showCampusMap(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Campus Resources Map'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('📍 Interactive campus map would show:'),
-            SizedBox(height: 8),
-            Text('• Health Center locations'),
-            Text('• Counseling services'),
-            Text('• Study spaces'),
-            Text('• Recreation facilities'),
-            Text('• Emergency call boxes'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
   }
 }

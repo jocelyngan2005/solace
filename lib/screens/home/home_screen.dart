@@ -1,11 +1,84 @@
 import 'package:flutter/material.dart';
 import '../../widgets/mood_chart.dart';
+import '../therapy/mood_entry_screen.dart';
+import '../../widgets/journal_screen.dart';
+import '../../data/mood_entry_service.dart';
+import '../therapy/breathing_exercises_screen.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
+  bool _hasMoodEntry = false;
+  bool _isLoading = true;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    
+    // Listen to mood entry status changes
+    MoodEntryService.moodEntryNotifier.addListener(_onMoodEntryStatusChanged);
+    
+    _checkMoodEntryStatus();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    MoodEntryService.moodEntryNotifier.removeListener(_onMoodEntryStatusChanged);
+    super.dispose();
+  }
+
+  void _onMoodEntryStatusChanged() {
+    // Refresh mood entry status when notified
+    _checkMoodEntryStatus();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Check mood entry status when app resumes
+      _checkMoodEntryStatus();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Check mood entry status when this screen becomes active
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && ModalRoute.of(context)?.isCurrent == true) {
+        _checkMoodEntryStatus();
+      }
+    });
+  }
+
+  Future<void> _checkMoodEntryStatus() async {
+    final hasEntry = await MoodEntryService.hasMoodEntryForToday();
+    if (mounted) {
+      setState(() {
+        _hasMoodEntry = hasEntry;
+        _isLoading = false;
+      });
+    }
+  }
+
+  // Public method to refresh mood entry status
+  void refreshMoodStatus() {
+    _checkMoodEntryStatus();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context); // Required for AutomaticKeepAliveClientMixin
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       body: SingleChildScrollView(

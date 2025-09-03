@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../widgets/breathing_exercise.dart';
+import 'package:fl_chart/fl_chart.dart';
+
+import 'grounding_toolkit/grounding_techniques.dart';
+import 'meditation_screen.dart';
+import 'positive_affirmation_screen.dart';
+import 'breathing_exercises_screen.dart';
+import '../../widgets/habit_tracker.dart';
+import '../../data/mood_entry_service.dart';
 
 class WellnessToolsScreen extends StatelessWidget {
   const WellnessToolsScreen({super.key});
@@ -35,7 +42,7 @@ class WellnessToolsScreen extends StatelessWidget {
             Colors.blue,
             () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const BreathingExercise()),
+              MaterialPageRoute(builder: (context) => const BreathingExercisePage()),
             ),
           ),
           
@@ -45,10 +52,14 @@ class WellnessToolsScreen extends StatelessWidget {
           _buildToolCard(
             context,
             'Mindfulness Library',
-            '10 guided practices for inner peace',
+            'Guided practices for inner peace',
             Icons.self_improvement,
+
             Colors.green,
-            () => _showMindfulnessPractices(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const MeditationPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -59,8 +70,12 @@ class WellnessToolsScreen extends StatelessWidget {
             'Grounding Techniques',
             'Connect with the present moment',
             Icons.nature_people,
+
             Colors.orange,
-            () => _showGroundingTechniques(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const GroundingTechniquesPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -71,8 +86,12 @@ class WellnessToolsScreen extends StatelessWidget {
             'Positive Affirmations',
             'Daily mantras for self-love',
             Icons.favorite,
+
             Colors.pink,
-            () => _showAffirmations(context),
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const PositiveAffirmationPage()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -85,6 +104,33 @@ class WellnessToolsScreen extends StatelessWidget {
             Icons.thermostat,
             Colors.red,
             () => _showStressCheckin(context),
+          ),
+
+          const SizedBox(height: 16),
+          
+          // Anxiety Check-in
+          _buildToolCard(
+            context,
+            'Anxiety Check-in',
+            'Quick assessment and coping tips',
+            Icons.sentiment_dissatisfied,
+            Colors.pink,
+            () => _showAnxietyCheckin(context),
+          ),
+          
+          const SizedBox(height: 16),
+
+          // Habit Tracker
+          _buildToolCard(
+            context,
+            'Habit Tracker',
+            'Monitor your daily habits',
+            Icons.check_circle,
+            Colors.purple,
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HabitTracker()),
+            ),
           ),
           
           const SizedBox(height: 16),
@@ -199,207 +245,292 @@ class WellnessToolsScreen extends StatelessWidget {
     );
   }
 
-  void _showMindfulnessPractices(BuildContext context) {
-    showModalBottomSheet(
+  void _showStressCheckin(BuildContext context) {
+    double stressLevel = 5;
+    TextEditingController reasonController = TextEditingController();
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.7,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFEFEFE),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.self_improvement, color: Colors.green),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Mindfulness Library',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text('Quick Stress Check'),
+            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Rate your current stress level:'),
+                    const SizedBox(height: 20),
+                    Text('Selected: ${stressLevel.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Slider(
+                      value: stressLevel,
+                      min: 1,
+                      max: 10,
+                      divisions: 9,
+                      label: stressLevel.toInt().toString(),
+                      onChanged: (value) {
+                        setState(() {
+                          stressLevel = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    const Text('😌 1-2: Calm and relaxed'),
+                    const Text('😐 3-4: Slightly tense'),
+                    const Text('😰 5-6: Moderately stressed'),
+                    const Text('😵 7-8: Very stressed'),
+                    const Text('🚨 9-10: Overwhelmed'),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: reasonController,
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: 'Why do you feel this way?',
+                        labelStyle: const TextStyle(
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-            Expanded(
-              child: ListView(
-                padding: const EdgeInsets.all(16),
-                children: [
-                  _buildPracticeItem('Body Scan Meditation', '15 mins', 'Release tension throughout your body'),
-                  _buildPracticeItem('Loving Kindness', '10 mins', 'Cultivate compassion for yourself and others'),
-                  _buildPracticeItem('Mindful Walking', '5 mins', 'Bring awareness to each step'),
-                  _buildPracticeItem('Present Moment Awareness', '8 mins', 'Ground yourself in the here and now'),
-                  _buildPracticeItem('Gratitude Reflection', '7 mins', 'Focus on what you\'re thankful for'),
-                ],
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  // Sync stress level with MoodEntryService
+                  await MoodEntryService.markMoodEntryCompleted(
+                    stressLevel: stressLevel,
+                    stressReason: reasonController.text.trim().isNotEmpty ? reasonController.text.trim() : null,
+                  );
+                  
+                  Navigator.pop(context);
+                  _showStressVisualization(context, stressLevel);
+                },
+                child: const Text('Done'),
               ),
-            ),
-          ],
-        ),
-      ),
+            ],
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildPracticeItem(String title, String duration, String description) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: const CircleAvatar(
-          backgroundColor: Colors.green,
-          child: Icon(Icons.play_arrow, color: Color(0xFFFEFEFE)),
-        ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
-        subtitle: Text('$duration • $description'),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          // Simulate starting practice
-        },
-      ),
-    );
-  }
+  void _showStressVisualization(BuildContext context, double currentStressLevel) {
+    // Sample stress data for the past 7 days (including today)
+    List<FlSpot> stressData = [
+      const FlSpot(0, 4), // 6 days ago
+      const FlSpot(1, 3), // 5 days ago
+      const FlSpot(2, 6), // 4 days ago
+      const FlSpot(3, 5), // 3 days ago
+      const FlSpot(4, 7), // 2 days ago
+      const FlSpot(5, 4), // Yesterday
+      FlSpot(6, currentStressLevel), // Today
+    ];
 
-  void _showGroundingTechniques(BuildContext context) {
+    // Calculate week average for insights
+    double weekAverage = stressData.map((spot) => spot.y).reduce((a, b) => a + b) / stressData.length;
+    List<double> peaks = stressData.where((spot) => spot.y >= 7).map((spot) => spot.y).toList();
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('5-4-3-2-1 Grounding Technique'),
-        content: const SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('When you feel overwhelmed, try this:'),
-              SizedBox(height: 16),
-              Text('👁️ 5 things you can SEE\nLook around and name them'),
-              SizedBox(height: 12),
-              Text('✋ 4 things you can TOUCH\nFeel their texture'),
-              SizedBox(height: 12),
-              Text('👂 3 things you can HEAR\nListen carefully'),
-              SizedBox(height: 12),
-              Text('👃 2 things you can SMELL\nTake a deep breath'),
-              SizedBox(height: 12),
-              Text('👅 1 thing you can TASTE\nNotice any flavors'),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Got it'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showAffirmations(BuildContext context) {
-    final affirmations = [
-      "I am capable of handling whatever comes my way",
-      "My mental health matters and I prioritize it",
-      "I am worthy of love and kindness, especially from myself",
-      "Each challenge is an opportunity to grow stronger",
-      "I choose to focus on what I can control",
-      "I am doing my best with what I have right now",
-    ];
-
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      builder: (context) => Container(
-        height: MediaQuery.of(context).size.height * 0.6,
-        decoration: const BoxDecoration(
-          color: Color(0xFFFEFEFE),
-          borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-        ),
-        child: Column(
+        title: Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(20),
+              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.pink.withOpacity(0.1),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+                color: Colors.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
               ),
-              child: Row(
-                children: [
-                  const Icon(Icons.favorite, color: Colors.pink),
-                  const SizedBox(width: 12),
-                  const Text(
-                    'Daily Affirmations',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
-              ),
+              child: const Icon(Icons.analytics, color: Colors.red, size: 20),
             ),
-            Expanded(
-              child: PageView.builder(
-                itemCount: affirmations.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          '"${affirmations[index]}"',
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontStyle: FontStyle.italic,
-                            fontWeight: FontWeight.w500,
-                          ),
-                          textAlign: TextAlign.center,
+            const SizedBox(width: 12),
+            const Text('Your Stress Pattern'),
+          ],
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.95,
+          height: 350,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Past 7 days stress levels',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: LineChart(
+                  LineChartData(
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      horizontalInterval: 2,
+                      getDrawingHorizontalLine: (value) {
+                        return FlLine(
+                          color: Colors.grey.withOpacity(0.2),
+                          strokeWidth: 1,
+                        );
+                      },
+                    ),
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 2,
+                          reservedSize: 25,
+                          getTitlesWidget: (value, meta) {
+                            return Text(
+                              value.toInt().toString(),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
                         ),
-                        const SizedBox(height: 20),
-                        Text(
-                          '${index + 1} of ${affirmations.length}',
-                          style: TextStyle(color: Colors.grey[600]),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 30,
+                          getTitlesWidget: (value, meta) {
+                            // Only show "Today" for the last data point (index 6)
+                            if (value.toInt() == 6) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  'Today',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink(); // Hide other labels
+                          },
+                        ),
+                      ),
+                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                    ),
+                    minX: 0,
+                    maxX: 6,
+                    minY: 0,
+                    maxY: 10,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: stressData,
+                        isCurved: true,
+                        color: Colors.red,
+                        barWidth: 3,
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.red.withOpacity(0.3),
+                              Colors.red.withOpacity(0.05),
+                            ],
+                          ),
+                        ),
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, barData, index) {
+                            if (index == 6) { // Today's data point
+                              return FlDotCirclePainter(
+                                radius: 6,
+                                color: Colors.red,
+                                strokeWidth: 3,
+                                strokeColor: Colors.white,
+                              );
+                            }
+                            return FlDotCirclePainter(
+                              radius: 3,
+                              color: Colors.red,
+                              strokeWidth: 2,
+                              strokeColor: Colors.white,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Insights container
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: _getInsightColor(currentStressLevel).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: _getInsightColor(currentStressLevel).withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          _getInsightIcon(currentStressLevel),
+                          color: _getInsightColor(currentStressLevel),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _getInsightText(currentStressLevel, weekAverage, peaks.length),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
-                  );
-                },
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Week average: ${weekAverage.toStringAsFixed(1)}',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'High stress days: ${peaks.length}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showStressCheckin(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Quick Stress Check'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Rate your current stress level:'),
-            SizedBox(height: 20),
-            Text('😌 1-2: Calm and relaxed'),
-            Text('😐 3-4: Slightly tense'),
-            Text('😰 5-6: Moderately stressed'),
-            Text('😵 7-8: Very stressed'),
-            Text('🚨 9-10: Overwhelmed'),
-          ],
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -414,24 +545,406 @@ class WellnessToolsScreen extends StatelessWidget {
     );
   }
 
+  Color _getInsightColor(double stressLevel) {
+    if (stressLevel >= 7) return Colors.red;
+    if (stressLevel >= 5) return Colors.orange;
+    return Colors.green;
+  }
+
+  IconData _getInsightIcon(double stressLevel) {
+    if (stressLevel >= 7) return Icons.warning;
+    if (stressLevel >= 5) return Icons.info;
+    return Icons.check_circle;
+  }
+
+  String _getInsightText(double stressLevel, double weekAverage, int peakDays) {
+    if (stressLevel >= 7) {
+      return 'High stress detected. Consider immediate stress relief techniques.';
+    } else if (stressLevel >= 5) {
+      return 'Moderate stress pattern. Your stress is manageable but worth monitoring.';
+    } else {
+      return 'Good stress management! You\'re handling stress well this week.';
+    }
+  }
+
   void _showStressTips(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Stress Relief Tips'),
-        content: const SingleChildScrollView(
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: const SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Quick relief (right now):'),
+                Text('• Take 3 deep breaths\n• Drink some water\n• Step outside briefly\n'),
+                Text('Short-term (next hour):'),
+                Text('• Take a 5-minute walk\n• Listen to calming music\n• Do gentle stretches\n'),
+                Text('Long-term (today/this week):'),
+                Text('• Plan breaks between tasks\n• Talk to a friend\n• Practice gratitude'),
+              ],
+            ),
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Got it'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAnxietyCheckin(BuildContext context) {
+    double anxietyLevel = 5;
+    TextEditingController reasonController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            title: const Text('Quick Anxiety Check'),
+            contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+            content: SizedBox(
+              width: MediaQuery.of(context).size.width * 0.9,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text('Rate your current anxiety level:'),
+                    const SizedBox(height: 20),
+                    Text('Selected: ${anxietyLevel.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Slider(
+                      value: anxietyLevel,
+                      min: 1,
+                      max: 10,
+                      divisions: 9,
+                      label: anxietyLevel.toInt().toString(),
+                      onChanged: (value) {
+                        setState(() {
+                          anxietyLevel = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                    Text('😌 1-2: Calm and relaxed'),
+                    Text('😐 3-4: Slightly tense'),
+                    Text('😰 5-6: Moderately anxious'),
+                    Text('😵 7-8: Very anxious'),
+                    Text('🚨 9-10: Overwhelmed'),
+                    const SizedBox(height: 16),
+                    TextField(
+                      controller: reasonController,
+                      maxLines: 2,
+                      decoration: InputDecoration(
+                        labelText: 'Why do you feel this way?',
+                        labelStyle: const TextStyle(
+                          fontSize: 14,
+                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () async {
+                  // Sync anxiety level with MoodEntryService
+                  await MoodEntryService.markMoodEntryCompleted(
+                    anxietyLevel: anxietyLevel,
+                    anxietyReason: reasonController.text.trim().isNotEmpty ? reasonController.text.trim() : null,
+                  );
+                  
+                  Navigator.pop(context);
+                  _showAnxietyVisualization(context, anxietyLevel);
+                },
+                child: const Text('Done'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showAnxietyVisualization(BuildContext context, double currentAnxietyLevel) {
+    // Sample anxiety data for the past 7 days (including today)
+    List<FlSpot> anxietyData = [
+      const FlSpot(0, 3), // 6 days ago
+      const FlSpot(1, 4), // 5 days ago
+      const FlSpot(2, 2), // 4 days ago
+      const FlSpot(3, 6), // 3 days ago
+      const FlSpot(4, 5), // 2 days ago
+      const FlSpot(5, 3), // Yesterday
+      FlSpot(6, currentAnxietyLevel), // Today
+    ];
+
+    // Calculate week average for insights
+    double weekAverage = anxietyData.map((spot) => spot.y).reduce((a, b) => a + b) / anxietyData.length;
+    List<double> peaks = anxietyData.where((spot) => spot.y >= 7).map((spot) => spot.y).toList();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.pink.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.analytics, color: Colors.pink, size: 20),
+            ),
+            const SizedBox(width: 12),
+            const Text('Your Anxiety Pattern'),
+          ],
+        ),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.95,
+          height: 350,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Quick relief (right now):'),
-              Text('• Take 3 deep breaths\n• Drink some water\n• Step outside briefly\n'),
-              Text('Short-term (next hour):'),
-              Text('• Take a 5-minute walk\n• Listen to calming music\n• Do gentle stretches\n'),
-              Text('Long-term (today/this week):'),
-              Text('• Plan breaks between tasks\n• Talk to a friend\n• Practice gratitude'),
+              Text(
+                'Past 7 days anxiety levels',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: LineChart(
+                  LineChartData(
+                    gridData: FlGridData(
+                      show: true,
+                      drawVerticalLine: false,
+                      horizontalInterval: 2,
+                      getDrawingHorizontalLine: (value) {
+                        return FlLine(
+                          color: Colors.grey.withOpacity(0.2),
+                          strokeWidth: 1,
+                        );
+                      },
+                    ),
+                    titlesData: FlTitlesData(
+                      leftTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          interval: 2,
+                          reservedSize: 25,
+                          getTitlesWidget: (value, meta) {
+                            return Text(
+                              value.toInt().toString(),
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      bottomTitles: AxisTitles(
+                        sideTitles: SideTitles(
+                          showTitles: true,
+                          reservedSize: 30,
+                          getTitlesWidget: (value, meta) {
+                            // Only show "Today" for the last data point (index 6)
+                            if (value.toInt() == 6) {
+                              return Padding(
+                                padding: const EdgeInsets.only(top: 8.0),
+                                child: Text(
+                                  'Today',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.pink,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              );
+                            }
+                            return const SizedBox.shrink(); // Hide other labels
+                          },
+                        ),
+                      ),
+                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    ),
+                    borderData: FlBorderData(
+                      show: true,
+                      border: Border.all(color: Colors.grey.withOpacity(0.2)),
+                    ),
+                    minX: 0,
+                    maxX: 6,
+                    minY: 0,
+                    maxY: 10,
+                    lineBarsData: [
+                      LineChartBarData(
+                        spots: anxietyData,
+                        isCurved: true,
+                        color: Colors.pink,
+                        barWidth: 3,
+                        belowBarData: BarAreaData(
+                          show: true,
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.pink.withOpacity(0.3),
+                              Colors.pink.withOpacity(0.05),
+                            ],
+                          ),
+                        ),
+                        dotData: FlDotData(
+                          show: true,
+                          getDotPainter: (spot, percent, barData, index) {
+                            if (index == 6) { // Today's data point
+                              return FlDotCirclePainter(
+                                radius: 6,
+                                color: Colors.pink,
+                                strokeWidth: 3,
+                                strokeColor: Colors.white,
+                              );
+                            }
+                            return FlDotCirclePainter(
+                              radius: 3,
+                              color: Colors.pink,
+                              strokeWidth: 2,
+                              strokeColor: Colors.white,
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              
+              // Insights container
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: _getAnxietyInsightColor(currentAnxietyLevel).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: _getAnxietyInsightColor(currentAnxietyLevel).withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(
+                          _getAnxietyInsightIcon(currentAnxietyLevel),
+                          color: _getAnxietyInsightColor(currentAnxietyLevel),
+                          size: 18,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            _getAnxietyInsightText(currentAnxietyLevel, weekAverage, peaks.length),
+                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            'Week average: ${weekAverage.toStringAsFixed(1)}',
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                        Text(
+                          'High anxiety days: ${peaks.length}',
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
             ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showAnxietyTips(context);
+            },
+            child: const Text('Show Coping Tips'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getAnxietyInsightColor(double anxietyLevel) {
+    if (anxietyLevel >= 7) return Colors.red;
+    if (anxietyLevel >= 5) return Colors.orange;
+    return Colors.green;
+  }
+
+  IconData _getAnxietyInsightIcon(double anxietyLevel) {
+    if (anxietyLevel >= 7) return Icons.warning;
+    if (anxietyLevel >= 5) return Icons.info;
+    return Icons.check_circle;
+  }
+
+  String _getAnxietyInsightText(double anxietyLevel, double weekAverage, int peakDays) {
+    if (anxietyLevel >= 7) {
+      return 'High anxiety detected. Consider immediate calming techniques.';
+    } else if (anxietyLevel >= 5) {
+      return 'Moderate anxiety pattern. Your anxiety is manageable but worth monitoring.';
+    } else {
+      return 'Good anxiety management! You\'re handling anxiety well this week.';
+    }
+  }
+
+  void _showAnxietyTips(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        title: const Text('Anxiety Relief Tips'),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: const SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Quick relief (right now):'),
+                Text('• Use 4-7-8 breathing technique\n• Name 5 things you can see\n• Hold an ice cube or splash cold water\n'),
+                Text('Short-term (next hour):'),
+                Text('• Practice progressive muscle relaxation\n• Listen to calming music\n• Take a mindful walk\n'),
+                Text('Long-term (today/this week):'),
+                Text('• Maintain regular sleep schedule\n• Limit caffeine intake\n• Practice grounding exercises'),
+              ],
+            ),
           ),
         ),
         actions: [
@@ -444,3 +957,5 @@ class WellnessToolsScreen extends StatelessWidget {
     );
   }
 }
+
+

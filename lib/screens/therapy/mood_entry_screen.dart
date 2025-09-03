@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import '../../data/mood_entry_service.dart';
 
 class MoodEntryScreen extends StatefulWidget {
   final VoidCallback onCompleted;
+  final String selectedMood;
+  final bool fromHomeScreen;
 
-  const MoodEntryScreen({super.key, required this.onCompleted});
+  const MoodEntryScreen({
+    super.key,
+    required this.onCompleted,
+    required this.selectedMood,
+    this.fromHomeScreen = false,
+  });
 
   @override
   State<MoodEntryScreen> createState() => _MoodEntryScreenState();
@@ -11,9 +19,10 @@ class MoodEntryScreen extends StatefulWidget {
 
 class _MoodEntryScreenState extends State<MoodEntryScreen> {
   double _moodRating = 3.0;
-  String _selectedMood = 'Neutral';
+  late String _selectedMood;
   final TextEditingController _journalController = TextEditingController();
-  final List<String> _selectedTags = [];
+  final List<String> _selectedMoodDescriptions = [];
+  final List<String> _selectedMoodReasons = [];
   bool _isVoiceMode = false;
 
   final Map<String, String> _moodEmojis = {
@@ -25,9 +34,93 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
   };
 
   final List<String> _moodTags = [
-    'Stressed', 'Anxious', 'Happy', 'Excited', 'Tired', 'Motivated',
-    'Overwhelmed', 'Peaceful', 'Frustrated', 'Content', 'Lonely', 'Social'
+    'Joyful',
+    'Hopeful',
+    'Amazed',
+    'Relieved',
+    'Confident',
+    'Content',
+    'Satisfied',
+    'Happy',
+    'Passionate',
+    'Enthusiastic',
+    'Excited',
+    'Brave',
+    'Proud',
+    'Calm',
+    'Curious',
+    'Grateful',
+    'Peaceful',
+    'Relaxed',
+    'Overwhelmed',
+    'Motivated',
+    'Inspired',
+    'Indifferent',
+    'Sad',
+    'Angry',
+    'Annoyed',
+    'Anxious',
+    'Scared',
+    'Disgusted',
+    'Jealous',
+    'Guilty',
+    'Embarrassed',
+    'Disappointed',
+    'Stressed',
+    'Frustrated',
+    'Hopeless',
+    'Lonely',
+    'Tired',
+    'Depressed',
   ];
+
+  final List<String> _reasonTags = [
+    'Work',
+    'Home',
+    'School',
+    'Outdoors',
+    'Travel',
+    'Weather',
+    'Identity',
+    'Partner',
+    'Friends',
+    'Pet',
+    'Family',
+    'Colleagues',
+    'Dating',
+    'Health',
+    'Sleep',
+    'Exercise',
+    'Food',
+    'Hobby',
+    'Money'
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedMood = widget.selectedMood;
+    // Sync slider value with selectedMood
+    switch (_selectedMood) {
+      case 'Very Low':
+        _moodRating = 1.0;
+        break;
+      case 'Low':
+        _moodRating = 2.0;
+        break;
+      case 'Neutral':
+        _moodRating = 3.0;
+        break;
+      case 'Good':
+        _moodRating = 4.0;
+        break;
+      case 'Excellent':
+        _moodRating = 5.0;
+        break;
+      default:
+        _moodRating = 3.0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +147,7 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     const SizedBox(height: 20),
-                    
+
                     // Mood emoji display
                     Center(
                       child: Column(
@@ -71,17 +164,21 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(height: 20),
-                    
+
                     // Mood slider
                     SliderTheme(
                       data: SliderTheme.of(context).copyWith(
                         activeTrackColor: Theme.of(context).colorScheme.primary,
                         thumbColor: Theme.of(context).colorScheme.primary,
-                        overlayColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                        overlayColor: Theme.of(
+                          context,
+                        ).colorScheme.primary.withOpacity(0.2),
                         trackHeight: 4,
-                        thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 12),
+                        thumbShape: const RoundSliderThumbShape(
+                          enabledThumbRadius: 12,
+                        ),
                       ),
                       child: Slider(
                         value: _moodRating,
@@ -96,22 +193,28 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                         },
                       ),
                     ),
-                    
+
                     // Mood scale labels
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Very Low', style: Theme.of(context).textTheme.bodySmall),
-                        Text('Excellent', style: Theme.of(context).textTheme.bodySmall),
+                        Text(
+                          'Very Low',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        Text(
+                          'Excellent',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ],
                     ),
                   ],
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Mood Tags Section
             Card(
               child: Padding(
@@ -128,20 +231,22 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                       spacing: 8,
                       runSpacing: 8,
                       children: _moodTags.map((tag) {
-                        final isSelected = _selectedTags.contains(tag);
+                        final isSelected = _selectedMoodDescriptions.contains(tag);
                         return FilterChip(
                           label: Text(tag),
                           selected: isSelected,
                           onSelected: (selected) {
                             setState(() {
                               if (selected) {
-                                _selectedTags.add(tag);
+                                _selectedMoodDescriptions.add(tag);
                               } else {
-                                _selectedTags.remove(tag);
+                                _selectedMoodDescriptions.remove(tag);
                               }
                             });
                           },
-                          selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                          selectedColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.2),
                           checkmarkColor: Theme.of(context).colorScheme.primary,
                         );
                       }).toList(),
@@ -150,10 +255,53 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
-            // Journal Section
+
+            // Reason Tags Section
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'What made you feel this way?',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: _reasonTags.map((tag) {
+                        final isSelected = _selectedMoodReasons.contains(tag);
+                        return FilterChip(
+                          label: Text(tag),
+                          selected: isSelected,
+                          onSelected: (selected) {
+                            setState(() {
+                              if (selected) {
+                                _selectedMoodReasons.add(tag);
+                              } else {
+                                _selectedMoodReasons.remove(tag);
+                              }
+                            });
+                          },
+                          selectedColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withOpacity(0.2),
+                          checkmarkColor: Theme.of(context).colorScheme.primary,
+                        );
+                      }).toList(),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Note Section
             Card(
               child: Padding(
                 padding: const EdgeInsets.all(20),
@@ -163,7 +311,7 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                     Row(
                       children: [
                         Text(
-                          'Journal Entry',
+                          'Anything else to add?',
                           style: Theme.of(context).textTheme.titleMedium,
                         ),
                         const Spacer(),
@@ -181,7 +329,7 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     if (_isVoiceMode)
                       _buildVoiceRecording()
                     else
@@ -189,7 +337,8 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                         controller: _journalController,
                         maxLines: 6,
                         decoration: InputDecoration(
-                          hintText: 'What\'s on your mind today? How are you feeling about your day, studies, or anything else?',
+                          hintText:
+                              'What\'s on your mind today? Add a note to help you remember this feeling or moment.',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide(color: Colors.grey[300]!),
@@ -207,9 +356,9 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Complete Button
             SizedBox(
               width: double.infinity,
@@ -236,7 +385,9 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.3)),
+        border: Border.all(
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+        ),
       ),
       child: Center(
         child: Column(
@@ -255,9 +406,9 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
             const SizedBox(height: 4),
             Text(
               'Tap to start recording your thoughts',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: Colors.grey[600]),
             ),
           ],
         ),
@@ -279,20 +430,28 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
     }
   }
 
-  void _completeEntry() {
+  void _completeEntry() async {
+    // Save mood entry completion status with all details
+    await MoodEntryService.markMoodEntryCompleted(
+      moodLabel: _selectedMood,
+      journalText: _journalController.text.trim().isNotEmpty ? _journalController.text.trim() : null,
+      moodDescriptions: _selectedMoodDescriptions.isNotEmpty ? _selectedMoodDescriptions : null,
+      moodWhy: _selectedMoodReasons.isNotEmpty ? _selectedMoodReasons.join(', ') : null,
+    );
+    
     // Simulate saving the entry
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Text('Entry Saved! 🎉'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Your daily check-in has been completed. Here\'s your AI insight:'),
+            const Text(
+              'Your daily check-in has been completed. Here\'s your AI insight:',
+            ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -311,9 +470,15 @@ class _MoodEntryScreenState extends State<MoodEntryScreen> {
           TextButton(
             onPressed: () {
               Navigator.pop(context);
-              widget.onCompleted();
+              if (widget.fromHomeScreen) {
+                Navigator.pop(context);
+              } else {
+                widget.onCompleted();
+              }
             },
-            child: const Text('Continue to Wellness Tools'),
+            child: Text(
+              widget.fromHomeScreen ? 'Done' : 'Continue to Wellness Tools',
+            ),
           ),
         ],
       ),

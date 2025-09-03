@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'mood_entry_screen.dart';
 import 'wellness_tools_screen.dart';
+import '../../data/mood_entry_service.dart';
 
 class TherapyScreen extends StatefulWidget {
   const TherapyScreen({super.key});
@@ -9,9 +10,37 @@ class TherapyScreen extends StatefulWidget {
   State<TherapyScreen> createState() => _TherapyScreenState();
 }
 
-class _TherapyScreenState extends State<TherapyScreen> {
-  bool _hasCompletedEntry = false; // Track if user completed mood entry today
-
+class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
+  bool _hasCompletedEntry = false;
+  bool _isLoading = true;
+  
+  @override
+  void initState() {
+    super.initState();
+    _checkMoodEntryStatus();
+  }
+  
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Check mood entry status when returning to this screen
+    if (ModalRoute.of(context)?.isCurrent == true) {
+      _checkMoodEntryStatus();
+    }
+  }
+  
+  Future<void> _checkMoodEntryStatus() async {
+    final hasEntry = await MoodEntryService.hasMoodEntryForToday();
+    print('TherapyScreen: Mood entry status - $hasEntry');
+    print('Debug info: ${MoodEntryService.getDebugInfo()}');
+    if (mounted) {
+      setState(() {
+        _hasCompletedEntry = hasEntry;
+        _isLoading = false;
+      });
+    }
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,9 +49,11 @@ class _TherapyScreenState extends State<TherapyScreen> {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-      body: _hasCompletedEntry 
-          ? const WellnessToolsScreen()
-          : _buildMoodEntryRequired(),
+      body: _isLoading 
+          ? const Center(child: CircularProgressIndicator())
+          : _hasCompletedEntry 
+              ? const WellnessToolsScreen()
+              : _buildMoodEntryRequired(),
     );
   }
 
@@ -100,6 +131,7 @@ class _TherapyScreenState extends State<TherapyScreen> {
             });
             Navigator.pop(context);
           },
+          selectedMood: 'Neutral',
         ),
       ),
     );

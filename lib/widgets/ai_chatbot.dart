@@ -16,7 +16,13 @@ class AIChatbot extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => const ChatbotModal(),
+      useSafeArea: true,
+      builder: (context) => Padding(
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: const ChatbotModal(),
+      ),
     );
   }
 }
@@ -30,6 +36,8 @@ class ChatbotModal extends StatefulWidget {
 
 class _ChatbotModalState extends State<ChatbotModal> {
   final TextEditingController _controller = TextEditingController();
+  final ScrollController _scrollController = ScrollController();
+  final FocusNode _focusNode = FocusNode();
   final List<ChatMessage> _messages = [];
 
   @override
@@ -40,6 +48,33 @@ class _ChatbotModalState extends State<ChatbotModal> {
       text: "Hi there! 👋 I'm Solace, your AI wellness companion. How are you feeling today?",
       isUser: false,
     ));
+    
+    // Listen to focus changes to scroll to bottom when keyboard appears
+    _focusNode.addListener(() {
+      if (_focusNode.hasFocus) {
+        Future.delayed(const Duration(milliseconds: 300), () {
+          _scrollToBottom();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _scrollController.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.animateTo(
+        _scrollController.position.maxScrollExtent,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   @override
@@ -85,6 +120,7 @@ class _ChatbotModalState extends State<ChatbotModal> {
           // Chat messages
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.all(16),
               itemCount: _messages.length,
               itemBuilder: (context, index) {
@@ -96,41 +132,52 @@ class _ChatbotModalState extends State<ChatbotModal> {
           
           // Input field
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: EdgeInsets.only(
+              left: 16,
+              right: 16,
+              top: 8,
+              bottom: 8,
+            ),
             decoration: BoxDecoration(
-              color: Colors.grey[50],
+              color: Colors.grey[100],
               border: Border(top: BorderSide(color: Colors.grey[200]!)),
             ),
-            child: Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    controller: _controller,
-                    decoration: InputDecoration(
-                      hintText: 'Type your message...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                        borderSide: BorderSide.none,
+            child: SafeArea(
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _controller,
+                      focusNode: _focusNode,
+                      maxLines: null,
+                      minLines: 1,
+                      textInputAction: TextInputAction.send,
+                      decoration: InputDecoration(
+                        hintText: 'Type your message...',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide.none,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                       ),
-                      filled: true,
-                      fillColor: Color(0xFFFEFEFE),
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 8,
-                      ),
+                      onSubmitted: _sendMessage,
                     ),
-                    onSubmitted: _sendMessage,
                   ),
-                ),
-                const SizedBox(width: 8),
-                CircleAvatar(
-                  backgroundColor: Theme.of(context).colorScheme.primary,
-                  child: IconButton(
-                    onPressed: () => _sendMessage(_controller.text),
-                    icon: const Icon(Icons.send, color: Color(0xFFFEFEFE)),
+                  const SizedBox(width: 8),
+                  CircleAvatar(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    child: IconButton(
+                      onPressed: () => _sendMessage(_controller.text),
+                      icon: const Icon(Icons.send, color: Colors.white),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],
@@ -146,6 +193,11 @@ class _ChatbotModalState extends State<ChatbotModal> {
       _controller.clear();
     });
 
+    // Scroll to bottom after adding user message
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _scrollToBottom();
+    });
+
     // Simulate AI response
     Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
@@ -153,6 +205,11 @@ class _ChatbotModalState extends State<ChatbotModal> {
           text: _getAIResponse(text),
           isUser: false,
         ));
+      });
+      
+      // Scroll to bottom after AI response
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _scrollToBottom();
       });
     });
   }
