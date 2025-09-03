@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import '../data/mood_entry_service.dart';
 
 class JournalEntry {
   final String date;
@@ -33,18 +34,81 @@ class JournalScreen extends StatefulWidget {
 }
 
 class _JournalScreenState extends State<JournalScreen> {
-  // Example data
-  late JournalEntry todaysEntry = JournalEntry(
-    date: "Today",
-    text: "I felt productive and happy!",
-    mood: "Good 😊",
-    stressLevel: "Low",
-    anxietyLevel: "Low",
-    stressReason: "Upcoming project deadline",
-    anxietyReason: "Presentation tomorrow",
-    moodDescriptions: ["Happy", "Motivated"],
-    moodWhy: "I completed my tasks and got enough rest.",
-  );
+  // Default empty entry that will be populated from MoodEntryService
+  late JournalEntry todaysEntry;
+  bool _hasMoodEntry = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeTodaysEntry();
+    
+    // Listen for mood entry changes
+    MoodEntryService.moodEntryNotifier.addListener(_onMoodEntryChanged);
+  }
+
+  @override
+  void dispose() {
+    MoodEntryService.moodEntryNotifier.removeListener(_onMoodEntryChanged);
+    super.dispose();
+  }
+
+  void _onMoodEntryChanged() {
+    _initializeTodaysEntry();
+  }
+
+  Future<void> _initializeTodaysEntry() async {
+    final hasEntry = await MoodEntryService.hasMoodEntryForToday();
+    
+    if (hasEntry) {
+      final moodLabel = MoodEntryService.getTodayMoodLabel() ?? 'Neutral';
+      final journalText = MoodEntryService.getTodayJournalText();
+      final stressLevel = MoodEntryService.getTodayStressLevel();
+      final anxietyLevel = MoodEntryService.getTodayAnxietyLevel();
+      final stressReason = MoodEntryService.getTodayStressReason();
+      final anxietyReason = MoodEntryService.getTodayAnxietyReason();
+      final moodDescriptions = MoodEntryService.getTodayMoodDescriptions();
+      final moodWhy = MoodEntryService.getTodayMoodWhy();
+      
+      // Use only the journal text from "Anything else to add?" for the entry field
+      String entryText;
+      if (journalText != null && journalText.isNotEmpty) {
+        entryText = journalText;
+      } else {
+        entryText = "Tap to add more details about your day!";
+      }
+      
+      setState(() {
+        _hasMoodEntry = true;
+        todaysEntry = JournalEntry(
+          date: "Today",
+          text: entryText,
+          mood: moodLabel,
+          stressLevel: stressLevel != null ? _sliderToLevel(stressLevel) : "No entry",
+          anxietyLevel: anxietyLevel != null ? _sliderToLevel(anxietyLevel) : "No entry",
+          stressReason: stressReason ?? "",
+          anxietyReason: anxietyReason ?? "",
+          moodDescriptions: moodDescriptions ?? [],
+          moodWhy: moodWhy ?? "",
+        );
+      });
+    } else {
+      setState(() {
+        _hasMoodEntry = false;
+        todaysEntry = JournalEntry(
+          date: "Today",
+          text: "Tap to add your first journal entry for today!",
+          mood: "Neutral",
+          stressLevel: "No entry",
+          anxietyLevel: "No entry",
+          stressReason: "",
+          anxietyReason: "",
+          moodDescriptions: [],
+          moodWhy: "",
+        );
+      });
+    }
+  }
 
   List<JournalEntry> pastEntries = [
     JournalEntry(
@@ -83,13 +147,16 @@ class _JournalScreenState extends State<JournalScreen> {
   ];
 
   Widget _buildJournalDetails(JournalEntry entry) {
+    // Get emoji for mood display
+    String moodWithEmoji = "${entry.mood} ${_moodEmoji(entry.mood)}";
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(entry.text, style: Theme.of(context).textTheme.bodyLarge),
         const SizedBox(height: 8),
         Text(
-          "Mood: ${entry.mood}",
+          "Mood: $moodWithEmoji",
           style: Theme.of(context).textTheme.bodyMedium,
         ),
         if (entry.moodDescriptions.isNotEmpty)
@@ -104,19 +171,60 @@ class _JournalScreenState extends State<JournalScreen> {
           ),
         Text(
           "Stress Level: ${entry.stressLevel}",
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: entry.stressLevel == "No entry" 
+                ? Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
+                : null,
+            fontStyle: entry.stressLevel == "No entry" ? FontStyle.italic : null,
+          ),
         ),
-        Text(
-          "Reason for Stress: ${entry.stressReason}",
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        if (entry.stressReason.isNotEmpty)
+          Text(
+            "Reason for Stress: ${entry.stressReason}",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
         Text(
           "Anxiety Level: ${entry.anxietyLevel}",
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: entry.anxietyLevel == "No entry" 
+                ? Theme.of(context).colorScheme.onSurface.withOpacity(0.6)
+                : null,
+            fontStyle: entry.anxietyLevel == "No entry" ? FontStyle.italic : null,
+          ),
         ),
+        if (entry.anxietyReason.isNotEmpty)
+          Text(
+            "Reason for Anxiety: ${entry.anxietyReason}",
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+      ],
+    );
+  }
+
+  Widget _buildEmptyJournalPrompt() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(
+          Icons.edit_note,
+          size: 48,
+          color: Theme.of(context).colorScheme.primary.withOpacity(0.6),
+        ),
+        const SizedBox(height: 16),
         Text(
-          "Reason for Anxiety: ${entry.anxietyReason}",
-          style: Theme.of(context).textTheme.bodySmall,
+          "Start your daily journal",
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          "Log your mood first, then tap here to add more details about your day",
+          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+          ),
+          textAlign: TextAlign.center,
         ),
       ],
     );
@@ -126,8 +234,8 @@ class _JournalScreenState extends State<JournalScreen> {
     String text = entry.text;
     double moodRating = _moodToRating(entry.mood);
     String selectedMood = entry.mood;
-    double stressSlider = _levelToSlider(entry.stressLevel);
-    double anxietySlider = _levelToSlider(entry.anxietyLevel);
+    double stressSlider = entry.stressLevel == "No entry" ? 5.0 : _levelToSlider(entry.stressLevel);
+    double anxietySlider = entry.anxietyLevel == "No entry" ? 5.0 : _levelToSlider(entry.anxietyLevel);
     String stressReason = entry.stressReason;
     String anxietyReason = entry.anxietyReason;
     List<String> moodDescriptions = List<String>.from(entry.moodDescriptions);
@@ -438,12 +546,49 @@ class _JournalScreenState extends State<JournalScreen> {
     if (result != null) {
       setState(() {
         if (index == null) {
+          // This is today's entry - sync with MoodEntryService
           todaysEntry = result;
+          _syncWithMoodEntryService(result);
         } else {
           pastEntries[index] = result;
         }
       });
     }
+  }
+
+  // Sync today's journal entry with the mood entry service
+  Future<void> _syncWithMoodEntryService(JournalEntry entry) async {
+    // Extract mood label without emoji
+    String moodLabel = entry.mood.replaceAll(RegExp(r'[^\w\s]'), '').trim();
+    
+    // If it's empty or just whitespace, use the raw mood value
+    if (moodLabel.isEmpty) {
+      moodLabel = entry.mood;
+    }
+    
+    // Convert stress and anxiety levels to numbers (if not "No entry")
+    double? stressLevel;
+    double? anxietyLevel;
+    
+    if (entry.stressLevel != "No entry") {
+      stressLevel = _levelToSlider(entry.stressLevel);
+    }
+    
+    if (entry.anxietyLevel != "No entry") {
+      anxietyLevel = _levelToSlider(entry.anxietyLevel);
+    }
+    
+    // Mark mood entry as completed with all the journal data
+    await MoodEntryService.markMoodEntryCompleted(
+      moodLabel: moodLabel,
+      journalText: entry.text.trim().isNotEmpty ? entry.text.trim() : null,
+      stressLevel: stressLevel,
+      anxietyLevel: anxietyLevel,
+      stressReason: entry.stressReason.isEmpty ? null : entry.stressReason,
+      anxietyReason: entry.anxietyReason.isEmpty ? null : entry.anxietyReason,
+      moodDescriptions: entry.moodDescriptions.isNotEmpty ? entry.moodDescriptions : null,
+      moodWhy: entry.moodWhy.isEmpty ? null : entry.moodWhy,
+    );
   }
 
   // Helper functions for mapping
@@ -577,10 +722,14 @@ class _JournalScreenState extends State<JournalScreen> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
-                    color: colorScheme.primaryContainer,
+                    color: _hasMoodEntry 
+                        ? colorScheme.primaryContainer 
+                        : colorScheme.surfaceVariant,
                     child: Padding(
                       padding: const EdgeInsets.all(16),
-                      child: _buildJournalDetails(todaysEntry),
+                      child: _hasMoodEntry 
+                          ? _buildJournalDetails(todaysEntry)
+                          : _buildEmptyJournalPrompt(),
                     ),
                   ),
                 ),
@@ -727,7 +876,6 @@ class _JournalScreenState extends State<JournalScreen> {
                             double anxietySlider = 5.0;
                             List<String> moodDescriptions = [];
                             List<String> moodWhyTags = [];
-                            String moodWhy = "";
                             final textController = TextEditingController();
                             final stressReasonController =
                                 TextEditingController();
