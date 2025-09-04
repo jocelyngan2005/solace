@@ -18,7 +18,9 @@ class BreathingSessionPage extends StatefulWidget {
 class _BreathingSessionPageState extends State<BreathingSessionPage>
     with TickerProviderStateMixin {
   late AnimationController _animationController;
+  late AnimationController _colorController;
   late Animation<double> _scaleAnimation;
+  late Animation<Color?> _colorAnimation;
   Timer? _breathingTimer;
   Timer? _countdownTimer;
   
@@ -26,29 +28,69 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
   int currentCycle = 0;
   bool isActive = false;
   int remainingSeconds = 0;
+  
+  // Colors for different phases
+  late final List<Color> phaseColors;
 
   @override
   void initState() {
     super.initState();
+    
+    // Initialize phase colors
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        phaseColors = [
+          Theme.of(context).colorScheme.primary,    // Inhale - Purple
+          Theme.of(context).colorScheme.tertiary,  // Hold - Orange
+          Theme.of(context).colorScheme.secondary,   // Exhale - Green
+          Theme.of(context).colorScheme.tertiary,  // Hold - Oranges
+        ];
+      });
+    });
+    
     _animationController = AnimationController(
       duration: Duration(seconds: widget.technique.inhale),
       vsync: this,
     );
+    
+    _colorController = AnimationController(
+      duration: const Duration(milliseconds: 800),
+      vsync: this,
+    );
+    
     _scaleAnimation = Tween<double>(
-      begin: 0.8,
-      end: 1.2,
+      begin: 0.85,
+      end: 1.15,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,
     ));
+    
+    _colorAnimation = ColorTween(
+      begin: widget.technique.color,
+      end: widget.technique.color,
+    ).animate(_colorController);
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _colorController.dispose();
     _breathingTimer?.cancel();
     _countdownTimer?.cancel();
     super.dispose();
+  }
+
+  void _updatePhaseColor(int phaseIndex) {
+    if (phaseColors.isNotEmpty) {
+      _colorAnimation = ColorTween(
+        begin: _colorAnimation.value,
+        end: phaseColors[phaseIndex % phaseColors.length],
+      ).animate(_colorController);
+      
+      _colorController.reset();
+      _colorController.forward();
+    }
   }
 
   void _startCountdown(int seconds) {
@@ -108,6 +150,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     setState(() {
       currentPhase = 'Breathe In';
     });
+    _updatePhaseColor(0); // Purple for inhale
     _animationController.duration = Duration(seconds: widget.technique.inhale);
     _animationController.forward();
     _startCountdown(widget.technique.inhale);
@@ -120,6 +163,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
         setState(() {
           currentPhase = 'Hold';
         });
+        _updatePhaseColor(1); // Green for hold
         _startCountdown(widget.technique.hold1);
         
         Timer(Duration(seconds: widget.technique.hold1), () {
@@ -137,6 +181,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     setState(() {
       currentPhase = 'Breathe Out';
     });
+    _updatePhaseColor(2); // Orange for exhale
     _animationController.duration = Duration(seconds: widget.technique.exhale);
     _animationController.reverse();
     _startCountdown(widget.technique.exhale);
@@ -149,6 +194,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
         setState(() {
           currentPhase = 'Hold';
         });
+        _updatePhaseColor(3); // Green for hold
         _startCountdown(widget.technique.hold2);
         
         Timer(Duration(seconds: widget.technique.hold2), () {
@@ -171,6 +217,9 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     _animationController.reset();
     _breathingTimer?.cancel();
     _countdownTimer?.cancel();
+    
+    // Reset to initial color
+    _updatePhaseColor(0);
   }
 
   void _completeExercise() {
@@ -186,6 +235,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
           currentPhase = 'Tap to Start';
           currentCycle = 0;
         });
+        _updatePhaseColor(0);
       }
     });
     
@@ -194,10 +244,19 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     );
   }
 
+  String _getTechniquePattern() {
+    List<String> pattern = [];
+    pattern.add('${widget.technique.inhale}s in');
+    if (widget.technique.hold1 > 0) pattern.add('${widget.technique.hold1}s hold');
+    pattern.add('${widget.technique.exhale}s out');
+    if (widget.technique.hold2 > 0) pattern.add('${widget.technique.hold2}s hold');
+    return pattern.join(' • ');
+  }
+
   @override
   Widget build(BuildContext context) {
+    final currentColor = _colorAnimation.value ?? (phaseColors.isNotEmpty ? phaseColors[0] : widget.technique.color);
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),  
       appBar: AppBar(
         title: Text(widget.technique.name),
         backgroundColor: Colors.transparent,
@@ -206,53 +265,53 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-      ),    
-      body: SafeArea(
-        child: Padding(
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          color: _colorAnimation.value ?? (phaseColors.isNotEmpty ? phaseColors[0] : widget.technique.color),
+        ),
+        child: SafeArea(
+          child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
             children: [
-              // Technique Info
-              Container(
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
+                Center(
+                child: Container(
+                  width: 260,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
                   gradient: LinearGradient(
                     colors: [
-                      widget.technique.color.withOpacity(0.1),
-                      widget.technique.color.withOpacity(0.05),
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
+                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
                     ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
+                  borderRadius: BorderRadius.circular(32),
+                  ),
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Icon(
+                    Icons.multitrack_audio_rounded,
+                    color: Theme.of(context).colorScheme.onPrimary,
+                    ),
+                    const SizedBox(width: 12),
                     Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          
-                          Text(
-                            widget.technique.description,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            '${widget.totalCycles} cycles planned',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: widget.technique.color,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: Text(
+                      'SOUND OF BIRDS CHIRPING',
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontWeight: FontWeight.w500,
+                        ),
+                    ),
                     ),
                   ],
+                  ),
                 ),
-              ),
+                ),
               
               const SizedBox(height: 18),
               
@@ -262,110 +321,161 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Progress indicator
-                      if (isActive)
-                        Text(
-                          'Cycle $currentCycle of ${widget.totalCycles}',
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: widget.technique.color,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                        // Progress indicator
+                        if (isActive)
+                          Text(
+                            'Cycle $currentCycle of ${widget.totalCycles}',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),                      
+                        const SizedBox(height: 36),
                       
-                      const SizedBox(height: 36),
-                      
-                      // Breathing circle
-                      GestureDetector(
-                        onTap: _startBreathingExercise,
-                        child: AnimatedBuilder(
-                          animation: _scaleAnimation,
-                          builder: (context, child) {
-                            return Container(
-                              width: 180 * _scaleAnimation.value,
-                              height: 180 * _scaleAnimation.value,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: RadialGradient(
-                                  colors: [
-                                    widget.technique.color.withOpacity(0.4),
-                                    widget.technique.color.withOpacity(0.2),
-                                    widget.technique.color.withOpacity(0.1),
+                        // Breathing circle with concentric circles
+                        GestureDetector(
+                          onTap: _startBreathingExercise,
+                          child: AnimatedBuilder(
+                            animation: Listenable.merge([_scaleAnimation, _colorAnimation]),
+                            builder: (context, child) {
+                              return SizedBox(
+                                width: 300,
+                                height: 300,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  children: [
+                                    // Outer circle (largest) - slight delay
+                                    AnimatedContainer(
+                                      duration: Duration(milliseconds: 100),
+                                      width: 240 * (_scaleAnimation.value * 0.95),
+                                      height: 240 * (_scaleAnimation.value * 0.95),
+                                      decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.05),
+                                        width: 1.5,
+                                      ),
+                                      boxShadow: [
+                                        BoxShadow(
+                                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
+                                        blurRadius: 32,
+                                        spreadRadius: 8,
+                                        offset: Offset(0, 0),
+                                        ),
+                                      ],
+                                      ),
+                                    ),
+                                    
+                                    
+                                    // Second circle
+                                    Container(
+                                      width: 200 * (_scaleAnimation.value * 0.97),
+                                      height: 200 * (_scaleAnimation.value * 0.97),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.15),
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                    // Third circle
+                                    Container(
+                                      width: 160 * (_scaleAnimation.value * 0.99),
+                                      height: 160 * (_scaleAnimation.value * 0.99),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
+                                          width: 2.5,
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                    // Fourth circle - main rhythm
+                                    Container(
+                                      width: 120 * _scaleAnimation.value,
+                                      height: 120 * _scaleAnimation.value,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
+                                          width: 2.7,
+                                        ),
+                                      ),
+                                    ),
+                                    
+                                    // Inner filled circle (center) - most responsive
+                                    Container(
+                                      width: 80 * (_scaleAnimation.value * 1.05),
+                                      height: 80 * (_scaleAnimation.value * 1.05),
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.05),
+                                        
+                                      ),
+                                      child: Center(
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            // Countdown timer in center
+                                            if (isActive && remainingSeconds > 0)
+                                              Text(
+                                                '$remainingSeconds',
+                                                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Theme.of(context).colorScheme.onPrimary,
+                                                  fontSize: 36,
+                                                ),
+                                              )
+                                            else
+                                              Icon(
+                                                isActive ? Icons.pause : Icons.play_arrow,
+                                                size: 36,
+                                                color: Theme.of(context).colorScheme.onPrimary,
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: widget.technique.color.withOpacity(0.3),
-                                    blurRadius: 30,
-                                    spreadRadius: 10,
-                                  ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Container(
-                                  width: 100,
-                                  height: 100,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: widget.technique.color.withOpacity(0.3),
-                                  ),
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      // Countdown timer in center
-                                      if (isActive && remainingSeconds > 0)
-                                        Text(
-                                          '$remainingSeconds',
-                                          style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            color: widget.technique.color,
-                                            fontSize: 36,
-                                          ),
-                                        )
-                                      else
-                                        Icon(
-                                          isActive ? Icons.pause : Icons.play_arrow,
-                                          size: 60,
-                                          color: widget.technique.color,
-                                        ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 36),
-                      
-                      // Phase indicator
-                      Text(
-                        currentPhase,
-                        style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                          color: widget.technique.color,
-                        ),
-                      ),
-                      
-                      const SizedBox(height: 20),
-                      
-                      // Instructions
-                      if (!isActive)
-                        Text(
-                          'Tap the circle to begin your breathing session',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.grey[600],
+                              );
+                            },
                           ),
-                          textAlign: TextAlign.center,
-                        )
-                      else
-                        Text(
-                          'Follow the circle\'s rhythm • Tap to stop',
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                          textAlign: TextAlign.center,
                         ),
+                        
+                        const SizedBox(height: 24),
+                        
+                        // Phase indicator
+                        Text(
+                          currentPhase,
+                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                          ),
+                        ),
+                        
+                        const SizedBox(height: 16),
+                        
+                        // Instructions
+                        if (!isActive)
+                          Text(
+                            'Tap the circle to begin your breathing session',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        else
+                          Text(
+                            'Follow the circle\'s rhythm • Tap to stop',
+                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                     ],
                   ),
                 ),
@@ -379,11 +489,11 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
                   child: ElevatedButton(
                     onPressed: _stopBreathingExercise,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red[400],
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.onSurface,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: const Text(
@@ -396,7 +506,9 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
           ),
         ),
       ),
+    )
     );
+
   }
 }
 

@@ -19,7 +19,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 4,
       hold2: 4,
       description: 'Equal counts for balance and focus. Perfect for reducing stress and improving concentration.',
-      color: Colors.blue,
+      color: Colors.blue[200]!,
     ),
     '4-7-8 Breathing': BreathingTechnique(
       name: '4-7-8 Breathing',
@@ -28,7 +28,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 8,
       hold2: 0,
       description: 'Promotes deep relaxation and helps with sleep. Excellent for calming anxiety.',
-      color: Colors.purple,
+      color: Colors.purple[200]!,
     ),
     'Deep Belly': BreathingTechnique(
       name: 'Deep Belly',
@@ -37,7 +37,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 6,
       hold2: 2,
       description: 'Gentle diaphragmatic breathing that activates the body\'s relaxation response.',
-      color: Colors.green,
+      color: Colors.green[200]!,
     ),
     'Calming Breath': BreathingTechnique(
       name: 'Calming Breath',
@@ -46,7 +46,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       exhale: 6,
       hold2: 2,
       description: 'Extended exhale helps activate the parasympathetic nervous system for deep calm.',
-      color: Colors.orange,
+      color: Colors.deepOrange[200]!,
     ),
   };
 
@@ -96,7 +96,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
                       borderRadius: BorderRadius.circular(20),
@@ -105,7 +105,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
                       value: selectedCycles,
                       underline: const SizedBox(),
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontWeight: FontWeight.w600,
                       ),
                       items: [3, 5, 8, 10, 15].map((cycles) => 
@@ -221,7 +221,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
                           color: Colors.grey[600],
                           height: 1.4,
                         ),
-                        maxLines: 2,
+                        maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ],
