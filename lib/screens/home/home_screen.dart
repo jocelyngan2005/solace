@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../widgets/mood_chart.dart';
-import '../therapy/mood_entry_screen.dart';
+import '../therapy/journal_entry_screen.dart';
 import '../../widgets/journal_screen.dart';
 import '../../data/mood_entry_service.dart';
 import '../therapy/breathing_exercises_screen.dart';

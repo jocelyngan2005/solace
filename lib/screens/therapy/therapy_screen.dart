@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'mood_entry_screen.dart';
+import 'journal_entry_screen.dart';
 import 'wellness_tools_screen.dart';
 import '../../data/mood_entry_service.dart';
 
@@ -94,7 +94,7 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () => _navigateToMoodEntry(),
+                    onPressed: () => _navigateToJournalEntry(),
                     icon: const Icon(Icons.edit_note),
                     label: const Text('Start Daily Check-in'),
                     style: ElevatedButton.styleFrom(
@@ -120,11 +120,11 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
     );
   }
 
-  void _navigateToMoodEntry() {
+  void _navigateToJournalEntry() {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => MoodEntryScreen(
+        builder: (context) => JournalEntryScreen(
           onCompleted: () {
             setState(() {
               _hasCompletedEntry = true;
