@@ -275,10 +275,10 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: isSelected ? ex.color.withOpacity(0.1) : Colors.white,
+                            color: isSelected ? ex.color.withOpacity(0.1) : Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: isSelected ? ex.color : Colors.grey[300]!,
+                              color: isSelected ? ex.color : Colors.transparent,
                               width: 2,
                             ),
                             boxShadow: [
@@ -353,7 +353,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -420,7 +420,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                     onPressed: _startExercise,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: exercise.color,
-                      foregroundColor: Colors.white,
+                      foregroundColor: Theme.of(context).colorScheme.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -453,7 +453,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -502,7 +502,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
           constraints: const BoxConstraints(minHeight: 300),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -578,7 +578,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                         Icon(
                           Icons.air,
                           color: exercise.color,
-                          size: 16,
+                          size: 14,
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -586,6 +586,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                           style: TextStyle(
                             color: exercise.color,
                             fontWeight: FontWeight.w500,
+                            fontSize: 12,
                           ),
                         ),
                       ],
@@ -606,8 +607,8 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
               icon: const Icon(Icons.stop),
               label: const Text('Stop'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey[600],
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),

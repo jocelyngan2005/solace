@@ -71,28 +71,19 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(16),
                 ),
-                color: Theme.of(context).colorScheme.primary,
+                color: const Color(0xFFB9998D), 
                 child: Padding(
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.info_outline,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                            size: 16,
-                          ),
-                          const SizedBox(width: 8),
+                    children: [                    
                           Text(
-                            'When to use grounding techniques:',
+                            '💡 When to use grounding techniques:',
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ],
-                      ),
                       const SizedBox(height: 12),
                       Text(
                         '• When feeling anxious or overwhelmed\n'
@@ -101,6 +92,7 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
                         '• To reconnect with the present moment\n'
                         '• Before important events or exams',
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.onPrimary,
                           height: 1.5,
                         ),
                       ),

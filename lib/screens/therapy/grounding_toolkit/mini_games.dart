@@ -329,10 +329,10 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                         child: Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: isSelected ? gameOption.color.withOpacity(0.1) : Colors.white,
+                            color: isSelected ? gameOption.color.withOpacity(0.1) : Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: isSelected ? gameOption.color : Colors.grey[300]!,
+                              color: isSelected ? gameOption.color : Colors.transparent,
                               width: 2,
                             ),
                             boxShadow: [
@@ -391,7 +391,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -431,7 +431,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                     onPressed: _startGame,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: game.color,
-                      foregroundColor: Colors.white,
+                      foregroundColor: Theme.of(context).colorScheme.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -477,7 +477,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -553,7 +553,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               onPressed: _addCategoryAnswer,
               style: ElevatedButton.styleFrom(
                 backgroundColor: game.color,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -571,7 +571,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
           height: 300,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
@@ -645,7 +645,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               onPressed: _completeGame,
               style: ElevatedButton.styleFrom(
                 backgroundColor: game.color,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.surface,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -667,7 +667,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -753,7 +753,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               onPressed: _addAlphabetAnswer,
               style: ElevatedButton.styleFrom(
                 backgroundColor: game.color,
-                foregroundColor: Colors.white,
+                foregroundColor: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -780,7 +780,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
             height: 300,
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -838,7 +838,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
         Container(
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
@@ -910,7 +910,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
           constraints: const BoxConstraints(minHeight: 400),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(20),
             boxShadow: [
               BoxShadow(
@@ -967,7 +967,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                   onPressed: _checkMathAnswer,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: game.color,
-                    foregroundColor: Colors.white,
+                    foregroundColor: Theme.of(context).colorScheme.surface,
                     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

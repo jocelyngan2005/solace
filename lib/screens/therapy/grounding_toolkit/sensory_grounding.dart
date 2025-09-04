@@ -17,7 +17,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
       sense: 'See',
       instruction: 'Name 5 things you can SEE 👀',
       icon: Icons.visibility,
-      color: const Color(0xFF7FB35F),
+      color: Colors.lightBlueAccent,
       items: [],
     ),
     GroundingStep(
@@ -25,7 +25,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
       sense: 'Touch',
       instruction: 'Name 4 things you can TOUCH ✋',
       icon: Icons.touch_app,
-      color: const Color(0xFF5FB3BF),
+      color: Colors.green[300]!,
       items: [],
     ),
     GroundingStep(
@@ -33,7 +33,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
       sense: 'Hear',
       instruction: 'Name 3 things you can HEAR 👂',
       icon: Icons.hearing,
-      color: const Color(0xFF8B5FBF),
+      color: Colors.orangeAccent,
       items: [],
     ),
     GroundingStep(
@@ -41,7 +41,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
       sense: 'Smell',
       instruction: 'Name 2 things you can SMELL 👃',
       icon: Icons.air,
-      color: const Color(0xFFBF7A5F),
+      color: Colors.redAccent,
       items: [],
     ),
     GroundingStep(
@@ -49,7 +49,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
       sense: 'Taste',
       instruction: 'Name 1 thing you can TASTE 👅',
       icon: Icons.local_dining,
-      color: const Color(0xFFBF5F8B),
+      color: Colors.deepPurpleAccent,
       items: [],
     ),
   ];
@@ -136,9 +136,8 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF8FAF9),
       appBar: AppBar(
-        title: const Text('5-4-3-2-1 Sensory Grounding'),
+        title: const Text('5-4-3-2-1 Grounding'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -182,7 +181,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(12),
                     boxShadow: [
                       BoxShadow(
@@ -197,8 +196,8 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
                     children: [
                       Text(
                         'How it works:',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                       const SizedBox(height: 12),
@@ -252,8 +251,8 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
                   child: ElevatedButton(
                     onPressed: _startGrounding,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF7FB35F),
-                      foregroundColor: Colors.white,
+                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

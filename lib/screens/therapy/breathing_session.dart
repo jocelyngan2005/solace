@@ -60,7 +60,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     
     _scaleAnimation = Tween<double>(
       begin: 0.85,
-      end: 1.15,
+      end: 1.30,
     ).animate(CurvedAnimation(
       parent: _animationController,
       curve: Curves.easeInOut,

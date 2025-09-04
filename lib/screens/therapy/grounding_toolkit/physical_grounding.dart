@@ -331,7 +331,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(16),
                         side: isSelected ? BorderSide(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: tech.color,
                           width: 2,
                         ) : BorderSide.none,
                       ),
@@ -391,7 +391,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                               if (isSelected)
                                 Icon(
                                   Icons.check_circle,
-                                  color: Theme.of(context).colorScheme.primary,
+                                  color: tech.color,
                                 ),
                             ],
                           ),
@@ -659,7 +659,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
