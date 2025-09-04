@@ -132,7 +132,6 @@ class _ChatbotModalState extends State<ChatbotModal> {
            lowerMessage.contains('end it all') || 
            lowerMessage.contains('hurt myself') ||
            lowerMessage.contains('overwhelming') ||
-           lowerMessage.contains('can\'t believe this is happening') ||
            lowerMessage.contains('falling apart');
   }
 
