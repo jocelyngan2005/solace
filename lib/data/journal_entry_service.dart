@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 
-class MoodEntryService {
-  static final MoodEntryService _instance = MoodEntryService._internal();
-  factory MoodEntryService() => _instance;
-  MoodEntryService._internal();
+class JournalEntryService {
+  static final JournalEntryService _instance = JournalEntryService._internal();
+  factory JournalEntryService() => _instance;
+  JournalEntryService._internal();
   
   String? _lastMoodEntryDate;
   String? _todayMoodEmoji;
@@ -37,7 +37,7 @@ class MoodEntryService {
     List<String>? moodDescriptions,
     String? moodWhy,
   }) async {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
     instance._lastMoodEntryDate = today;
     
@@ -81,7 +81,7 @@ class MoodEntryService {
   }
   
   static Future<bool> hasMoodEntryForToday() async {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
     
     final hasEntry = instance._lastMoodEntryDate == today;
@@ -94,7 +94,7 @@ class MoodEntryService {
   }
   
   static Future<void> clearMoodEntryStatus() async {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     instance._lastMoodEntryDate = null;
     instance._todayMoodEmoji = null;
     instance._todayMoodLabel = null;
@@ -113,60 +113,60 @@ class MoodEntryService {
   }
   
   static String? getTodayMoodEmoji() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayMoodEmoji;
   }
   
   static String? getTodayMoodLabel() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayMoodLabel;
   }
   
   static String? getTodayJournalText() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayJournalText;
   }
   
   static double? getTodayStressLevel() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayStressLevel;
   }
   
   static double? getTodayAnxietyLevel() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayAnxietyLevel;
   }
   
   static String? getTodayStressReason() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayStressReason;
   }
   
   static String? getTodayAnxietyReason() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayAnxietyReason;
   }
   
   static List<String>? getTodayMoodDescriptions() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayMoodDescriptions != null 
         ? List<String>.from(instance._todayMoodDescriptions!)
         : null;
   }
   
   static String? getTodayMoodWhy() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance._todayMoodWhy;
   }
   
   static ValueNotifier<bool> get moodEntryNotifier {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     return instance.moodEntryStatusNotifier;
   }
   
   // Debug method to check current status
   static String getDebugInfo() {
-    final instance = MoodEntryService();
+    final instance = JournalEntryService();
     final today = DateTime.now().toIso8601String().split('T')[0];
     return 'Today: $today, Last entry: ${instance._lastMoodEntryDate}, '
         'Mood: ${instance._todayMoodLabel} ${instance._todayMoodEmoji}, '
