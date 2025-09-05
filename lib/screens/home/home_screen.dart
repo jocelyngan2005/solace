@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/mood_chart.dart';
-import '../therapy/journal_entry_screen.dart';
-import '../../widgets/journal_screen.dart';
-import '../../data/mood_entry_service.dart';
+import '../../data/journal_entry_service.dart';
 import '../therapy/breathing_exercises_screen.dart';
+import '../therapy/journal_library_screen.dart';
+import '../therapy/journal_entry_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -25,7 +25,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
     WidgetsBinding.instance.addObserver(this);
     
     // Listen to mood entry status changes
-    MoodEntryService.moodEntryNotifier.addListener(_onMoodEntryStatusChanged);
+    JournalEntryService.moodEntryNotifier.addListener(_onMoodEntryStatusChanged);
     
     _checkMoodEntryStatus();
   }
@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    MoodEntryService.moodEntryNotifier.removeListener(_onMoodEntryStatusChanged);
+    JournalEntryService.moodEntryNotifier.removeListener(_onMoodEntryStatusChanged);
     super.dispose();
   }
 
@@ -62,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   }
 
   Future<void> _checkMoodEntryStatus() async {
-    final hasEntry = await MoodEntryService.hasMoodEntryForToday();
+    final hasEntry = await JournalEntryService.hasMoodEntryForToday();
     if (mounted) {
       setState(() {
         _hasMoodEntry = hasEntry;
@@ -212,28 +212,46 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     const SizedBox(height: 20),
                     
                     // Feeling input section
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF8F8F8),
-                        borderRadius: BorderRadius.circular(32),
-                      ),
-                      child: Row(
-                        children: [
-                          const Expanded(
-                            child: Text(
-                              'How are you feeling today?',
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
+                    GestureDetector(
+                      onTap: () {
+                        // Navigate to Journal Entry Screen
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => JournalEntryScreen(
+                              onCompleted: () {
+                                // Refresh mood status when completed
+                                refreshMoodStatus();
+                              },
+                              selectedMood: 'Neutral',
+                              fromHomeScreen: true, // Set to true so mood analysis knows origin
                             ),
                           ),
-                          const Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
-                        ],
+                        );
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFFF8F8F8),
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: Row(
+                          children: [
+                            const Expanded(
+                              child: Text(
+                                'How are you feeling today?',
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            const Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
+                          ],
+                        ),
                       ),
-                  ),
+                    ),
                 ],
               ),
             ),            const SizedBox(height: 24),
@@ -380,43 +398,54 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             const SizedBox(width: 12),
             // Journal Streak Card
             Expanded(
-              child: Container(
-                height: 200,
-                padding: const EdgeInsets.all(20),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF8B7ED8),
-                  borderRadius: BorderRadius.circular(28),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_month, color: Colors.white, size: 16),
-                        const SizedBox(width: 8),
-                        const Text(
-                          'Journal Streak',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
+              child: GestureDetector(
+                onTap: () {
+                  // Navigate to Journal Library
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const JournalLibraryScreen(),
+                    ),
+                  );
+                },
+                child: Container(
+                  height: 200,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF8B7ED8),
+                    borderRadius: BorderRadius.circular(28),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.calendar_month, color: Colors.white, size: 16),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'Journal Streak',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                      '10/31 days',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        ],
                       ),
-                    ),
-                    const Spacer(),
-                    // Calendar grid
-                    _buildMiniCalendar(),
-                  ],
+                      const SizedBox(height: 8),
+                      const Text(
+                        '10/31 days',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const Spacer(),
+                      // Calendar grid
+                      _buildMiniCalendar(),
+                    ],
+                  ),
                 ),
               ),
             ),

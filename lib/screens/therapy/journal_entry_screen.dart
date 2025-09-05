@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
-import '../../data/mood_entry_service.dart';
+import '../../data/journal_entry_service.dart';
 import 'mood_analysis_screen.dart';
 
 class JournalEntryScreen extends StatefulWidget {
@@ -818,7 +818,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
 
   void _completeEntry() async {
     // Save mood entry completion status with all details
-    await MoodEntryService.markMoodEntryCompleted(
+    await JournalEntryService.markMoodEntryCompleted(
       moodLabel: _selectedMood,
       journalText: _journalController.text.trim().isNotEmpty
           ? _journalController.text.trim()
@@ -852,26 +852,22 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
 
     // Navigate to mood analysis screen after a brief delay
     Future.delayed(const Duration(milliseconds: 2500), () {
-      if (widget.fromHomeScreen) {
-        Navigator.pop(context);
-      } else {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => MoodAnalysisScreen(
-              selectedMood: _selectedMood,
-              journalText: _journalController.text.trim(),
-              moodDescriptions: _selectedMoodDescriptions,
-              stressLevel: _stressLevel,
-              onCompleted: widget.onCompleted,
-              fromHomeScreen: widget.fromHomeScreen,
-            ),
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MoodAnalysisScreen(
+            selectedMood: _selectedMood,
+            journalText: _journalController.text.trim(),
+            moodDescriptions: _selectedMoodDescriptions,
+            stressLevel: _stressLevel,
+            onCompleted: widget.onCompleted,
+            fromHomeScreen: widget.fromHomeScreen,
           ),
-        ).then((_) {
-          // Call onCompleted after returning from mood analysis
-          widget.onCompleted();
-        });
-      }
+        ),
+      ).then((_) {
+        // Call onCompleted after returning from mood analysis
+        widget.onCompleted();
+      });
     });
   }
 

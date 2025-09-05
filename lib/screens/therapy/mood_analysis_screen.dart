@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'journal_entry_screen.dart';
+import 'journal_library_screen.dart';
+import 'therapy_screen.dart';
 
 class MoodAnalysisScreen extends StatelessWidget {
   final String selectedMood;
@@ -50,20 +52,18 @@ class MoodAnalysisScreen extends StatelessWidget {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        // Navigate back to journal entry screen with current data
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => JournalEntryScreen(
-                              onCompleted: onCompleted ?? () {},
-                              selectedMood: selectedMood,
-                              fromHomeScreen: fromHomeScreen,
-                              initialJournalText: journalText,
-                              initialMoodDescriptions: moodDescriptions,
-                              initialStressLevel: stressLevel,
-                            ),
-                          ),
-                        );
+                        // Navigate back based on where the user came from
+                        if (fromHomeScreen) {
+                          // If from home screen, pop all routes to get back to home
+                          Navigator.of(context).popUntil((route) => route.isFirst);
+                          // Call onCompleted to refresh home screen state
+                          if (onCompleted != null) {
+                            onCompleted!();
+                          }
+                        } else {
+                          // If from therapy screen, just pop back to journal entry
+                          Navigator.pop(context);
+                        }
                       },
                       child: Container(
                         padding: const EdgeInsets.all(8),
@@ -243,10 +243,13 @@ class MoodAnalysisScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigate to breathing exercises or meditation
-                            Navigator.of(
+                            // Navigate to wellness tools screen
+                            Navigator.push(
                               context,
-                            ).pushNamed('/breathing-exercises');
+                              MaterialPageRoute(
+                                builder: (context) => const TherapyScreen(),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: _getMoodBackgroundColor(),
@@ -282,8 +285,13 @@ class MoodAnalysisScreen extends StatelessWidget {
                         width: double.infinity,
                         child: ElevatedButton(
                           onPressed: () {
-                            // Navigate to journal entries
-                            Navigator.of(context).pushNamed('/journal-entries');
+                            // Navigate to journal library
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const JournalLibraryScreen(),
+                              ),
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF4A3427),

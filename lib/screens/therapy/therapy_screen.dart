@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'journal_entry_screen.dart';
 import 'wellness_tools_screen.dart';
-import '../../data/mood_entry_service.dart';
+import '../../data/journal_entry_service.dart';
 
 class TherapyScreen extends StatefulWidget {
   const TherapyScreen({super.key});
@@ -30,9 +30,9 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
   }
   
   Future<void> _checkMoodEntryStatus() async {
-    final hasEntry = await MoodEntryService.hasMoodEntryForToday();
+    final hasEntry = await JournalEntryService.hasMoodEntryForToday();
     print('TherapyScreen: Mood entry status - $hasEntry');
-    print('Debug info: ${MoodEntryService.getDebugInfo()}');
+    print('Debug info: ${JournalEntryService.getDebugInfo()}');
     if (mounted) {
       setState(() {
         _hasCompletedEntry = hasEntry;
