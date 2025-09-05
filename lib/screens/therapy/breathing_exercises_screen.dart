@@ -18,8 +18,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       hold1: 4,
       exhale: 4,
       hold2: 4,
-      description: 'Equal counts for balance and focus. Perfect for reducing stress and improving concentration.',
-      color: Colors.blue[200]!,
+      description: 'Perfect for reducing stress and improving concentration.',
     ),
     '4-7-8 Breathing': BreathingTechnique(
       name: '4-7-8 Breathing',
@@ -27,8 +26,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       hold1: 7,
       exhale: 8,
       hold2: 0,
-      description: 'Promotes deep relaxation and helps with sleep. Excellent for calming anxiety.',
-      color: Colors.purple[200]!,
+      description: 'Helps with sleep and calms anxiety.',
     ),
     'Deep Belly': BreathingTechnique(
       name: 'Deep Belly',
@@ -36,8 +34,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       hold1: 2,
       exhale: 6,
       hold2: 2,
-      description: 'Gentle diaphragmatic breathing that activates the body\'s relaxation response.',
-      color: Colors.green[200]!,
+      description: 'Activates the body\'s relaxation response.',
     ),
     'Calming Breath': BreathingTechnique(
       name: 'Calming Breath',
@@ -45,8 +42,7 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
       hold1: 2,
       exhale: 6,
       hold2: 2,
-      description: 'Extended exhale helps activate the parasympathetic nervous system for deep calm.',
-      color: Colors.deepOrange[200]!,
+      description: 'Best for reducing stress in the moment.',
     ),
   };
 
@@ -54,7 +50,6 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Breathing Exercises'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -70,8 +65,8 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
             children: [
               // Header
               Text(
-            'Breathe and Relax',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            'Mindfulness Breathing',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -83,22 +78,22 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
             ),
           ),
               
-              const SizedBox(height: 28),
+              const SizedBox(height: 16),
               
               // Cycles Selector
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Session Length',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    'Choose number of cycles:',
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       fontWeight: FontWeight.w600,
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 0),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary,
+                      color: const Color(0xFFB9998D).withOpacity(0.5),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: DropdownButton<int>(
@@ -126,26 +121,18 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
                 ],
               ),
               
-              const SizedBox(height: 20),
-              
-              // Techniques List
-              Text(
-                'Choose Your Technique',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
               const SizedBox(height: 16),
               
-              Expanded(
+                // Techniques List
+                Expanded(
                 child: ListView.builder(
                   itemCount: techniques.length,
                   itemBuilder: (context, index) {
-                    final technique = techniques.values.elementAt(index);
-                    return _buildTechniqueCard(technique);
+                  final technique = techniques.values.elementAt(index);
+                  return _buildTechniqueCard(technique);
                   },
                 ),
-              ),
+                ),
             ],
           ),
         ),
@@ -155,98 +142,85 @@ class _BreathingExercisePageState extends State<BreathingExercisePage> {
   
   Widget _buildTechniqueCard(BreathingTechnique technique) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: const EdgeInsets.only(bottom: 4),
       child: Card(
-        elevation: 0,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-          side: BorderSide(color: Colors.grey.withOpacity(0.2)),
-        ),
-        child: InkWell(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => BreathingSessionPage(
-                  technique: technique,
-                  totalCycles: selectedCycles,
-                ),
+      elevation: 6, // Increased elevation for shadow
+      shadowColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.15), // Custom shadow color
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: InkWell(
+        onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+          builder: (context) => BreathingSessionPage(
+            technique: technique,
+            totalCycles: selectedCycles,
+            selectedSoundtrack: null, // Start with no soundtrack
+          ),
+          ),
+        );
+        },
+        child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+          // Technique Info
+          Expanded(
+            child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+              technique.name,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
               ),
-            );
-          },
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                // Technique Icon
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: technique.color.withOpacity(0.15),
-                    borderRadius: BorderRadius.circular(12),
+              ),
+              const SizedBox(height: 4),
+                Row(
+                children: [
+                  Icon(
+                  Icons.timer_outlined,
+                  size: 14,
+                  color: Theme.of(context).colorScheme.outline,
                   ),
-                  child: Icon(
-                    Icons.air,
-                    color: technique.color,
-                    size: 24,
+                  const SizedBox(width: 4),
+                  Text(
+                  _getTechniquePattern(technique),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                    fontWeight: FontWeight.w500,
                   ),
+                  ),
+                ],
                 ),
-                
-                const SizedBox(width: 16),
-                
-                // Technique Info
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        technique.name,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _getTechniquePattern(technique),
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: technique.color,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        technique.description,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                          height: 1.4,
-                        ),
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(width: 12),
-                
-                // Arrow
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: technique.color.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    color: technique.color,
-                    size: 16,
-                  ),
-                ),
-              ],
+              const SizedBox(height: 8),
+              Text(
+              technique.description,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                height: 1.4,
+              ),
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+              ),
+            ],
             ),
           ),
+          const SizedBox(width: 12),
+          // Arrow
+          Container(
+            padding: const EdgeInsets.all(8),
+            child: Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            ),
+          ),
+          ],
         ),
+        ),
+      ),
       ),
     );
   }

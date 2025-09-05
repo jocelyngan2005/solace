@@ -36,29 +36,13 @@ class WellnessToolsScreen extends StatelessWidget {
           // Breathing Exercises
           _buildToolCard(
             context,
-            'Breathing Exercises',
+            'Mindfulness Breathing',
             'Calm your mind with guided breathing',
             Icons.air,
             Colors.blue,
             () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const BreathingExercisePage()),
-            ),
-          ),
-          
-          const SizedBox(height: 16),
-          
-          // Mindfulness Library
-          _buildToolCard(
-            context,
-            'Mindfulness Library',
-            'Guided practices for inner peace',
-            Icons.self_improvement,
-
-            Colors.green,
-            () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => const MeditationPage()),
             ),
           ),
           

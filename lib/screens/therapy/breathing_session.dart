@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'soundtrack_library.dart';
 
 class BreathingSessionPage extends StatefulWidget {
   final BreathingTechnique technique;
   final int totalCycles;
+  final String? selectedSoundtrack;
 
   const BreathingSessionPage({
     super.key,
     required this.technique,
     required this.totalCycles,
+    this.selectedSoundtrack,
   });
 
   @override
@@ -23,30 +26,36 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
   late Animation<Color?> _colorAnimation;
   Timer? _breathingTimer;
   Timer? _countdownTimer;
+  Timer? _sessionTimer;
   
   String currentPhase = 'Tap to Start';
   int currentCycle = 0;
   bool isActive = false;
+  bool isPaused = false;
   int remainingSeconds = 0;
+  int totalSessionSeconds = 0;
+  int elapsedSessionSeconds = 0;
+  String? selectedSoundtrack;
+  Set<String> favoriteSoundtracks = {};
   
   // Colors for different phases
-  late final List<Color> phaseColors;
+  List<Color> phaseColors = [
+    Colors.purple,
+    Colors.orange, 
+    Colors.green,
+    Colors.orange,
+  ];
 
   @override
   void initState() {
     super.initState();
     
-    // Initialize phase colors
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        phaseColors = [
-          Theme.of(context).colorScheme.primary,    // Inhale - Purple
-          Theme.of(context).colorScheme.tertiary,  // Hold - Orange
-          Theme.of(context).colorScheme.secondary,   // Exhale - Green
-          Theme.of(context).colorScheme.tertiary,  // Hold - Oranges
-        ];
-      });
-    });
+    selectedSoundtrack = widget.selectedSoundtrack;
+    
+    // Calculate total session time
+    int cycleTime = widget.technique.inhale + widget.technique.hold1 + 
+                   widget.technique.exhale + widget.technique.hold2;
+    totalSessionSeconds = cycleTime * widget.totalCycles;
     
     _animationController = AnimationController(
       duration: Duration(seconds: widget.technique.inhale),
@@ -66,10 +75,58 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
       curve: Curves.easeInOut,
     ));
     
+    // Initialize with a default color, will be updated after build
     _colorAnimation = ColorTween(
-      begin: widget.technique.color,
-      end: widget.technique.color,
+      begin: Colors.orange,
+      end: Colors.orange,
     ).animate(_colorController);
+    
+    // Initialize phase colors after the widget is built
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        setState(() {
+          phaseColors = [
+            Theme.of(context).colorScheme.primary,    // Inhale - Purple
+            Theme.of(context).colorScheme.tertiary,   // Hold - Orange
+            Theme.of(context).colorScheme.secondary,  // Exhale - Green
+            Theme.of(context).colorScheme.tertiary,   // Hold - Orange
+          ];
+          
+          // Update the color animation with theme colors
+          _colorAnimation = ColorTween(
+            begin: Theme.of(context).colorScheme.tertiary,
+            end: Theme.of(context).colorScheme.tertiary,
+          ).animate(_colorController);
+        });
+      }
+    });
+  }
+
+  String _getSoundtrackName() {
+    switch (selectedSoundtrack) {
+      case 'mountain_stream':
+        return 'Mountain Stream';
+      case 'zen_garden':
+        return 'Zen Garden';
+      case 'chirping_birds':
+        return 'Chirping Birds';
+      case 'starry_night':
+        return 'Starry Night';
+      case 'ocean':
+        return 'Ocean Waves';
+      case 'rain':
+        return 'Rain Drops';
+      case 'forest':
+        return 'Forest Ambience';
+      case 'wind':
+        return 'Gentle Wind';
+      case 'fireplace':
+        return 'Fireplace';
+      case 'none':
+        return 'No Sound';
+      default:
+        return 'No Sound';
+    }
   }
 
   @override
@@ -78,7 +135,85 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     _colorController.dispose();
     _breathingTimer?.cancel();
     _countdownTimer?.cancel();
+    _sessionTimer?.cancel();
     super.dispose();
+  }
+
+  void _startSessionTimer() {
+    _sessionTimer?.cancel();
+    _sessionTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!isActive || isPaused) {
+        return;
+      }
+      
+      setState(() {
+        elapsedSessionSeconds++;
+      });
+      
+      if (elapsedSessionSeconds >= totalSessionSeconds) {
+        timer.cancel();
+      }
+    });
+  }
+
+  void _pauseSession() {
+    setState(() {
+      isPaused = !isPaused;
+    });
+    
+    if (isPaused) {
+      _animationController.stop();
+      _countdownTimer?.cancel();
+    } else {
+      // Resume animation and timer
+      if (currentPhase == 'Breathe In') {
+        _animationController.forward();
+      } else if (currentPhase == 'Breathe Out') {
+        _animationController.reverse();
+      }
+    }
+  }
+
+  void _restartSession() {
+    setState(() {
+      isActive = false;
+      isPaused = false;
+      currentPhase = 'Tap to Start';
+      currentCycle = 0;
+      remainingSeconds = 0;
+      elapsedSessionSeconds = 0;
+    });
+    _animationController.reset();
+    _breathingTimer?.cancel();
+    _countdownTimer?.cancel();
+    _sessionTimer?.cancel();
+    
+    // Reset to initial color
+    _updatePhaseColor(0);
+  }
+
+  void _toggleFavorite() {
+    if (selectedSoundtrack != null && selectedSoundtrack != 'none') {
+      setState(() {
+        if (favoriteSoundtracks.contains(selectedSoundtrack)) {
+          favoriteSoundtracks.remove(selectedSoundtrack);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${_getSoundtrackName()} removed from favorites'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        } else {
+          favoriteSoundtracks.add(selectedSoundtrack!);
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('${_getSoundtrackName()} added to favorites'),
+              duration: const Duration(seconds: 2),
+            ),
+          );
+        }
+      });
+    }
   }
 
   void _updatePhaseColor(int phaseIndex) {
@@ -100,7 +235,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     
     _countdownTimer?.cancel();
     _countdownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isActive) {
+      if (!isActive || isPaused) {
         timer.cancel();
         return;
       }
@@ -117,27 +252,32 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
 
   void _startBreathingExercise() {
     if (isActive) {
-      _stopBreathingExercise();
+      _pauseSession();
       return;
     }
 
     setState(() {
       isActive = true;
+      isPaused = false;
       currentCycle = 0;
       currentPhase = 'Get Ready...';
+      elapsedSessionSeconds = 0;
     });
+
+    // Start session timer
+    _startSessionTimer();
 
     // Update animation duration for inhale phase
     _animationController.duration = Duration(seconds: widget.technique.inhale);
     
     // Start with a 2-second preparation
     Timer(const Duration(seconds: 2), () {
-      if (mounted) _runBreathingCycle();
+      if (mounted && isActive && !isPaused) _runBreathingCycle();
     });
   }
 
   void _runBreathingCycle() {
-    if (!isActive || currentCycle >= widget.totalCycles) {
+    if (!isActive || isPaused || currentCycle >= widget.totalCycles) {
       _completeExercise();
       return;
     }
@@ -156,7 +296,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     _startCountdown(widget.technique.inhale);
     
     Timer(Duration(seconds: widget.technique.inhale), () {
-      if (!isActive || !mounted) return;
+      if (!isActive || !mounted || isPaused) return;
       
       // Hold phase 1
       if (widget.technique.hold1 > 0) {
@@ -167,7 +307,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
         _startCountdown(widget.technique.hold1);
         
         Timer(Duration(seconds: widget.technique.hold1), () {
-          if (!isActive || !mounted) return;
+          if (!isActive || !mounted || isPaused) return;
           _exhalePhase();
         });
       } else {
@@ -187,7 +327,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     _startCountdown(widget.technique.exhale);
     
     Timer(Duration(seconds: widget.technique.exhale), () {
-      if (!isActive || !mounted) return;
+      if (!isActive || !mounted || isPaused) return;
       
       // Hold phase 2
       if (widget.technique.hold2 > 0) {
@@ -198,7 +338,7 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
         _startCountdown(widget.technique.hold2);
         
         Timer(Duration(seconds: widget.technique.hold2), () {
-          if (!isActive || !mounted) return;
+          if (!isActive || !mounted || isPaused) return;
           _runBreathingCycle();
         });
       } else {
@@ -207,33 +347,21 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     });
   }
 
-  void _stopBreathingExercise() {
-    setState(() {
-      isActive = false;
-      currentPhase = 'Tap to Start';
-      currentCycle = 0;
-      remainingSeconds = 0;
-    });
-    _animationController.reset();
-    _breathingTimer?.cancel();
-    _countdownTimer?.cancel();
-    
-    // Reset to initial color
-    _updatePhaseColor(0);
-  }
-
   void _completeExercise() {
     setState(() {
       isActive = false;
+      isPaused = false;
       currentPhase = 'Complete!';
     });
     _animationController.reset();
+    _sessionTimer?.cancel();
     
     Timer(const Duration(seconds: 2), () {
       if (mounted) {
         setState(() {
           currentPhase = 'Tap to Start';
           currentCycle = 0;
+          elapsedSessionSeconds = 0;
         });
         _updatePhaseColor(0);
       }
@@ -244,282 +372,321 @@ class _BreathingSessionPageState extends State<BreathingSessionPage>
     );
   }
 
-  String _getTechniquePattern() {
-    List<String> pattern = [];
-    pattern.add('${widget.technique.inhale}s in');
-    if (widget.technique.hold1 > 0) pattern.add('${widget.technique.hold1}s hold');
-    pattern.add('${widget.technique.exhale}s out');
-    if (widget.technique.hold2 > 0) pattern.add('${widget.technique.hold2}s hold');
-    return pattern.join(' • ');
-  }
-
   @override
   Widget build(BuildContext context) {
-    final currentColor = _colorAnimation.value ?? (phaseColors.isNotEmpty ? phaseColors[0] : widget.technique.color);
+    final currentColor = _colorAnimation.value ?? (phaseColors.isNotEmpty ? phaseColors[0] : Theme.of(context).colorScheme.tertiary);
+    
+    // Calculate progress percentage
+    double progress = totalSessionSeconds > 0 ? elapsedSessionSeconds / totalSessionSeconds : 0.0;
+    progress = progress.clamp(0.0, 1.0);
+    
+    // Format time
+    String formatTime(int seconds) {
+      int minutes = seconds ~/ 60;
+      int remainingSeconds = seconds % 60;
+      return '${minutes.toString().padLeft(2, '0')}:${remainingSeconds.toString().padLeft(2, '0')}';
+    }
+    
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.technique.name),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ),
-      body: Container(
-        decoration: BoxDecoration(
-          color: _colorAnimation.value ?? (phaseColors.isNotEmpty ? phaseColors[0] : widget.technique.color),
-        ),
-        child: SafeArea(
-          child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      backgroundColor: currentColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
-                Center(
-                child: Container(
-                  width: 260,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
-                      Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
-                    ],
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                  ),
-                  borderRadius: BorderRadius.circular(32),
-                  ),
-                  child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                    Icons.multitrack_audio_rounded,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                    child: Text(
-                      'SOUND OF BIRDS CHIRPING',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimary,
-                        fontWeight: FontWeight.w500,
-                        ),
-                    ),
-                    ),
-                  ],
-                  ),
-                ),
-                ),
-              
-              const SizedBox(height: 18),
-              
-              // Breathing Animation
-              Expanded(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                        // Progress indicator
-                        if (isActive)
-                          Text(
-                            'Cycle $currentCycle of ${widget.totalCycles}',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),                      
-                        const SizedBox(height: 36),
-                      
-                        // Breathing circle with concentric circles
-                        GestureDetector(
-                          onTap: _startBreathingExercise,
-                          child: AnimatedBuilder(
-                            animation: Listenable.merge([_scaleAnimation, _colorAnimation]),
-                            builder: (context, child) {
-                              return SizedBox(
-                                width: 300,
-                                height: 300,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    // Outer circle (largest) - slight delay
-                                    AnimatedContainer(
-                                      duration: Duration(milliseconds: 100),
-                                      width: 240 * (_scaleAnimation.value * 0.95),
-                                      height: 240 * (_scaleAnimation.value * 0.95),
-                                      decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.05),
-                                        width: 1.5,
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
-                                        blurRadius: 32,
-                                        spreadRadius: 8,
-                                        offset: Offset(0, 0),
-                                        ),
-                                      ],
-                                      ),
-                                    ),
-                                    
-                                    
-                                    // Second circle
-                                    Container(
-                                      width: 200 * (_scaleAnimation.value * 0.97),
-                                      height: 200 * (_scaleAnimation.value * 0.97),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.15),
-                                          width: 2,
-                                        ),
-                                      ),
-                                    ),
-                                    
-                                    // Third circle
-                                    Container(
-                                      width: 160 * (_scaleAnimation.value * 0.99),
-                                      height: 160 * (_scaleAnimation.value * 0.99),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
-                                          width: 2.5,
-                                        ),
-                                      ),
-                                    ),
-                                    
-                                    // Fourth circle - main rhythm
-                                    Container(
-                                      width: 120 * _scaleAnimation.value,
-                                      height: 120 * _scaleAnimation.value,
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.4),
-                                          width: 2.7,
-                                        ),
-                                      ),
-                                    ),
-                                    
-                                    // Inner filled circle (center) - most responsive
-                                    Container(
-                                      width: 80 * (_scaleAnimation.value * 1.05),
-                                      height: 80 * (_scaleAnimation.value * 1.05),
-                                      decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.05),
-                                        
-                                      ),
-                                      child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            // Countdown timer in center
-                                            if (isActive && remainingSeconds > 0)
-                                              Text(
-                                                '$remainingSeconds',
-                                                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Theme.of(context).colorScheme.onPrimary,
-                                                  fontSize: 36,
-                                                ),
-                                              )
-                                            else
-                                              Icon(
-                                                isActive ? Icons.pause : Icons.play_arrow,
-                                                size: 36,
-                                                color: Theme.of(context).colorScheme.onPrimary,
-                                              ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
+              // Top section with sound and heart icon
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Sound selector
+                  GestureDetector(
+                    onTap: () async {
+                      final result = await Navigator.push<String>(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SoundtrackLibrary(
+                            selectedSoundtrack: selectedSoundtrack,
+                            favoriteSoundtracks: favoriteSoundtracks,
+                            onSoundtrackSelected: (soundtrack) {
+                              Navigator.pop(context, soundtrack);
+                            },
+                            onFavoritesUpdated: (favorites) {
+                              setState(() {
+                                favoriteSoundtracks = favorites;
+                              });
                             },
                           ),
                         ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Phase indicator
-                        Text(
-                          currentPhase,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: Theme.of(context).colorScheme.onPrimary,
-                          ),
+                      );
+                      
+                      if (result != null) {
+                        setState(() {
+                          selectedSoundtrack = result;
+                        });
+                      }
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+                          width: 1,
                         ),
-                        
-                        const SizedBox(height: 16),
-                        
-                        // Instructions
-                        if (!isActive)
-                          Text(
-                            'Tap the circle to begin your breathing session',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        else
-                          Text(
-                            'Follow the circle\'s rhythm • Tap to stop',
-                            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-                            ),
-                            textAlign: TextAlign.center,
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            Icons.volume_up,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            size: 16,
                           ),
-                    ],
+                          const SizedBox(width: 8),
+                          Text(
+                            'SOUND: ${_getSoundtrackName().toUpperCase()}',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  
+                  // Heart/favorite icon
+                  GestureDetector(
+                    onTap: _toggleFavorite,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      child: Icon(
+                        selectedSoundtrack != null && 
+                        selectedSoundtrack != 'none' && 
+                        favoriteSoundtracks.contains(selectedSoundtrack)
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                        color: selectedSoundtrack != null && 
+                               selectedSoundtrack != 'none' && 
+                               favoriteSoundtracks.contains(selectedSoundtrack)
+                          ? Colors.red
+                          : Theme.of(context).colorScheme.onPrimary,
+                        size: 20,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 60),
+              
+              // Main breathing circle
+              Expanded(
+                child: Center(
+                  child: GestureDetector(
+                    onTap: _startBreathingExercise,
+                    child: AnimatedBuilder(
+                      animation: Listenable.merge([_scaleAnimation, _colorAnimation]),
+                      builder: (context, child) {
+                        return SizedBox(
+                          width: 340,
+                          height: 340,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              // Outer circle
+                              Container(
+                                width: 340 * (_scaleAnimation.value * 0.93),
+                                height: 340 * (_scaleAnimation.value * 0.93),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
+                                ),
+                              ),
+                              
+                              Container(
+                                width: 280 * (_scaleAnimation.value * 0.95),
+                                height: 280 * (_scaleAnimation.value * 0.95),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.15),
+                                ),
+                              ),
+
+                              // Middle circle
+                              Container(
+                                width: 220 * (_scaleAnimation.value * 0.97),
+                                height: 220 * (_scaleAnimation.value * 0.97),
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                                ),
+                              ),
+                              
+                              // Inner circle
+                              Container(
+                                width: 160 * _scaleAnimation.value,
+                                height: 160 * _scaleAnimation.value,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.25),
+                                ),
+                                child: Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        currentPhase,
+                                        style: TextStyle(
+                                          color: Theme.of(context).colorScheme.onPrimary,
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
               ),
               
-              // Control Button
-              if (isActive)
-                Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.only(top: 20),
-                  child: ElevatedButton(
-                    onPressed: _stopBreathingExercise,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.onSurface,
-                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+              const SizedBox(height: 30),
+              
+              // Progress bar section
+              Column(
+                children: [
+                  // Time display
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        formatTime(elapsedSessionSeconds),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
+                      Text(
+                        formatTime(totalSessionSeconds),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                  
+                  const SizedBox(height: 8),
+                  
+                  // Progress bar
+                  Container(
+                    height: 4,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(2),
                     ),
-                    child: const Text(
-                      'Stop Session',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    child: Stack(
+                      children: [
+                        Container(
+                          width: double.infinity,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.3),
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          width: MediaQuery.of(context).size.width * 0.85 * progress,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                ],
+              ),
+              
+              const SizedBox(height: 40),
+              
+              // Control panel
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // Restart button
+                  GestureDetector(
+                    onTap: _restartSession,
+                    child: Container(
+                      padding: const EdgeInsets.all(16),
+                      child: Icon(
+                        Icons.refresh,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 32,
+                      ),
+                    ),
+                  ),
+                  
+                  // Play/pause button (larger)
+                  GestureDetector(
+                    onTap: _startBreathingExercise,
+                    child: Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        isActive && !isPaused ? Icons.pause : Icons.play_arrow,
+                        color: currentColor,
+                        size: 36,
+                      ),
+                    ),
+                  ),
+                  
+                  // Cycle counter
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Text(
+                      '$currentCycle/${widget.totalCycles}',
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 20),
             ],
           ),
         ),
       ),
-    )
     );
-
   }
-}
-
-class BreathingTechnique {
+}class BreathingTechnique {
   final String name;
   final int inhale;
   final int hold1;
   final int exhale;
   final int hold2;
   final String description;
-  final Color color;
 
   BreathingTechnique({
     required this.name,
@@ -528,6 +695,5 @@ class BreathingTechnique {
     required this.exhale,
     required this.hold2,
     required this.description,
-    required this.color,
   });
 }
