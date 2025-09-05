@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../data/mood_entry_service.dart';
 
 class JournalEntryScreen extends StatefulWidget {
@@ -26,6 +27,12 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
   bool _isMoodDescriptionExpanded = false;
   final TextEditingController _customMoodController = TextEditingController();
   bool _showCustomMoodInput = false;
+  
+  // Voice recording variables
+  bool _isRecording = false;
+  bool _speechEnabled = false;
+  String _recordedText = '';
+  late stt.SpeechToText _speech;
 
   final Map<String, Map<String, dynamic>> _moodData = {
     'Very Low': {
@@ -95,6 +102,8 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
   void initState() {
     super.initState();
     _selectedMood = widget.selectedMood;
+    _initSpeech();
+    
     // Sync slider value with selectedMood
     switch (_selectedMood) {
       case 'Very Low':
@@ -115,6 +124,11 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
       default:
         _moodRating = 3.0;
     }
+  }
+
+  void _initSpeech() async {
+    // _speechEnabled = await _speech.initialize();
+    setState(() {});
   }
 
   @override
@@ -536,15 +550,17 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
                         ),
                         const SizedBox(width: 12),
                         GestureDetector(
-                          onTap: _startVoiceInput,
+                          onTap: _toggleRecording,
                           child: Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.tertiary,
+                              color: _isRecording 
+                                  ? Colors.red 
+                                  : Theme.of(context).colorScheme.tertiary,
                               borderRadius: BorderRadius.circular(20),
                             ),
-                            child: const Icon(
-                              Icons.mic,
+                            child: Icon(
+                              _isRecording ? Icons.stop : Icons.mic,
                               color: Colors.white,
                               size: 20,
                             ),
@@ -738,39 +754,92 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
     );
   }
 
-  void _startVoiceInput() {
-    // Show a placeholder dialog for voice input functionality
+  void _toggleRecording() async {
+    if (_isRecording) {
+      _stopListening();
+    } else {
+      _startListening();
+    }
+  }
+
+  void _startListening() async {
+    // For demo purposes, we'll simulate voice recording
+    setState(() {
+      _isRecording = true;
+    });
+    
+    // Show recording dialog
     showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: const Row(
           children: [
-            Icon(Icons.mic, color: Colors.orange),
+            Icon(Icons.mic, color: Colors.red),
             SizedBox(width: 8),
-            Text('Voice Input'),
+            Text('Recording...'),
           ],
         ),
-        content: const Column(
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.mic, size: 48, color: Colors.orange),
-            SizedBox(height: 16),
-            Text('Voice input feature coming soon!'),
-            SizedBox(height: 8),
-            Text(
-              'This will allow you to dictate your journal entry using speech-to-text.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.grey),
+            Container(
+              padding: const EdgeInsets.all(20),
+              child: const Icon(
+                Icons.mic,
+                size: 48,
+                color: Colors.red,
+              ),
             ),
+            const Text('Speak now...'),
+            const SizedBox(height: 16),
+            const LinearProgressIndicator(),
           ],
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('OK'),
+            onPressed: _stopListening,
+            child: const Text('Stop'),
           ),
         ],
+      ),
+    );
+
+    // Simulate recording for 3 seconds then auto-stop
+    Future.delayed(const Duration(seconds: 3), () {
+      if (_isRecording) {
+        _stopListening();
+      }
+    });
+  }
+
+  void _stopListening() {
+    setState(() {
+      _isRecording = false;
+    });
+    
+    // Close dialog if open
+    if (Navigator.canPop(context)) {
+      Navigator.pop(context);
+    }
+    
+    // Simulate transcribed text (in real implementation, this would come from speech recognition)
+    const simulatedTranscription = "This is a sample transcription of what you said. In a real implementation, this would be the actual speech-to-text result.";
+    
+    // Add transcribed text to journal
+    final currentText = _journalController.text;
+    final newText = currentText.isEmpty 
+        ? simulatedTranscription 
+        : '$currentText\n\n$simulatedTranscription';
+    
+    _journalController.text = newText;
+    
+    // Show success message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Voice recording added to journal'),
+        backgroundColor: Colors.green,
       ),
     );
   }

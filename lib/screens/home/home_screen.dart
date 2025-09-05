@@ -91,8 +91,8 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(20),
-                  bottomRight: Radius.circular(20),
+                  bottomLeft: Radius.circular(46),
+                  bottomRight: Radius.circular(46),
                 ),
                 boxShadow: [
                   BoxShadow(
@@ -217,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color: const Color(0xFFF8F8F8),
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(32),
                       ),
                       child: Row(
                         children: [
@@ -287,7 +287,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(32),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -334,11 +334,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             // Mindful Minutes Card
             Expanded(
               child: Container(
-                height: 160,
+                height: 200,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: const Color(0xFF7FB069),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(28),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -381,11 +381,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
             // Journal Streak Card
             Expanded(
               child: Container(
-                height: 160,
+                height: 200,
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   color: const Color(0xFF8B7ED8),
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(28),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
