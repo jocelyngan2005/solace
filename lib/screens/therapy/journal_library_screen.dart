@@ -13,6 +13,7 @@ class JournalLibraryScreen extends StatefulWidget {
 class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   bool _isCalendarView = true;
   DateTime _currentDate = DateTime.now();
+  PageController _pageController = PageController();
 
   // Sample data - in a real app, this would come from your data service
   List<JournalEntry> _journalEntries = [];
@@ -81,6 +82,12 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     _journalEntries = _generateSampleData();
   }
 
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   void _refreshEntries() {
     setState(() {
       _journalEntries = _generateSampleData();
@@ -137,7 +144,18 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           _buildViewToggle(),
           _buildMoodCount(),
           Expanded(
-            child: _isCalendarView ? _buildCalendarView() : _buildListView(),
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _isCalendarView = index == 0;
+                });
+              },
+              children: [
+                _buildCalendarView(),
+                _buildListView(),
+              ],
+            ),
           ),
         ],
       ),
@@ -155,7 +173,14 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _isCalendarView = true),
+              onTap: () {
+                setState(() => _isCalendarView = true);
+                _pageController.animateToPage(
+                  0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
@@ -188,7 +213,14 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           ),
           Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _isCalendarView = false),
+              onTap: () {
+                setState(() => _isCalendarView = false);
+                _pageController.animateToPage(
+                  1,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
@@ -444,6 +476,19 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
       itemCount: _journalEntries.length,
       itemBuilder: (context, index) {
         final entry = _journalEntries[index];
+        
+        // Check if this is today's entry to get actual time
+        final today = DateTime.now();
+        final isToday = entry.date.year == today.year && 
+                       entry.date.month == today.month && 
+                       entry.date.day == today.day;
+        
+        // Get the actual entry time for today's entry
+        DateTime? entryTime;
+        if (isToday) {
+          entryTime = JournalEntryService.getTodayEntryTime();
+        }
+        
         return GestureDetector(
           onTap: () => _showDayDetails(entry.date, entry),
           child: Container(
@@ -518,7 +563,9 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '8:00 PM',
+                            entryTime != null 
+                              ? DateFormat('h:mm a').format(entryTime)
+                              : '8:00 PM',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 12,
@@ -605,6 +652,12 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
       moodTags = _generateMoodTags(entry.mood);
     }
     
+    // Get entry time for today's entry
+    DateTime? entryTime;
+    if (isToday) {
+      entryTime = JournalEntryService.getTodayEntryTime();
+    }
+    
     // Find current entry index for navigation
     int currentIndex = _journalEntries.indexWhere((e) => 
         e.date.year == entry.date.year &&
@@ -622,6 +675,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           points: entry.points,
           moodTags: moodTags,
           moodColor: _moodColors[entry.mood] ?? Colors.grey,
+          entryTime: entryTime,
           onNextDay: currentIndex > 0 ? () {
             Navigator.pop(context);
             _showDayDetails(_journalEntries[currentIndex - 1].date, _journalEntries[currentIndex - 1]);

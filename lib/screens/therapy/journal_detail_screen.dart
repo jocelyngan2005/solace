@@ -9,6 +9,7 @@ class JournalDetailScreen extends StatelessWidget {
   final int points;
   final List<String> moodTags;
   final Color moodColor;
+  final DateTime? entryTime;
   final VoidCallback? onNextDay;
   final VoidCallback? onPreviousDay;
 
@@ -21,6 +22,7 @@ class JournalDetailScreen extends StatelessWidget {
     required this.points,
     required this.moodTags,
     required this.moodColor,
+    this.entryTime,
     this.onNextDay,
     this.onPreviousDay,
   });
@@ -138,7 +140,9 @@ class JournalDetailScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    '8:00 PM',
+                                    entryTime != null 
+                                        ? DateFormat('h:mm a').format(entryTime!)
+                                        : '8:00 PM',
                                     style: TextStyle(
                                       color: Colors.grey[600],
                                       fontSize: 14,

@@ -10,6 +10,7 @@ class JournalEntryService {
   String? _todayMoodLabel;
   String? _todayTitle;
   String? _todayJournalText;
+  DateTime? _todayEntryTime;
   double? _todayStressLevel;
   double? _todayAnxietyLevel;
   String? _todayStressReason;
@@ -42,6 +43,9 @@ class JournalEntryService {
     final instance = JournalEntryService();
     final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
     instance._lastMoodEntryDate = today;
+    
+    // Store the current time when the entry is created
+    instance._todayEntryTime = DateTime.now();
     
     if (moodLabel != null) {
       instance._todayMoodLabel = moodLabel;
@@ -136,6 +140,11 @@ class JournalEntryService {
   static String? getTodayJournalText() {
     final instance = JournalEntryService();
     return instance._todayJournalText;
+  }
+
+  static DateTime? getTodayEntryTime() {
+    final instance = JournalEntryService();
+    return instance._todayEntryTime;
   }
   
   static double? getTodayStressLevel() {
