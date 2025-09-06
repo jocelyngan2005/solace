@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/dashboard_card.dart';
-import '../therapy/resources_screen.dart';
 
 class AcademicScreen extends StatefulWidget {
   const AcademicScreen({super.key});
@@ -19,7 +18,7 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -34,7 +33,6 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
           tabs: const [
             Tab(text: 'Calendar'),
             Tab(text: 'Focus Mode'),
-            Tab(text: 'Resources'),
           ],
         ),
       ),
@@ -43,7 +41,6 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
         children: [
           _buildCalendarTab(),
           _buildFocusModeTab(),
-          const ResourcesScreen(),
         ],
       ),
     );

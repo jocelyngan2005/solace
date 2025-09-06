@@ -239,7 +239,7 @@ class _ChatbotModalState extends State<ChatbotModal> {
                       ));
                     });
                   },
-                  icon: const Icon(Icons.refresh, size: 20),
+                  icon: const Icon(Icons.loop, size: 20),
                   style: IconButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.outline.withOpacity(0.1),
                     foregroundColor: Theme.of(context).colorScheme.onSurface,

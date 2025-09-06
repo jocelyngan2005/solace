@@ -35,26 +35,36 @@ class ResourcesScreen extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        const Text(
-                          'If you\'re in immediate danger, call',
-                          style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                        Row(
+                          children: [
+                          const Icon(
+                            Icons.warning_amber,
+                            color: Colors.white,
+                            size: 16,
                           ),
+                          const SizedBox(width: 8),
+                          const Text(
+                            'If you\'re in immediate danger, call',
+                            style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            ),
+                          ),
+                          ],
                         ),
                         const SizedBox(height: 8),
                         SizedBox(
-                          width: 148,
+                          width: 100,
                           child: ElevatedButton.icon(
-                          icon: const Icon(Icons.phone, color: Colors.red),
+                          icon: const Icon(Icons.phone, color: Colors.redAccent),
                           label: const Text('Call 999'),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
-                            foregroundColor: Colors.red,
+                            foregroundColor: Colors.redAccent,
                             shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                             ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(vertical: 8),
                           ),
                           onPressed: () {
                             // You can use url_launcher to actually call, but here just show a snackbar
@@ -70,7 +80,7 @@ class ResourcesScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         const Divider(color: Colors.white), 
                         const Text(
-                          'Suicide helplines:',
+                          '24hr helplines:',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,    
                             color: Colors.white,                      
@@ -78,6 +88,8 @@ class ResourcesScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Befrienders KL', '03-7627-2929'),
+                        const SizedBox(height: 4),
+                        _buildCrisisContactItem(context, 'Talian Kasih', '15999'),
                         const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Life Line Association', '15995'),
                         const SizedBox(height: 4),
@@ -154,58 +166,8 @@ class ResourcesScreen extends StatelessWidget {
               ),
             ),
             
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             
-            // Quick Actions
-            Row(
-              children: [
-                Expanded(
-                  child: Card(
-                    child: InkWell(
-                      onTap: () => _showEmergencyContacts(context),
-                      borderRadius: BorderRadius.circular(16),
-                      child: const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            Icon(Icons.emergency, color: Colors.red, size: 32),
-                            SizedBox(height: 8),
-                            Text(
-                              'Emergency\nContacts',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Card(
-                    child: InkWell(
-                      onTap: () => _showCampusMap(context),
-                      borderRadius: BorderRadius.circular(16),
-                      child: const Padding(
-                        padding: EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            Icon(Icons.map, color: Colors.blue, size: 32),
-                            SizedBox(height: 8),
-                            Text(
-                              'Campus\nMap',
-                              textAlign: TextAlign.center,
-                              style: TextStyle(fontWeight: FontWeight.w600),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
           ],
         ),
       ),
@@ -273,6 +235,11 @@ class ResourcesScreen extends StatelessWidget {
         contact.startsWith('09-');
     final isEmail = contact.contains('@');
 
+    // Parse description to extract distance and time
+    final parts = description.split(' • ');
+    final distance = parts.isNotEmpty ? parts[0] : '';
+    final openTime = parts.length > 1 ? parts[1] : '';
+
     return Row(
       children: [
         Container(
@@ -294,12 +261,49 @@ class ResourcesScreen extends StatelessWidget {
                         fontWeight: FontWeight.w700,
                       ),
               ),
-              Text(
-                description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              const SizedBox(height: 4),
+              // Distance with location icon
+              if (distance.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.location_pin,
+                      size: 14,
                       color: Theme.of(context).colorScheme.outline,
                     ),
-              ),
+                    const SizedBox(width: 4),
+                    Text(
+                      distance,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 2),
+              // Open time with clock icon
+              if (openTime.isNotEmpty)
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        openTime,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              const SizedBox(height: 4),
               if (contact.isNotEmpty)
                 Row(
                   children: [
@@ -361,55 +365,6 @@ class ResourcesScreen extends StatelessWidget {
         content: Text('Copied $text to clipboard'),
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.fixed,
-      ),
-    );
-  }
-
-  void _showEmergencyContacts(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Emergency Contacts'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildEmergencyContactItem(context, '🚨 Emergency', '999'),
-            _buildEmergencyContactItem(context, '🆘 Befrienders KL', '03-7627-2929'),
-            _buildEmergencyContactItem(context, '📞 Life Line Association', '15995'),
-            const SizedBox(height: 8),
-            _buildEmergencyContactItem(context, 'Campus Security', '03-7967-1000'),
-            _buildEmergencyContactItem(context, 'Campus Health', '03-7967-2000'),
-            _buildEmergencyContactItem(context, 'Student Counseling', '03-7967-3333'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildEmergencyContactItem(BuildContext context, String label, String number) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text('$label: $number'),
-          ),
-          IconButton(
-            onPressed: () => _copyToClipboard(context, number),
-            icon: Icon(Icons.copy, size: 16, color: Colors.grey[400]),
-            tooltip: 'Copy number',
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-          ),
-        ],
       ),
     );
   }
@@ -518,36 +473,6 @@ class ResourcesScreen extends StatelessWidget {
           constraints: const BoxConstraints(),
         ),
       ],
-    );
-  }
-
-  void _showCampusMap(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const Text('Campus Resources Map'),
-        content: const Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('📍 Interactive campus map would show:'),
-            SizedBox(height: 8),
-            Text('• Health Center locations'),
-            Text('• Counseling services'),
-            Text('• Study spaces & library'),
-            Text('• Sports & recreation facilities'),
-            Text('• Prayer rooms & facilities'),
-            Text('• Emergency call points'),
-            Text('• Student services centers'),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
-        ],
-      ),
     );
   }
 }
