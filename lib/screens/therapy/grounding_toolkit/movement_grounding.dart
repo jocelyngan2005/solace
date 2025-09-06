@@ -217,17 +217,6 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              'Use gentle movements to reconnect with your body.',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              ),
-                            ),
-                            ),
-              
-              const SizedBox(height: 24),
               
               if (!isActive) ...[
                 // Exercise Selector                

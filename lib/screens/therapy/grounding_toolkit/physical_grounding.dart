@@ -279,20 +279,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
             padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                            Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                            child: Text(
-                              'Use your body to anchor yourself in the present.',
-                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              ),
-                            ),
-                            ),
-                        
-                
-                const SizedBox(height: 24),
-                
+              children: [                
                 if (!isActive) ...[                  
                   ...techniques.entries.map((entry) {
                     final key = entry.key;
