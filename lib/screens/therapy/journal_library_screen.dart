@@ -45,6 +45,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     final todayMood = JournalEntryService.getTodayMoodLabel();
     final todayTitle = JournalEntryService.getTodayTitle();
     final todayContent = JournalEntryService.getTodayJournalText();
+    final todayPoints = JournalEntryService.getTodayPoints();
     
     if (todayMood != null && todayTitle != null && todayContent != null) {
       entries.add(
@@ -53,7 +54,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           mood: todayMood,
           title: todayTitle,
           content: todayContent,
-          points: 120,
+          points: todayPoints ?? 0, // Use calculated points or 0 as fallback
         ),
       );
     }
