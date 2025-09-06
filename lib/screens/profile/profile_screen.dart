@@ -7,6 +7,7 @@ import '../../data/gamification_service.dart';
 import '../../data/gamification_controller.dart';
 import '../../data/weekly_challenge_service.dart';
 import '../../widgets/animations/achievement_unlock_animation.dart';
+import '../../widgets/habit_tracker.dart';
 import 'achievements_screen.dart';
 import 'weekly_challenges_screen.dart';
 
@@ -30,14 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late WeeklyChallengeService _challengeService;
 
   final List<String> _themes = ['Pastel Blue', 'Soft Lavender', 'Warm Beige'];
-  final List<String> _allFocusAreas = [
-    'Sleep',
-    'Anxiety',
-    'Productivity',
-    'Social',
-    'Academic',
-    'Self-esteem',
-  ];
 
   @override
   void initState() {
@@ -266,7 +259,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                                 onTap: () {
-                                  // Navigate to focus areas & goals screen
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const HabitTracker(),
+                                    ),
+                                  );
                                 },
                               ),
                               Divider(
@@ -305,9 +303,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   size: 24,
                                 ),
                                 contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                                onTap: () {
-                                  // Navigate to personalisation screen
-                                },
+                                onTap: () => _showPersonalisation(context),
                               ),
                               Divider(
                                 indent: 20,
@@ -556,6 +552,175 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showPersonalisation(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => StatefulBuilder(
+        builder: (context, setStateDialog) => AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          title: const Text('Personalisation'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Theme Selection
+                const Text(
+                  '🎨 App Theme',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  children: _themes.map((theme) {
+                    final isSelected = _selectedTheme == theme;
+                    Color themeColor;
+                    switch (theme) {
+                      case 'Pastel Blue':
+                        themeColor = Colors.blue.shade300;
+                        break;
+                      case 'Soft Lavender':
+                        themeColor = Colors.purple.shade300;
+                        break;
+                      case 'Warm Beige':
+                        themeColor = Colors.orange.shade300;
+                        break;
+                      default:
+                        themeColor = Colors.blue.shade300;
+                    }
+                    
+                    return FilterChip(
+                      label: Text(theme),
+                      selected: isSelected,
+                      selectedColor: themeColor.withOpacity(0.3),
+                      checkmarkColor: themeColor,
+                      backgroundColor: Colors.grey.shade100,
+                      onSelected: (selected) {
+                        if (selected) {
+                          setStateDialog(() {
+                            _selectedTheme = theme;
+                          });
+                          setState(() {
+                            _selectedTheme = theme;
+                          });
+                        }
+                      },
+                    );
+                  }).toList(),
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // Font Size
+                const Text(
+                  '📝 Text Size',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    const Text('Small', style: TextStyle(fontSize: 12)),
+                    Expanded(
+                      child: Slider(
+                        value: _fontSize,
+                        min: 12.0,
+                        max: 24.0,
+                        divisions: 6,
+                        onChanged: (value) {
+                          setStateDialog(() {
+                            _fontSize = value;
+                          });
+                          setState(() {
+                            _fontSize = value;
+                          });
+                        },
+                      ),
+                    ),
+                    const Text('Large', style: TextStyle(fontSize: 18)),
+                  ],
+                ),
+                Text(
+                  'Preview text at ${_fontSize.round()}pt',
+                  style: TextStyle(fontSize: _fontSize, color: Colors.grey.shade600),
+                ),
+                
+                const SizedBox(height: 20),
+                
+                // Accessibility Features
+                const Text(
+                  '♿ Accessibility',
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                
+                SwitchListTile(
+                  title: const Text('Screen Reader Support', style: TextStyle(fontSize: 14)),
+                  subtitle: const Text('Enhanced accessibility for screen readers', style: TextStyle(fontSize: 12)),
+                  value: _screenReaderEnabled,
+                  onChanged: (value) {
+                    setStateDialog(() {
+                      _screenReaderEnabled = value;
+                    });
+                    setState(() {
+                      _screenReaderEnabled = value;
+                    });
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
+                
+                SwitchListTile(
+                  title: const Text('Notifications', style: TextStyle(fontSize: 14)),
+                  subtitle: const Text('Receive wellness reminders and updates', style: TextStyle(fontSize: 12)),
+                  value: _notificationsEnabled,
+                  onChanged: (value) {
+                    setStateDialog(() {
+                      _notificationsEnabled = value;
+                    });
+                    setState(() {
+                      _notificationsEnabled = value;
+                    });
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
+                
+                const SizedBox(height: 12),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.shade50,
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.blue.shade200),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.info_outline, color: Colors.blue.shade600, size: 16),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          'Your preferences are saved locally and help personalize your Solace experience.',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue.shade700,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Done'),
+            ),
+          ],
+        ),
       ),
     );
   }

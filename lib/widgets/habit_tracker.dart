@@ -368,7 +368,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Sleep Hours tracker card
-  Widget _buildSleepHoursTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildSleepHoursTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -499,7 +502,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Bedtime Patterns tracker card
-  Widget _buildBedtimePatternsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildBedtimePatternsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     String targetBed = _bedTimeGoal != null
         ? _bedTimeGoal!.format(context)
         : '23:00';
@@ -552,7 +558,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                                     color: habit['color'],
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  textAlign: TextAlign.start,
+                              textAlign: TextAlign.start,
                             ),
                             Text(
                               'Target wake-up: $targetWake',
@@ -561,7 +567,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                                     color: habit['color'],
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  textAlign: TextAlign.start,
+                              textAlign: TextAlign.start,
                             ),
                           ],
                         ),
@@ -657,7 +663,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Nap Breaks tracker card
-  Widget _buildNapBreaksTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildNapBreaksTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -804,7 +813,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Meals tracker card
-  Widget _buildMealsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildMealsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final mealOptions = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
     final Color chipColor = habit['color'];
 
@@ -937,7 +949,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Water tracker card
-  Widget _buildWaterTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildWaterTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1055,7 +1070,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Fruits tracker card
-  Widget _buildFruitsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildFruitsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1173,7 +1191,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Steps tracker card
-  Widget _buildStepsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildStepsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     bool _linkedToPhone = false;
 
     return StatefulBuilder(
@@ -1355,7 +1376,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Exercise tracker card
-  Widget _buildExerciseTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildExerciseTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final TextEditingController typeController = TextEditingController();
     final TextEditingController durationController = TextEditingController();
 
@@ -1799,7 +1823,10 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
-  Widget _buildDynamicHabitCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildDynamicHabitCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final habitName = habit['name'];
     switch (habitName) {
       case 'Sleep Hours':
@@ -1828,127 +1855,274 @@ class _HabitTrackerState extends State<HabitTracker> {
     return '${twoDigits(duration.inHours)}:${twoDigits(duration.inMinutes.remainder(60))}';
   }
 
+  final List<String> _focusAreas = [];
+  final List<String> _allFocusAreas = [
+    'Sleep',
+    'Anxiety',
+    'Productivity',
+    'Social',
+    'Academic',
+    'Self-esteem',
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
-        title: const Text('Habit Tracker'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            tooltip: 'Add Custom Habit',
-            onPressed: _showAddHabitDialog,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: Text(
+          'Focus Areas & Goals',
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-          IconButton(
-            icon: const Icon(Icons.edit, size: 20),
-            tooltip: 'Edit Habits',
-            onPressed: _showEditHabitsDialog,
+        ),
+        leading: IconButton(
+          icon: Icon(
+            Icons.arrow_back_ios_rounded,
+            color: Theme.of(context).colorScheme.onSurface,
+            size: 20,
           ),
-          const SizedBox(width: 16),
-        ],
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Sleep & Rest Habits section
-                      _buildSection(
-                        context,
-                        title: 'Sleep & Rest Habits',
-                        cards: _sleepHabits.map((habit) => _buildDynamicHabitCard(context, habit)).toList(),
-                      ),
-                      const SizedBox(height: 24),
-                      _buildSection(
-                        context,
-                        title: 'Health Habits',
-                        cards: _healthHabits.map((habit) => _buildDynamicHabitCard(context, habit)).toList(),
-                      ),
-                      const SizedBox(height: 24),
-                      _buildSection(
-                        context,
-                        title: 'Movement & Exercise Habits',
-                        cards: _movementHabits.map((habit) => _buildDynamicHabitCard(context, habit)).toList(),
-                      ),
-                      if (_customHabits.isNotEmpty) ...[
-                        const SizedBox(height: 24),
-                        _buildSection(
-                          context,
-                          title: 'Custom Habits',
-                          cards: _customHabits
-                              .map(
-                                (habit) =>
-                                    _buildCustomHabitCard(context, habit),
-                              )
-                              .toList(),
-                        ),
-                      ],
-                    ],
+          padding: const EdgeInsets.all(20.0),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Focus Areas',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        title: const Text('Habits Saved! 🎉'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text(
-                              'Your habit entries have been saved successfully.',
-                            ),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.all(12),
-                              decoration: BoxDecoration(
-                                color: Theme.of(
-                                  context,
-                                ).colorScheme.primary.withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: Text(
-                                'Keep up the good work! Consistency is key to building healthy habits.',
-                                style: const TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Done'),
-                          ),
-                        ],
-                      ),
+
+                const SizedBox(height: 16),
+
+                // Focus Areas
+                const Text(
+                  'Select areas you want to focus on for better personalized content.',
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: _allFocusAreas.map((area) {
+                    final isSelected = _focusAreas.contains(area);
+                    return FilterChip(
+                      label: Text(area, style: const TextStyle(fontSize: 12)),
+                      selected: isSelected,
+                      selectedColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.2),
+                      checkmarkColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: Colors.grey.shade100,
+                      onSelected: (selected) {
+                        setState(() {
+                          if (selected) {
+                            _focusAreas.add(area);
+                          } else {
+                            _focusAreas.remove(area);
+                          }
+                        });
+                      },
                     );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    foregroundColor: Theme.of(context).colorScheme.onPrimary,
-                    textStyle: Theme.of(context).textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                  }).toList(),
+                ),
+
+                const SizedBox(height: 32),
+
+                Text(
+                  'Habit Tracking',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
-                  child: const Text('Save'),
+                ),
+
+                const SizedBox(height: 16),
+
+                Text(
+                  'Sleep & Wellness',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Sleep Hours
+                _buildMinimalHabitCard(
+                  context,
+                  icon: Icons.bedtime_outlined,
+                  title: 'Sleep Hours',
+                  description: 'Monitor your daily sleep duration',
+                  points: '15 pts',
+                  color: const Color(0xFF8FA2FF),
+                  onTap: () => _showTrackingDialog(context, _sleepHabits[0]),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Bedtime Patterns
+                _buildMinimalHabitCard(
+                  context,
+                  icon: Icons.schedule_outlined,
+                  title: 'Bedtime Patterns',
+                  description: 'Track your bedtime and wake-up routines',
+                  points: '10 pts',
+                  color: const Color(0xFFA18FFF),
+                  onTap: () => _showTrackingDialog(context, _sleepHabits[1]),
+                ),
+
+                const SizedBox(height: 32),
+
+                Text(
+                  'Health & Nutrition',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Meals
+                _buildMinimalHabitCard(
+                  context,
+                  icon: Icons.restaurant_outlined,
+                  title: 'Meals',
+                  description: 'Track your meal times and nutrition',
+                  points: '10 pts',
+                  color: const Color(0xFFFFCE5D),
+                  onTap: () => _showTrackingDialog(context, _healthHabits[0]),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Water Intake
+                _buildMinimalHabitCard(
+                  context,
+                  icon: Icons.local_drink_outlined,
+                  title: 'Water Intake',
+                  description: 'Log your daily water consumption',
+                  points: '5 pts',
+                  color: const Color(0xFF8FA2FF),
+                  onTap: () => _showTrackingDialog(context, _healthHabits[1]),
+                ),
+
+                const SizedBox(height: 32),
+
+                Text(
+                  'Movement & Exercise',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    letterSpacing: 0.5,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Steps
+                _buildMinimalHabitCard(
+                  context,
+                  icon: Icons.directions_walk_outlined,
+                  title: 'Daily Steps',
+                  description: 'Track your daily step count and movement',
+                  points: '15 pts',
+                  color: const Color(0xFF95A663),
+                  onTap: () => _showTrackingDialog(context, _movementHabits[0]),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Exercise
+                _buildMinimalHabitCard(
+                  context,
+                  icon: Icons.sports_soccer_outlined,
+                  title: 'Exercise',
+                  description: 'Log your sports and exercise activities',
+                  points: '25 pts',
+                  color: const Color(0xFFA18FFF),
+                  onTap: () => _showTrackingDialog(context, _movementHabits[1]),
+                ),
+
+                const SizedBox(height: 32),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showTrackingDialog(BuildContext context, Map<String, dynamic> habit) {
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        backgroundColor: Colors.transparent,
+        child: Container(
+          margin: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: habit['color'].withOpacity(0.1),
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                child: Row(
+                  children: [
+                    Icon(habit['icon'], color: habit['color'], size: 24),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Text(
+                        habit['name'],
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: habit['color'],
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.close),
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ],
+                ),
+              ),
+              // Content
+              Container(
+                constraints: const BoxConstraints(maxHeight: 400),
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: _buildDynamicHabitCard(context, habit),
+                  ),
                 ),
               ),
             ],
@@ -1958,31 +2132,96 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
-  Widget _buildSection(
+  Widget _buildMinimalHabitCard(
     BuildContext context, {
+    required IconData icon,
     required String title,
-    required List<Widget> cards,
+    required String description,
+    required String points,
+    required Color color,
+    VoidCallback? onTap,
   }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(
-            context,
-          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600),
-        ),
-        const SizedBox(height: 8),
-        Column(
-          children: [
-            for (int i = 0; i < cards.length; i++) ...[
-              cards[i],
-              if (i < cards.length - 1) const SizedBox(height: 16),
-            ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
           ],
         ),
-      ],
+        child: Row(
+          children: [
+            // Icon container
+            Container(
+              width: 50,
+              height: 50,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF5F5F5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: Colors.black87, size: 24),
+            ),
+
+            const SizedBox(width: 16),
+
+            // Content
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black87,
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                      Text(
+                        points,
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          color: const Color(0xFF9B9B9B),
+                          letterSpacing: 0.2,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF9B9B9B),
+                      letterSpacing: 0.1,
+                      height: 1.3,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            // Arrow
+            Icon(Icons.chevron_right, color: Colors.black87, size: 20),
+          ],
+        ),
+      ),
     );
   }
-
 }

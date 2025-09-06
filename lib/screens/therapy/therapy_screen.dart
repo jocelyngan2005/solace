@@ -44,11 +44,6 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Therapy & Wellness'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
       body: _isLoading 
           ? const Center(child: CircularProgressIndicator())
           : _hasCompletedEntry 
