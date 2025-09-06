@@ -78,6 +78,8 @@ flutter:
     - assets/background/Neutral_bg.png
     - assets/background/Good_bg.png
     - assets/background/Excellent_bg.png
+    - assets/background/Profile_bg.png
+    - assets/images/Profile_Icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

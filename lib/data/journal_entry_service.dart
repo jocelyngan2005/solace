@@ -8,13 +8,16 @@ class JournalEntryService {
   String? _lastMoodEntryDate;
   String? _todayMoodEmoji;
   String? _todayMoodLabel;
+  String? _todayTitle;
   String? _todayJournalText;
+  DateTime? _todayEntryTime;
   double? _todayStressLevel;
   double? _todayAnxietyLevel;
   String? _todayStressReason;
   String? _todayAnxietyReason;
   List<String>? _todayMoodDescriptions;
   String? _todayMoodWhy;
+  int? _todayPoints;
   
   // ValueNotifier to notify listeners when mood entry status changes
   final ValueNotifier<bool> moodEntryStatusNotifier = ValueNotifier<bool>(false);
@@ -27,8 +30,59 @@ class JournalEntryService {
     'Excellent': '😄',
   };
   
+  // Calculate points based on journal entry components
+  static int _calculatePoints({
+    String? title,
+    String? moodLabel,
+    double? stressLevel,
+    List<String>? moodDescriptions,
+    String? journalText,
+  }) {
+    int totalPoints = 0;
+    
+    // Title: 20 points
+    if (title != null && title.trim().isNotEmpty) {
+      totalPoints += 20;
+    }
+    
+    // Feeling/Mood: 20 points
+    if (moodLabel != null && moodLabel.isNotEmpty) {
+      totalPoints += 20;
+    }
+    
+    // Stress level: 20 points
+    if (stressLevel != null) {
+      totalPoints += 20;
+    }
+    
+    // Mood descriptions: 20 points
+    if (moodDescriptions != null && moodDescriptions.isNotEmpty) {
+      totalPoints += 20;
+    }
+    
+    // Journal text: Base 20 points + bonus for length
+    if (journalText != null && journalText.trim().isNotEmpty) {
+      totalPoints += 20; // Base points
+      
+      // Bonus points for longer entries
+      int wordCount = journalText.trim().split(RegExp(r'\s+')).length;
+      if (wordCount > 50) {
+        totalPoints += 10; // Bonus for 50+ words
+      }
+      if (wordCount > 100) {
+        totalPoints += 10; // Additional bonus for 100+ words
+      }
+      if (wordCount > 200) {
+        totalPoints += 10; // Additional bonus for 200+ words
+      }
+    }
+    
+    return totalPoints;
+  }
+  
   static Future<void> markMoodEntryCompleted({
     String? moodLabel,
+    String? title,
     String? journalText,
     double? stressLevel,
     double? anxietyLevel,
@@ -41,9 +95,16 @@ class JournalEntryService {
     final today = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD format
     instance._lastMoodEntryDate = today;
     
+    // Store the current time when the entry is created
+    instance._todayEntryTime = DateTime.now();
+    
     if (moodLabel != null) {
       instance._todayMoodLabel = moodLabel;
       instance._todayMoodEmoji = _moodEmojis[moodLabel];
+    }
+    
+    if (title != null) {
+      instance._todayTitle = title;
     }
     
     if (journalText != null) {
@@ -73,6 +134,15 @@ class JournalEntryService {
     if (moodWhy != null) {
       instance._todayMoodWhy = moodWhy;
     }
+    
+    // Calculate and store points based on entry components
+    instance._todayPoints = _calculatePoints(
+      title: title,
+      moodLabel: moodLabel,
+      stressLevel: stressLevel,
+      moodDescriptions: moodDescriptions,
+      journalText: journalText,
+    );
     
     // Notify listeners that mood entry status has changed
     instance.moodEntryStatusNotifier.value = true;
@@ -105,6 +175,7 @@ class JournalEntryService {
     instance._todayAnxietyReason = null;
     instance._todayMoodDescriptions = null;
     instance._todayMoodWhy = null;
+    instance._todayPoints = null;
     
     // Notify listeners that mood entry status has changed
     instance.moodEntryStatusNotifier.value = false;
@@ -122,9 +193,19 @@ class JournalEntryService {
     return instance._todayMoodLabel;
   }
   
+  static String? getTodayTitle() {
+    final instance = JournalEntryService();
+    return instance._todayTitle;
+  }
+  
   static String? getTodayJournalText() {
     final instance = JournalEntryService();
     return instance._todayJournalText;
+  }
+
+  static DateTime? getTodayEntryTime() {
+    final instance = JournalEntryService();
+    return instance._todayEntryTime;
   }
   
   static double? getTodayStressLevel() {
@@ -159,6 +240,11 @@ class JournalEntryService {
     return instance._todayMoodWhy;
   }
   
+  static int? getTodayPoints() {
+    final instance = JournalEntryService();
+    return instance._todayPoints;
+  }
+  
   static ValueNotifier<bool> get moodEntryNotifier {
     final instance = JournalEntryService();
     return instance.moodEntryStatusNotifier;
@@ -172,6 +258,7 @@ class JournalEntryService {
         'Mood: ${instance._todayMoodLabel} ${instance._todayMoodEmoji}, '
         'Journal: ${instance._todayJournalText?.substring(0, instance._todayJournalText!.length > 20 ? 20 : instance._todayJournalText!.length) ?? 'N/A'}..., '
         'Stress: ${instance._todayStressLevel ?? 'N/A'}, '
-        'Anxiety: ${instance._todayAnxietyLevel ?? 'N/A'}';
+        'Anxiety: ${instance._todayAnxietyLevel ?? 'N/A'}, '
+        'Points: ${instance._todayPoints ?? 'N/A'}';
   }
 }

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'journal_entry_screen.dart';
 import 'journal_library_screen.dart';
 import 'therapy_screen.dart';
 

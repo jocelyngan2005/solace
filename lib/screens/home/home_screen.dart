@@ -12,7 +12,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   bool _hasMoodEntry = false;
   bool _isLoading = true;
 
@@ -23,17 +24,21 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    
+
     // Listen to mood entry status changes
-    JournalEntryService.moodEntryNotifier.addListener(_onMoodEntryStatusChanged);
-    
+    JournalEntryService.moodEntryNotifier.addListener(
+      _onMoodEntryStatusChanged,
+    );
+
     _checkMoodEntryStatus();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    JournalEntryService.moodEntryNotifier.removeListener(_onMoodEntryStatusChanged);
+    JournalEntryService.moodEntryNotifier.removeListener(
+      _onMoodEntryStatusChanged,
+    );
     super.dispose();
   }
 
@@ -80,14 +85,19 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
   Widget build(BuildContext context) {
     super.build(context); // Required for AutomaticKeepAliveClientMixin
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Main header card containing profile, greeting, and feeling input
             Container(
-              padding: const EdgeInsets.fromLTRB(24, 90, 24, 24), // Increased top padding from 60 to 80
+              padding: const EdgeInsets.fromLTRB(
+                24,
+                90,
+                24,
+                24,
+              ), // Increased top padding from 60 to 80
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: const BorderRadius.only(
@@ -103,159 +113,201 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   ),
                 ],
               ),
-                child: Column(
-                  children: [
-                    // Header row with profile, greeting, and notification
-                    Row(
-                      children: [
-                        // Profile avatar
-                        Container(
-                          width: 50,
-                          height: 50,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: const Color(0xFFD4B5A0),
-                            border: Border.all(color: Colors.white, width: 2),
-                          ),
-                          child: const Icon(Icons.person, color: Colors.white, size: 24),
+              child: Column(
+                children: [
+                  // Header row with profile, greeting, and notification
+                  Row(
+                    children: [
+                      // Profile avatar
+                      Container(
+                        width: 50,
+                        height: 50,
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child: Image.asset(
+                          'assets/images/Profile_Icon.png',
+                          fit: BoxFit.cover,
                         ),
-                        const SizedBox(width: 16),
-                        // Greeting and status
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Hi, Jocelyn!',
-                                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight : FontWeight.bold,
-                                  color: Colors.black87,
-                                  fontSize: 36 
-                                ),
-                              ),
-                              const SizedBox(height: 6),
-                              Row(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: const Color(0xFFE8E8E8),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: const Text(
-                                      'member',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey,
-                                      ),
-                                    ),
+                      ),
+                      const SizedBox(width: 16),
+                      // Greeting and status
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Hi, Stacie!',
+                              style: Theme.of(context).textTheme.headlineSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black87,
+                                    fontSize: 36,
                                   ),
-                                  const SizedBox(width: 8),
-                                  Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    decoration: BoxDecoration(
-                                      color: Colors.purple.withOpacity(0.15),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Container(
-                                          width: 12,
-                                          height: 12,
-                                          decoration: const BoxDecoration(
-                                            color: Colors.purple,
-                                            shape: BoxShape.rectangle,
-                                          ),
-                                        ),
-                                        const SizedBox(width: 4),
-                                        const Text(
-                                          '80%',
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.purple,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                            ),
+                            const SizedBox(height: 6),
+                            Row(
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 10,
+                                    vertical: 4,
                                   ),
-                                  const SizedBox(width: 8),
-                                  const Text('😊', style: TextStyle(fontSize: 16)),
-                                  const SizedBox(width: 4),
-                                  const Text(
-                                    'Happy',
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Text(
+                                    'Level 100',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Colors.grey,
+                                      color: Theme.of(context).colorScheme.secondary,
                                     ),
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        // Notification icon
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: Colors.grey.withOpacity(0.3)),
-                            color: Colors.transparent,
-                          ),
-                          child: const Icon(Icons.notifications_outlined, color: Colors.grey, size: 20),
-                        ),
-                      ],
-                    ),
-                    
-                    const SizedBox(height: 20),
-                    
-                    // Feeling input section
-                    GestureDetector(
-                      onTap: () {
-                        // Navigate to Journal Entry Screen
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => JournalEntryScreen(
-                              onCompleted: () {
-                                // Refresh mood status when completed
-                                refreshMoodStatus();
-                              },
-                              selectedMood: 'Neutral',
-                              fromHomeScreen: true, // Set to true so mood analysis knows origin
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFF8F8F8),
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: Text(
-                                'How are you feeling today?',
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
                                 ),
-                              ),
+                                const SizedBox(width: 8),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                    vertical: 4,
+                                  ),
+                                  child: Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Icon( Icons.menu_book_rounded, color: Theme.of(context).colorScheme.primary, size: 18),
+                                      const SizedBox(width: 4),
+                                      Text(
+                                        '80%',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Theme.of(context).colorScheme.onSurface,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(width: 8),
+                                Icon( Icons.emoji_emotions, color: Colors.amber, size: 18),
+                                const SizedBox(width: 4),
+                                Text(
+                                  'Happy',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                              ],
                             ),
-                            const Icon(Icons.edit_outlined, color: Colors.grey, size: 20),
                           ],
                         ),
                       ),
+                      // Notification icon
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.3),
+                          ),
+                          color: Colors.transparent,
+                        ),
+                        child: const Icon(
+                          Icons.notifications_outlined,
+                          color: Colors.grey,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  // Level progress
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(4),
+                            child: LinearProgressIndicator(
+                              value: 0.4, // Example: 40% complete
+                              backgroundColor: Theme.of(
+                                context,
+                              ).colorScheme.outline.withOpacity(0.4),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Theme.of(context).colorScheme.tertiary,
+                              ),
+                              minHeight: 8,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          '1290 pts left',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.outline,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
+                  ),
+
+                  const SizedBox(width: 20),
+
+                  // Feeling input section
+                  GestureDetector(
+                    onTap: () {
+                      // Navigate to Journal Entry Screen
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => JournalEntryScreen(
+                            onCompleted: () {
+                              // Refresh mood status when completed
+                              refreshMoodStatus();
+                            },
+                            selectedMood: 'Neutral',
+                            fromHomeScreen:
+                                true, // Set to true so mood analysis knows origin
+                          ),
+                        ),
+                      );
+                    },
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.background,
+                        borderRadius: BorderRadius.circular(32),
+                      ),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'How are you feeling today?',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.outline,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                          Icon(
+                            Icons.edit_outlined,
+                            color: Theme.of(context).colorScheme.outline,
+                            size: 20,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),            const SizedBox(height: 24),
-            
+            ),
+            const SizedBox(height: 24),
+
             // Main content sections
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -264,27 +316,27 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                 children: [
                   // Motivational Quote
                   _buildMotivationalQuoteCard(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Mindfulness Metrics
                   _buildMindfulnessMetricsSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Mood Tracker
                   _buildMoodTrackerSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Academic Overview
                   _buildAcademicOverviewSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Help button
                   _buildHelpButton(),
-                  
+
                   const SizedBox(height: 100), // Bottom padding for navigation
                 ],
               ),
@@ -363,7 +415,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.favorite, color: Colors.white, size: 16),
+                        const Icon(
+                          Icons.favorite,
+                          color: Colors.white,
+                          size: 16,
+                        ),
                         const SizedBox(width: 8),
                         const Text(
                           'Mindful Minutes',
@@ -386,10 +442,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     ),
                     const Text(
                       'achieved',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 14,
-                      ),
+                      style: TextStyle(color: Colors.white, fontSize: 14),
                     ),
                   ],
                 ),
@@ -420,7 +473,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
                     children: [
                       Row(
                         children: [
-                          const Icon(Icons.calendar_month, color: Colors.white, size: 16),
+                          const Icon(
+                            Icons.calendar_month,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                           const SizedBox(width: 8),
                           const Text(
                             'Journal Streak',
@@ -512,18 +569,11 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           ),
           const SizedBox(height: 16),
           // Mood chart with emojis
-          SizedBox(
-            height: 120,
-            child: const MoodChart(),
-          ),
+          SizedBox(height: 120, child: const MoodChart()),
           const SizedBox(height: 16),
           const Text(
             'Your mood has been trending up this week, keep building on that momentum with some mindful breaks.',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-              height: 1.4,
-            ),
+            style: TextStyle(fontSize: 12, color: Colors.grey, height: 1.4),
           ),
         ],
       ),
@@ -614,10 +664,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.black87,
-              ),
+              style: const TextStyle(fontSize: 14, color: Colors.black87),
             ),
           ),
           if (urgency == 'urgent')
@@ -639,10 +686,7 @@ class _HomeScreenState extends State<HomeScreen> with AutomaticKeepAliveClientMi
           const SizedBox(width: 8),
           Text(
             dueDate,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ],
       ),
@@ -687,7 +731,7 @@ class HillsPainter extends CustomPainter {
 
     final path = Path();
     path.moveTo(0, size.height * 0.7);
-    
+
     // Create rolling hills
     for (double i = 0; i <= size.width; i += size.width / 6) {
       path.quadraticBezierTo(
@@ -697,7 +741,7 @@ class HillsPainter extends CustomPainter {
         size.height * 0.7,
       );
     }
-    
+
     path.lineTo(size.width, size.height);
     path.lineTo(0, size.height);
     path.close();

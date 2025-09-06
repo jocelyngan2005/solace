@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../data/journal_entry_service.dart';
 import 'journal_detail_screen.dart';
 
 class JournalLibraryScreen extends StatefulWidget {
@@ -12,9 +13,10 @@ class JournalLibraryScreen extends StatefulWidget {
 class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   bool _isCalendarView = true;
   DateTime _currentDate = DateTime.now();
+  PageController _pageController = PageController();
 
   // Sample data - in a real app, this would come from your data service
-  final List<JournalEntry> _journalEntries = _generateSampleData();
+  List<JournalEntry> _journalEntries = [];
 
   // Mood colors mapping - matching journal entry screen
   final Map<String, Color> _moodColors = {
@@ -34,13 +36,31 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     'Excellent': 'assets/moods/excellent.png',
   };
 
-  static List<JournalEntry> _generateSampleData() {
+  List<JournalEntry> _generateSampleData() {
     final List<JournalEntry> entries = [];
     final random = DateTime.now().millisecondsSinceEpoch;
     final moods = ['Very Low', 'Low', 'Neutral', 'Good', 'Excellent'];
 
-    // Generate entries for the past 30 days
-    for (int i = 0; i < 35; i++) {
+    // Add today's entry from JournalEntryService if it exists
+    final todayMood = JournalEntryService.getTodayMoodLabel();
+    final todayTitle = JournalEntryService.getTodayTitle();
+    final todayContent = JournalEntryService.getTodayJournalText();
+    final todayPoints = JournalEntryService.getTodayPoints();
+    
+    if (todayMood != null && todayTitle != null && todayContent != null) {
+      entries.add(
+        JournalEntry(
+          date: DateTime.now(),
+          mood: todayMood,
+          title: todayTitle,
+          content: todayContent,
+          points: todayPoints ?? 0, // Use calculated points or 0 as fallback
+        ),
+      );
+    }
+
+    // Generate entries for the past 30 days (skip today if already added)
+    for (int i = todayMood != null ? 1 : 0; i < 35; i++) {
       final date = DateTime.now().subtract(Duration(days: i));
       final moodIndex = (random + i) % moods.length;
       entries.add(
@@ -55,6 +75,31 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     }
 
     return entries;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _journalEntries = _generateSampleData();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _refreshEntries() {
+    setState(() {
+      _journalEntries = _generateSampleData();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh entries when returning to this screen
+    _refreshEntries();
   }
 
   @override
@@ -100,7 +145,18 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           _buildViewToggle(),
           _buildMoodCount(),
           Expanded(
-            child: _isCalendarView ? _buildCalendarView() : _buildListView(),
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _isCalendarView = index == 0;
+                });
+              },
+              children: [
+                _buildCalendarView(),
+                _buildListView(),
+              ],
+            ),
           ),
         ],
       ),
@@ -118,7 +174,14 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
         children: [
           Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _isCalendarView = true),
+              onTap: () {
+                setState(() => _isCalendarView = true);
+                _pageController.animateToPage(
+                  0,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
@@ -151,7 +214,14 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           ),
           Expanded(
             child: GestureDetector(
-              onTap: () => setState(() => _isCalendarView = false),
+              onTap: () {
+                setState(() => _isCalendarView = false);
+                _pageController.animateToPage(
+                  1,
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
               child: Container(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 decoration: BoxDecoration(
@@ -321,6 +391,21 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     for (int day = 1; day <= lastDayOfMonth.day; day++) {
       final date = DateTime(_currentDate.year, _currentDate.month, day);
       final entry = _getEntryForDate(date);
+      
+      // Check if this is today and if there's actually an entry
+      final today = DateTime.now();
+      final isToday = date.year == today.year && 
+                     date.month == today.month && 
+                     date.day == today.day;
+      
+      // For today, check if user has actually completed a journal entry
+      bool hasActualEntry = entry != null;
+      if (isToday) {
+        final todayMood = JournalEntryService.getTodayMoodLabel();
+        final todayTitle = JournalEntryService.getTodayTitle();
+        final todayContent = JournalEntryService.getTodayJournalText();
+        hasActualEntry = todayMood != null && todayTitle != null && todayContent != null;
+      }
 
       currentWeek.add(
         Expanded(
@@ -336,15 +421,15 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
                     width: 35,
                     height: 35,
                     decoration: BoxDecoration(
-                      color: entry != null
-                          ? _moodColors[entry.mood] ?? Colors.grey[300]
+                      color: hasActualEntry
+                          ? _moodColors[entry!.mood] ?? Colors.grey[300]
                           : Colors.grey[200],
                       shape: BoxShape.circle,
                     ),
-                    child: entry != null
+                    child: hasActualEntry
                         ? ClipOval(
                             child: Image.asset(
-                              _moodImages[entry.mood] ??
+                              _moodImages[entry!.mood] ??
                                   'assets/moods/neutral.png',
                               width: 24,
                               height: 24,
@@ -358,7 +443,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
                   Text(
                     day.toString(),
                     style: TextStyle(
-                      color: entry != null
+                      color: hasActualEntry
                           ? Theme.of(context).colorScheme.onSurface
                           : Colors.grey[600],
                       fontWeight: FontWeight.w500,
@@ -407,6 +492,19 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
       itemCount: _journalEntries.length,
       itemBuilder: (context, index) {
         final entry = _journalEntries[index];
+        
+        // Check if this is today's entry to get actual time
+        final today = DateTime.now();
+        final isToday = entry.date.year == today.year && 
+                       entry.date.month == today.month && 
+                       entry.date.day == today.day;
+        
+        // Get the actual entry time for today's entry
+        DateTime? entryTime;
+        if (isToday) {
+          entryTime = JournalEntryService.getTodayEntryTime();
+        }
+        
         return GestureDetector(
           onTap: () => _showDayDetails(entry.date, entry),
           child: Container(
@@ -481,7 +579,9 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '8:00 PM',
+                            entryTime != null 
+                              ? DateFormat('h:mm a').format(entryTime)
+                              : '8:00 PM',
                             style: TextStyle(
                               color: Colors.grey[600],
                               fontSize: 12,
@@ -545,10 +645,52 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   }
 
   void _showDayDetails(DateTime date, JournalEntry? entry) {
+    // Check if this is today and if there's actually a completed entry
+    final currentDate = DateTime.now();
+    final isTodaysDate = date.year == currentDate.year && 
+                        date.month == currentDate.month && 
+                        date.day == currentDate.day;
+    
+    if (isTodaysDate) {
+      // For today, check if user has actually completed a journal entry
+      final todayMood = JournalEntryService.getTodayMoodLabel();
+      final todayTitle = JournalEntryService.getTodayTitle();
+      final todayContent = JournalEntryService.getTodayJournalText();
+      
+      // If today's entry is not completed, don't show details
+      if (todayMood == null || todayTitle == null || todayContent == null) {
+        return;
+      }
+    }
+    
     if (entry == null) return;
 
-    // Generate sample mood tags based on the mood
-    List<String> moodTags = _generateMoodTags(entry.mood);
+    // Use actual mood descriptions for today's entry if available, otherwise generate sample ones
+    List<String> moodTags = [];
+    final today = DateTime.now();
+    final isToday = date.year == today.year && 
+                   date.month == today.month && 
+                   date.day == today.day;
+    
+    if (isToday) {
+      // Try to get actual mood descriptions from the service
+      final actualMoodDescriptions = JournalEntryService.getTodayMoodDescriptions();
+      if (actualMoodDescriptions != null && actualMoodDescriptions.isNotEmpty) {
+        moodTags = actualMoodDescriptions;
+      } else {
+        // If no mood descriptions were selected, leave empty
+        moodTags = [];
+      }
+    } else {
+      // For other days, generate sample mood tags based on the mood
+      moodTags = _generateMoodTags(entry.mood);
+    }
+    
+    // Get entry time for today's entry
+    DateTime? entryTime;
+    if (isToday) {
+      entryTime = JournalEntryService.getTodayEntryTime();
+    }
     
     // Find current entry index for navigation
     int currentIndex = _journalEntries.indexWhere((e) => 
@@ -567,6 +709,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
           points: entry.points,
           moodTags: moodTags,
           moodColor: _moodColors[entry.mood] ?? Colors.grey,
+          entryTime: entryTime,
           onNextDay: currentIndex > 0 ? () {
             Navigator.pop(context);
             _showDayDetails(_journalEntries[currentIndex - 1].date, _journalEntries[currentIndex - 1]);
@@ -598,7 +741,18 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   }
 
   String _getExpandedContent(JournalEntry entry) {
-    // Return more detailed content based on mood
+    // If this is today's entry from the journal service, return the actual content
+    final today = DateTime.now();
+    if (entry.date.year == today.year && 
+        entry.date.month == today.month && 
+        entry.date.day == today.day) {
+      final serviceContent = JournalEntryService.getTodayJournalText();
+      if (serviceContent != null) {
+        return serviceContent;
+      }
+    }
+    
+    // Return more detailed content based on mood for sample entries
     switch (entry.mood) {
       case 'Very Low':
         return "Today was so frustrating. I came home late after hanging out with friends, and my parents immediately grounded me for the whole weekend. I feel upset because I only wanted a little break after such a stressful week at school. At the same time, I know they just worry about me, but it still feels unfair. I'm torn between feeling angry and understanding their point of view. Hopefully, I can use this time to cool off and maybe catch up on things I've been putting aside.";
