@@ -26,7 +26,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       name: 'Temperature Reset',
       description: 'Use temperature to bring focus to the present',
       icon: Icons.ac_unit,
-      color: Colors.lightBlueAccent,
+      color: Color(0xFFA596F5),
       steps: [
         'Find something cold to hold (ice cube, cold water, etc.)',
         'Hold the cold object for 30 seconds',
@@ -40,7 +40,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       name: 'Progressive Muscle Relaxation',
       description: 'Tense and release muscle groups systematically',
       icon: Icons.fitness_center,
-      color: Colors.deepPurple,
+      color: Color(0xFFA596F5),
       steps: [
         'Start with your hands - make tight fists',
         'Hold tension for 5 seconds, then release',
@@ -55,7 +55,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       name: '5-Finger Grounding',
       description: 'Touch each finger while focusing on positives',
       icon: Icons.back_hand,
-      color: Colors.green,
+      color: Color(0xFFA596F5),
       steps: [
         'Touch your thumb to your index finger',
         'Name something you\'re grateful for',
@@ -280,120 +280,126 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header
-                Card(
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.info_outline,
-                          color: Theme.of(context).colorScheme.primary,
-                          size: 16,
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Use your body to anchor yourself in the present',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'Use your body to anchor yourself in the present.',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                            ),
+                        
                 
                 const SizedBox(height: 24),
                 
-                if (!isActive) ...[
-                  // Technique Selector
-                  Text(
-                    'Choose Your Technique',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  
+                if (!isActive) ...[                  
                   ...techniques.entries.map((entry) {
                     final key = entry.key;
                     final tech = entry.value;
                     final isSelected = selectedTechnique == key;
                     
-                    return Card(
-                      elevation: isSelected ? 4 : 2,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
-                        side: isSelected ? BorderSide(
-                          color: tech.color,
-                          width: 2,
-                        ) : BorderSide.none,
-                      ),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            selectedTechnique = key;
-                          });
-                        },
-                        borderRadius: BorderRadius.circular(16),
-                        child: Padding(
-                          padding: const EdgeInsets.all(16),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: tech.color.withOpacity(0.15),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Icon(
-                                  tech.icon,
-                                  color: tech.color,
-                                  size: 24,
-                                ),
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 4),
+                      child: Card(
+                        elevation: 6, // Increased elevation for shadow
+                        shadowColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.15), // Custom shadow color
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32),
+                        ),
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              selectedTechnique = key;
+                            });
+                          },
+                          borderRadius: BorderRadius.circular(32),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(32),
+                              border: isSelected ? Border.all(
+                                color: tech.color,
+                                width: 2,
+                              ) : null,
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(16),
+                              child: Row(
+                                children: [
+                                  // Icon container
+                                  Container(
+                                    padding: const EdgeInsets.all(12),
+                                    decoration: BoxDecoration(
+                                      color: isSelected 
+                                          ? tech.color.withOpacity(0.15)
+                                          : Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Icon(
+                                      tech.icon,
+                                      color: isSelected ? tech.color : Theme.of(context).colorScheme.onSurface,
+                                      size: 24,
+                                    ),
+                                  ),
+                                  
+                                  const SizedBox(width: 16),
+                                  
+                                  // Technique Info
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          tech.name,
+                                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: isSelected ? tech.color : null,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 4),
+                                        Row(
+                                          children: [
+                                            Icon(
+                                              Icons.timer_outlined,
+                                              size: 14,
+                                              color: Theme.of(context).colorScheme.outline,
+                                            ),
+                                            const SizedBox(width: 4),
+                                            Text(
+                                              '${tech.duration} steps',
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.outline,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          tech.description,
+                                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                            height: 1.4,
+                                          ),
+                                          maxLines: 2,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  // Arrow or check icon
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Icon(
+                                      isSelected ? Icons.check_circle : Icons.arrow_forward_ios,
+                                      size: 24,
+                                      color: isSelected ? tech.color : Theme.of(context).colorScheme.outline,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      tech.name,
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: isSelected ? tech.color : null,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      tech.description,
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      '${tech.duration} minutes',
-                                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                        color: tech.color,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              if (isSelected)
-                                Icon(
-                                  Icons.check_circle,
-                                  color: tech.color,
-                                ),
-                            ],
+                            ),
                           ),
                         ),
                       ),
@@ -412,11 +418,11 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                         foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         padding: const EdgeInsets.symmetric(vertical: 16),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
+                          borderRadius: BorderRadius.circular(24),
                         ),
                       ),
                       child: Text(
-                        'Start ${technique.name}',
+                        'Start ',
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ),

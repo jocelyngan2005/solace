@@ -41,19 +41,19 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
     'categories': CognitiveGame(
       name: 'Categories Game',
       icon: Icons.category,
-      color: Colors.purple,
+      color: Color(0xFFA596F5),
       instructions: 'Try to name at least 5 items in the given category',
     ),
     'alphabet': CognitiveGame(
       name: 'Alphabet Game',
       icon: Icons.abc,
-      color: Colors.orange,
+      color: Color(0xFFA596F5),
       instructions: 'Name something that starts with each letter A-Z',
     ),
     'math': CognitiveGame(
       name: 'Math Mini-Tasks',
       icon: Icons.calculate,
-      color: Colors.pinkAccent,
+      color: Color(0xFFA596F5),
       instructions: 'Solve simple math problems to redirect your thoughts',
     ),
   };
@@ -316,68 +316,87 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                   final isSelected = selectedGame == key;
                   
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: Material(
-                      color: Colors.transparent,
+                    margin: const EdgeInsets.only(bottom: 4),
+                    child: Card(
+                      elevation: 6, // Increased elevation for shadow
+                      shadowColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.15), // Custom shadow color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
                       child: InkWell(
                         onTap: () {
                           setState(() {
                             selectedGame = key;
                           });
                         },
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(32),
                         child: Container(
-                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: isSelected ? gameOption.color.withOpacity(0.1) : Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: isSelected ? gameOption.color : Colors.transparent,
+                            borderRadius: BorderRadius.circular(32),
+                            border: isSelected ? Border.all(
+                              color: gameOption.color,
                               width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                            ) : null,
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: gameOption.color.withOpacity(0.15),
-                                  shape: BoxShape.circle,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                // Icon container
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: isSelected 
+                                        ? gameOption.color.withOpacity(0.15)
+                                        : Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    gameOption.icon,
+                                    color: isSelected ? gameOption.color : Theme.of(context).colorScheme.onSurface,
+                                    size: 24,
+                                  ),
                                 ),
-                                child: Icon(
-                                  gameOption.icon,
-                                  color: gameOption.color,
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      gameOption.name,
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: isSelected ? gameOption.color : null,
+                                
+                                const SizedBox(width: 16),
+                                
+                                // Game Info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        gameOption.name,
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: isSelected ? gameOption.color : null,
+                                        ),
                                       ),
-                                    ),
-                                  ],
+                                      const SizedBox(height: 4),
+                                      Text(
+                                              _getGameTypeDescription(key),
+                                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                                color: Theme.of(context).colorScheme.outline,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                              maxLines: 2,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),                                      
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              if (isSelected)
-                                Icon(
-                                  Icons.check_circle,
-                                  color: gameOption.color,
+                                const SizedBox(width: 12),
+                                // Arrow or check icon
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(
+                                    isSelected ? Icons.check_circle : Icons.arrow_forward_ios,
+                                    size: 24,
+                                    color: isSelected ? gameOption.color : Theme.of(context).colorScheme.outline,
+                                  ),
                                 ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -406,12 +425,12 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                     children: [
                       Row(
                         children: [
-                          Icon(Icons.info_outline, color: game.color),
+                          Icon(Icons.info_outline, color: game.color, size:20),
                           const SizedBox(width: 8),
                           Text(
                             'How to play:',
                             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
+                              fontWeight: FontWeight.w600, 
                             ),
                           ),
                         ],
@@ -434,11 +453,11 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                       foregroundColor: Theme.of(context).colorScheme.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
                     child: Text(
-                      'Start ${game.name}',
+                      'Start',
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),
@@ -902,7 +921,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
           ),
         ),
         
-        const SizedBox(height: 40),
+        const SizedBox(height: 20),
         
         // Math Problem
         Container(
@@ -983,6 +1002,19 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
           ),
       ],
     );
+  }
+  
+  String _getGameTypeDescription(String gameKey) {
+    switch (gameKey) {
+      case 'categories':
+        return 'Mental categorization exercise';
+      case 'alphabet':
+        return 'Sequential thinking challenge';
+      case 'math':
+        return 'Quick calculation practice';
+      default:
+        return 'Cognitive exercise';
+    }
   }
 }
 

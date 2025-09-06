@@ -24,7 +24,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
       name: 'Mindful Walking',
       description: 'Focus on each step and your connection to the ground',
       icon: Icons.directions_walk,
-      color: Colors.green,
+      color: Color(0xFFA596F5),
       duration: 120, // 2 minutes
       instructions: [
         'Stand up straight and take a deep breath',
@@ -40,7 +40,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
       name: 'Stretch & Count',
       description: 'Slow stretching movements with mindful counting',
       icon: Icons.accessibility_new,
-      color: Colors.blue,
+      color: Color(0xFFA596F5),
       duration: 90, // 1.5 minutes
       instructions: [
         'Stand with feet shoulder-width apart',
@@ -56,7 +56,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
       name: 'Bilateral Tapping',
       description: 'Alternate tapping to reorient your nervous system',
       icon: Icons.touch_app,
-      color: Colors.purple,
+      color: Color(0xFFA596F5), 
       duration: 60, // 1 minute
       instructions: [
         'Sit comfortably with feet flat on the floor',
@@ -217,129 +217,125 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-              // Header
-              Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.surface,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Row(
-                  children: [
-                   Icon(
-                        Icons.info_outline,
-                        color: Theme.of(context).colorScheme.primary,
-                        size: 16,
-                      ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'Use gentle movement to reconnect with your body',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+              Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Text(
+                              'Use gentle movements to reconnect with your body.',
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                              ),
+                            ),
+                            ),
               
               const SizedBox(height: 24),
               
               if (!isActive) ...[
-                // Exercise Selector
-                Text(
-                  'Choose Your Movement',
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                
+                // Exercise Selector                
                 ...exercises.entries.map((entry) {
                   final key = entry.key;
                   final ex = entry.value;
                   final isSelected = selectedExercise == key;
                   
                   return Container(
-                    margin: const EdgeInsets.only(bottom: 12),
-                    child: Material(
-                      color: Colors.transparent,
+                    margin: const EdgeInsets.only(bottom: 4),
+                    child: Card(
+                      elevation: 6, // Increased elevation for shadow
+                      shadowColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.15), // Custom shadow color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(32),
+                      ),
                       child: InkWell(
                         onTap: () {
                           setState(() {
                             selectedExercise = key;
                           });
                         },
-                        borderRadius: BorderRadius.circular(16),
+                        borderRadius: BorderRadius.circular(32),
                         child: Container(
-                          padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: isSelected ? ex.color.withOpacity(0.1) : Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(
-                              color: isSelected ? ex.color : Colors.transparent,
+                            borderRadius: BorderRadius.circular(32),
+                            border: isSelected ? Border.all(
+                              color: ex.color,
                               width: 2,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black.withOpacity(0.05),
-                                blurRadius: 8,
-                                offset: const Offset(0, 2),
-                              ),
-                            ],
+                            ) : null,
                           ),
-                          child: Row(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(12),
-                                decoration: BoxDecoration(
-                                  color: ex.color.withOpacity(0.15),
-                                  shape: BoxShape.circle,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Row(
+                              children: [
+                                // Icon container
+                                Container(
+                                  padding: const EdgeInsets.all(12),
+                                  decoration: BoxDecoration(
+                                    color: isSelected 
+                                        ? ex.color.withOpacity(0.15)
+                                        : Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: Icon(
+                                    ex.icon,
+                                    color: isSelected ? ex.color : Theme.of(context).colorScheme.onSurface,
+                                    size: 24,
+                                  ),
                                 ),
-                                child: Icon(
-                                  ex.icon,
-                                  color: ex.color,
-                                  size: 24,
-                                ),
-                              ),
-                              const SizedBox(width: 16),
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      ex.name,
-                                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: isSelected ? ex.color : null,
+                                
+                                const SizedBox(width: 16),
+                                
+                                // Exercise Info
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ex.name,
+                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                          fontWeight: FontWeight.w700,
+                                          color: isSelected ? ex.color : null,
+                                        ),
                                       ),
-                                    ),
-                                    const SizedBox(height: 4),
-                                    Text(
-                                      ex.description,
-                                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        children: [
+                                          Icon(
+                                            Icons.timer_outlined,
+                                            size: 14,
+                                            color: Theme.of(context).colorScheme.outline,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            '${ex.duration ~/ 60} minute${ex.duration >= 120 ? 's' : ''}',
+                                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                              color: Theme.of(context).colorScheme.outline,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    const SizedBox(height: 8),
-                                    Text(
-                                      '${ex.duration ~/ 60} minute${ex.duration >= 120 ? 's' : ''}',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: ex.color,
-                                        fontWeight: FontWeight.w500,
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        ex.description,
+                                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                          height: 1.4,
+                                        ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
-                              ),
-                              if (isSelected)
-                                Icon(
-                                  Icons.check_circle,
-                                  color: ex.color,
+                                const SizedBox(width: 12),
+                                // Arrow or check icon
+                                Container(
+                                  padding: const EdgeInsets.all(8),
+                                  child: Icon(
+                                    isSelected ? Icons.check_circle : Icons.arrow_forward_ios,
+                                    size: 24,
+                                    color: isSelected ? ex.color : Theme.of(context).colorScheme.outline,
+                                  ),
                                 ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -423,11 +419,11 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                       foregroundColor: Theme.of(context).colorScheme.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(24),
                       ),
                     ),
                     child: Text(
-                      'Start ${exercise.name}',
+                      'Start',
                       style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                     ),
                   ),

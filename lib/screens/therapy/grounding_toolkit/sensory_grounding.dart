@@ -15,41 +15,41 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
     GroundingStep(
       number: 5,
       sense: 'See',
-      instruction: 'Name 5 things you can SEE 👀',
+      instruction: '5 things you can SEE',
       icon: Icons.visibility,
-      color: Colors.lightBlueAccent,
+      color: Color(0xFF4A3427),
       items: [],
     ),
     GroundingStep(
       number: 4,
       sense: 'Touch',
-      instruction: 'Name 4 things you can TOUCH ✋',
+      instruction: '4 things you can TOUCH',
       icon: Icons.touch_app,
-      color: Colors.green[300]!,
+      color: Color(0xFF4A3427),
       items: [],
     ),
     GroundingStep(
       number: 3,
       sense: 'Hear',
-      instruction: 'Name 3 things you can HEAR 👂',
+      instruction: '3 things you can HEAR',
       icon: Icons.hearing,
-      color: Colors.orangeAccent,
+      color: Color(0xFF4A3427),
       items: [],
     ),
     GroundingStep(
       number: 2,
       sense: 'Smell',
-      instruction: 'Name 2 things you can SMELL 👃',
+      instruction: '2 things you can SMELL',
       icon: Icons.air,
-      color: Colors.redAccent,
+      color: Color(0xFF4A3427),
       items: [],
     ),
     GroundingStep(
       number: 1,
       sense: 'Taste',
-      instruction: 'Name 1 thing you can TASTE 👅',
+      instruction: '1 thing you can TASTE',
       icon: Icons.local_dining,
-      color: Colors.deepPurpleAccent,
+      color: Color(0xFF4A3427),
       items: [],
     ),
   ];
@@ -137,7 +137,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('5-4-3-2-1 Grounding'),
+        title: const Text('Sensory Grounding'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -158,34 +158,17 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Text(
-            '5-4-3-2-1 Technique',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Ground yourself using your five senses',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
-          ),
-              
-              const SizedBox(height: 24),
-              
+            children: [              
               if (!isActive) ...[
                 // Instructions
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
                     color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(16),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.15),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),
@@ -194,19 +177,37 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Header
+                        Row(
+                        children: [
+                          Icon(
+                            Icons.emoji_events_outlined,
+                            color: Theme.of(context).colorScheme.onSurface,
+                            size: 20,
+                          ),
+                          const SizedBox(width: 8),
+                          Text(
+                          '5-4-3-2-1 Technique',
+                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
+                          ),
+                        ],
+                        ),
+                        const SizedBox(height: 6),
                       Text(
                         'How it works:',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w700,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 6),
                       const Text(
                         'This technique helps ground you in the present moment by engaging all your senses. It\'s particularly helpful during anxiety or panic attacks.',
                       ),
                       const SizedBox(height: 16),
                       Text(
-                        'You\'ll be guided through:',
+                        'You\'ll be guided through naming:',
                         style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w600,
                         ),
@@ -215,27 +216,31 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
                       ...steps.map((step) => Padding(
                         padding: const EdgeInsets.symmetric(vertical: 4),
                         child: Row(
-                          children: [
+                            children: [
                             Container(
                               width: 24,
                               height: 24,
                               decoration: BoxDecoration(
-                                color: step.color.withOpacity(0.2),
-                                shape: BoxShape.circle,
+                              color: step.color,
+                              shape: BoxShape.circle,
                               ),
                               child: Center(
-                                child: Text(
-                                  '${step.number}',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: step.color,
-                                    fontSize: 12,
-                                  ),
+                              child: Text(
+                                '${step.number}',
+                                style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.onPrimary,
+                                fontSize: 12,
                                 ),
                               ),
+                              ),
                             ),
-                            const SizedBox(width: 12),
-                            Expanded(child: Text(step.instruction)),
+                            const SizedBox(width: 6),
+                            Expanded(
+                              child: Text(
+                              step.instruction.split(' ').skip(1).join(' '),
+                              ),
+                            ),
                           ],
                         ),
                       )),
@@ -251,7 +256,7 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
                   child: ElevatedButton(
                     onPressed: _startGrounding,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: Theme.of(context).colorScheme.onSurface,
                       foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
