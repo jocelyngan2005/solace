@@ -959,47 +959,143 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
       _isRecording = true;
     });
 
-    // Show recording dialog
+    // Show recording dialog with sound wave animation
     showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: Row(
-          children: [
-            Icon(Icons.mic, color: Theme.of(context).colorScheme.tertiary),
-            SizedBox(width: 8),
-            Text('Recording...'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(20),
-              child: Icon(
-                Icons.mic,
-                size: 48,
-                color: Theme.of(context).colorScheme.tertiary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        backgroundColor: Colors.white,
+        contentPadding: EdgeInsets.all(24),
+        content: Container(
+          width: 280,
+          height: 180,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Microphone icon
+              Container(
+                width: 50,
+                height: 50,
+                decoration: BoxDecoration(
+                  color: Color(0xFFA18FFF),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.mic,
+                  color: Colors.white,
+                  size: 24,
+                ),
               ),
-            ),
-            const Text('Speak now...'),
-            const SizedBox(height: 16),
-            const LinearProgressIndicator(),
-          ],
+              SizedBox(height: 16),
+              
+              // Sound wave animation
+              Container(
+                height: 50,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    _buildSoundWave(height: 16, delay: 0),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 28, delay: 100),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 12, delay: 200),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 36, delay: 300),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 20, delay: 400),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 32, delay: 500),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 16, delay: 600),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 24, delay: 700),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 12, delay: 800),
+                    SizedBox(width: 3),
+                    _buildSoundWave(height: 28, delay: 900),
+                  ],
+                ),
+              ),
+              
+              SizedBox(height: 12),
+              Text(
+                'Recording...',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black87,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                'Speak clearly into your microphone',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
         actions: [
-          TextButton(onPressed: _stopListening, child: const Text('Stop')),
+          Padding(
+            padding: EdgeInsets.fromLTRB(24, 0, 24, 16),
+            child: Container(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: _stopListening,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFFA18FFF),
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  elevation: 0,
+                ),
+                child: Text(
+                  'Stop Recording',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
 
-    // Simulate recording for 3 seconds then auto-stop
-    Future.delayed(const Duration(seconds: 3), () {
+    // Simulate recording for 5 seconds then auto-stop
+    Future.delayed(const Duration(seconds: 5), () {
       if (_isRecording) {
         _stopListening();
       }
     });
+  }
+
+  Widget _buildSoundWave({required double height, required int delay}) {
+    return TweenAnimationBuilder<double>(
+      tween: Tween(begin: 10.0, end: _isRecording ? height : 10.0),
+      duration: Duration(milliseconds: 800),
+      curve: Curves.easeInOut,
+      builder: (context, animatedHeight, child) {
+        return Container(
+          width: 4,
+          height: animatedHeight,
+          decoration: BoxDecoration(
+            color: _isRecording 
+                ? Color(0xFFA18FFF) 
+                : Color(0xFFA18FFF).withOpacity(0.3),
+            borderRadius: BorderRadius.circular(2),
+          ),
+        );
+      },
+    );
   }
 
   void _stopListening() {
