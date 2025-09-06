@@ -129,7 +129,8 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
       if (todayTitle != null) _titleController.text = todayTitle;
       if (todayContent != null) _journalController.text = todayContent;
       if (todayMood != null) _selectedMood = todayMood;
-      if (todayDescriptions != null) _selectedMoodDescriptions.addAll(todayDescriptions);
+      if (todayDescriptions != null)
+        _selectedMoodDescriptions.addAll(todayDescriptions);
       if (todayStress != null) _stressLevel = todayStress;
     }
 
@@ -728,39 +729,38 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
                     ),
                   ),
 
-                  const SizedBox(height: 32),
-
-                  // Save Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: _completeEntry,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFFFFCE5D),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(32),
-                        ),
-                        elevation: 0,
-                      ),
-                      child: const Text(
-                        'SAVE',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 16),
                 ],
               ),
             ),
           ),
         ],
+      ),
+      bottomNavigationBar: Container(
+        padding: const EdgeInsets.only(bottom: 20, right: 20, left: 20),
+        child: SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: _completeEntry,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFFFCE5D),
+              foregroundColor: Colors.white,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(32),
+              ),
+              elevation: 0,
+            ),
+            child: const Text(
+              'SAVE',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 1.2,
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -880,9 +880,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
         backgroundColor: Theme.of(context).colorScheme.secondary,
         duration: const Duration(seconds: 2),
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         margin: const EdgeInsets.all(16),
       ),
     );
@@ -981,14 +979,10 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
                   color: Color(0xFFA18FFF),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(
-                  Icons.mic,
-                  color: Colors.white,
-                  size: 24,
-                ),
+                child: Icon(Icons.mic, color: Colors.white, size: 24),
               ),
               SizedBox(height: 16),
-              
+
               // Sound wave animation
               Container(
                 height: 50,
@@ -1018,7 +1012,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
                   ],
                 ),
               ),
-              
+
               SizedBox(height: 12),
               Text(
                 'Recording...',
@@ -1031,10 +1025,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
               SizedBox(height: 4),
               Text(
                 'Speak clearly into your microphone',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -1058,10 +1049,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
                 ),
                 child: Text(
                   'Stop Recording',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
@@ -1088,8 +1076,8 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
           width: 4,
           height: animatedHeight,
           decoration: BoxDecoration(
-            color: _isRecording 
-                ? Color(0xFFA18FFF) 
+            color: _isRecording
+                ? Color(0xFFA18FFF)
                 : Color(0xFFA18FFF).withOpacity(0.3),
             borderRadius: BorderRadius.circular(2),
           ),
