@@ -391,6 +391,21 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     for (int day = 1; day <= lastDayOfMonth.day; day++) {
       final date = DateTime(_currentDate.year, _currentDate.month, day);
       final entry = _getEntryForDate(date);
+      
+      // Check if this is today and if there's actually an entry
+      final today = DateTime.now();
+      final isToday = date.year == today.year && 
+                     date.month == today.month && 
+                     date.day == today.day;
+      
+      // For today, check if user has actually completed a journal entry
+      bool hasActualEntry = entry != null;
+      if (isToday) {
+        final todayMood = JournalEntryService.getTodayMoodLabel();
+        final todayTitle = JournalEntryService.getTodayTitle();
+        final todayContent = JournalEntryService.getTodayJournalText();
+        hasActualEntry = todayMood != null && todayTitle != null && todayContent != null;
+      }
 
       currentWeek.add(
         Expanded(
@@ -406,15 +421,15 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
                     width: 35,
                     height: 35,
                     decoration: BoxDecoration(
-                      color: entry != null
-                          ? _moodColors[entry.mood] ?? Colors.grey[300]
+                      color: hasActualEntry
+                          ? _moodColors[entry!.mood] ?? Colors.grey[300]
                           : Colors.grey[200],
                       shape: BoxShape.circle,
                     ),
-                    child: entry != null
+                    child: hasActualEntry
                         ? ClipOval(
                             child: Image.asset(
-                              _moodImages[entry.mood] ??
+                              _moodImages[entry!.mood] ??
                                   'assets/moods/neutral.png',
                               width: 24,
                               height: 24,
@@ -428,7 +443,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
                   Text(
                     day.toString(),
                     style: TextStyle(
-                      color: entry != null
+                      color: hasActualEntry
                           ? Theme.of(context).colorScheme.onSurface
                           : Colors.grey[600],
                       fontWeight: FontWeight.w500,
@@ -630,6 +645,24 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   }
 
   void _showDayDetails(DateTime date, JournalEntry? entry) {
+    // Check if this is today and if there's actually a completed entry
+    final currentDate = DateTime.now();
+    final isTodaysDate = date.year == currentDate.year && 
+                        date.month == currentDate.month && 
+                        date.day == currentDate.day;
+    
+    if (isTodaysDate) {
+      // For today, check if user has actually completed a journal entry
+      final todayMood = JournalEntryService.getTodayMoodLabel();
+      final todayTitle = JournalEntryService.getTodayTitle();
+      final todayContent = JournalEntryService.getTodayJournalText();
+      
+      // If today's entry is not completed, don't show details
+      if (todayMood == null || todayTitle == null || todayContent == null) {
+        return;
+      }
+    }
+    
     if (entry == null) return;
 
     // Use actual mood descriptions for today's entry if available, otherwise generate sample ones
