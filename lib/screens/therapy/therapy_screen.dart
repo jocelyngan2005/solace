@@ -4,7 +4,9 @@ import 'wellness_tools_screen.dart';
 import '../../data/journal_entry_service.dart';
 
 class TherapyScreen extends StatefulWidget {
-  const TherapyScreen({super.key});
+  final String? previousScreen;
+  
+  const TherapyScreen({super.key, this.previousScreen});
 
   @override
   State<TherapyScreen> createState() => _TherapyScreenState();
@@ -47,7 +49,7 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
       body: _isLoading 
           ? const Center(child: CircularProgressIndicator())
           : _hasCompletedEntry 
-              ? const WellnessToolsScreen()
+              ? WellnessToolsScreen(previousScreen: widget.previousScreen)
               : _buildMoodEntryRequired(),
     );
   }

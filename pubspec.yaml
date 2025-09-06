@@ -80,6 +80,11 @@ flutter:
     - assets/background/Excellent_bg.png
     - assets/background/Profile_bg.png
     - assets/images/Profile_Icon.png
+    - assets/wellness/Grounding_techniques.png
+    - assets/wellness/Positive_affirmations.png
+    - assets/wellness/Check_in.png
+    - assets/wellness/Mental_health_resources.png
+    - assets/wellness/Mindfulness_breathing.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

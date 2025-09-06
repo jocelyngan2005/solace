@@ -61,7 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 // Profile section with transparent background
                 Container(
                   width: double.infinity,
-                  padding: EdgeInsets.fromLTRB(16, 140, 16, 0),
+                  padding: EdgeInsets.fromLTRB(16, 100, 16, 0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [

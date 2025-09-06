@@ -246,7 +246,7 @@ class MoodAnalysisScreen extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => const TherapyScreen(),
+                                builder: (context) => const TherapyScreen(previousScreen: 'mood_analysis'),
                               ),
                             );
                           },

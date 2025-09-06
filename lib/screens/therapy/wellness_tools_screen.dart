@@ -7,10 +7,12 @@ import 'positive_affirmation_screen.dart';
 import 'breathing_exercises_screen.dart';
 import '../../widgets/habit_tracker.dart';
 import '../../data/journal_entry_service.dart';
-import 'resources_screen.dart'; 
+import 'resources_screen.dart';
 
 class WellnessToolsScreen extends StatelessWidget {
-  const WellnessToolsScreen({super.key});
+  final String? previousScreen;
+  
+  const WellnessToolsScreen({super.key, this.previousScreen});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,7 @@ class WellnessToolsScreen extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             // Header Section
             Container(
               padding: const EdgeInsets.all(20),
@@ -30,13 +32,26 @@ class WellnessToolsScreen extends StatelessWidget {
                   Row(
                     children: [
                       GestureDetector(
-                        onTap: () => Navigator.pop(context),
+                        onTap: () {
+                          // Navigate back based on previous screen
+                          if (previousScreen == 'mood_analysis') {
+                            // Navigate back to mood analysis screen by popping twice
+                            Navigator.pop(context);
+                          } else {
+                            // Default behavior - try to pop
+                            if (Navigator.canPop(context)) {
+                              Navigator.pop(context);
+                            }
+                          }
+                        },
                         child: Container(
                           width: 40,
                           height: 40,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            border: Border.all(color: Theme.of(context).colorScheme.onSurface),
+                            border: Border.all(
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
                           ),
                           child: Icon(
                             Icons.arrow_back_ios_new,
@@ -71,7 +86,7 @@ class WellnessToolsScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Wellness Tools Cards
             Expanded(
               child: SingleChildScrollView(
@@ -79,70 +94,78 @@ class WellnessToolsScreen extends StatelessWidget {
                 child: Column(
                   children: [
                     // Mindfulness Breathing
-                    _buildWellnessCard(
+                    _buildWellnessCardLeft(
                       context,
                       'Mindfulness Breathing',
                       const Color(0xFF02A552),
-                      '🌱',
+                      'assets/wellness/Mindfulness_breathing.png',
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const BreathingExercisePage()),
+                        MaterialPageRoute(
+                          builder: (context) => const BreathingExercisePage(),
+                        ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Grounding Techniques
-                    _buildWellnessCard(
+                    _buildWellnessCardRight(
                       context,
                       'Grounding Techniques',
                       const Color(0xFFFFC702),
-                      '🧘‍♀️',
+                      'assets/wellness/Grounding_techniques.png',
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const GroundingTechniquesPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const GroundingTechniquesPage(),
+                        ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Positive Affirmations
-                    _buildWellnessCard(
+                    _buildWellnessCardLeft(
                       context,
                       'Positive Affirmations',
                       const Color(0xFFFF7300),
-                      '💝',
+                      'assets/wellness/Positive_affirmations.png',
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const PositiveAffirmationPage()),
+                        MaterialPageRoute(
+                          builder: (context) => const PositiveAffirmationPage(),
+                        ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Stress & Anxiety Check-in
-                    _buildWellnessCard(
+                    _buildWellnessCardRight(
                       context,
                       'Stress & Anxiety Check-in',
                       const Color(0xFF0040EA),
-                      '🧸',
+                      'assets/wellness/Check_in.png',
                       () => _showStressCheckin(context),
                     ),
-                    
+
                     const SizedBox(height: 16),
-                    
+
                     // Mental Health Resources
-                    _buildWellnessCard(
+                    _buildWellnessCardLeft(
                       context,
                       'Mental Health Resources',
                       const Color(0xFFFEA1CD),
-                      '🌍',
+                      'assets/wellness/Mental_health_resources.png',
                       () => Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ResourcesScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const ResourcesScreen(),
+                        ),
                       ),
                     ),
-                    
+
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -154,18 +177,18 @@ class WellnessToolsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWellnessCard(
+  Widget _buildWellnessCardRight(
     BuildContext context,
     String title,
     Color backgroundColor,
-    String emoji,
+    String image,
     VoidCallback onTap,
   ) {
     return GestureDetector(
       onTap: onTap,
       child: Container(
         width: double.infinity,
-        height: 80,
+        height: 95,
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.circular(24),
@@ -178,7 +201,7 @@ class WellnessToolsScreen extends StatelessWidget {
           ],
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+          padding: const EdgeInsets.only(left: 24),
           child: Row(
             children: [
               // Title
@@ -194,23 +217,70 @@ class WellnessToolsScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Emoji/Icon area
               Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Center(
-                  child: Text(
-                    emoji,
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
+                width: 90,
+                height: 90,
+                margin: EdgeInsets.only(right: 12),
+                child: Image.asset(image, fit: BoxFit.cover),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWellnessCardLeft(
+    BuildContext context,
+    String title,
+    Color backgroundColor,
+    String image,
+    VoidCallback onTap,
+  ) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: double.infinity,
+        height: 95,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: backgroundColor.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 24),
+          child: Row(
+            children: [
+              // Emoji/Icon area
+              Container(
+                width: 90,
+                height: 90,
+                margin: EdgeInsets.only(left: 12),
+                child: Image.asset(image, fit: BoxFit.cover),
+              ),
+
+              const SizedBox(width: 16),
+
+              // Title
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: -0.3,
+                    height: 1.1,
                   ),
                 ),
               ),
@@ -229,7 +299,9 @@ class WellnessToolsScreen extends StatelessWidget {
       builder: (context) {
         return StatefulBuilder(
           builder: (context, setState) => AlertDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
             title: const Text('Quick Stress Check'),
             contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
             content: SizedBox(
@@ -240,7 +312,10 @@ class WellnessToolsScreen extends StatelessWidget {
                   children: [
                     const Text('Rate your current stress level:'),
                     const SizedBox(height: 20),
-                    Text('Selected: ${stressLevel.toInt()}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                    Text(
+                      'Selected: ${stressLevel.toInt()}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
                     Slider(
                       value: stressLevel,
                       min: 1,
@@ -265,10 +340,10 @@ class WellnessToolsScreen extends StatelessWidget {
                       maxLines: 2,
                       decoration: InputDecoration(
                         labelText: 'Why do you feel this way?',
-                        labelStyle: const TextStyle(
-                          fontSize: 14,
+                        labelStyle: const TextStyle(fontSize: 14),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
                       ),
                     ),
                   ],
@@ -281,9 +356,11 @@ class WellnessToolsScreen extends StatelessWidget {
                   // Sync stress level with MoodEntryService
                   await JournalEntryService.markMoodEntryCompleted(
                     stressLevel: stressLevel,
-                    stressReason: reasonController.text.trim().isNotEmpty ? reasonController.text.trim() : null,
+                    stressReason: reasonController.text.trim().isNotEmpty
+                        ? reasonController.text.trim()
+                        : null,
                   );
-                  
+
                   Navigator.pop(context);
                   _showStressVisualization(context, stressLevel);
                 },
@@ -296,7 +373,10 @@ class WellnessToolsScreen extends StatelessWidget {
     );
   }
 
-  void _showStressVisualization(BuildContext context, double currentStressLevel) {
+  void _showStressVisualization(
+    BuildContext context,
+    double currentStressLevel,
+  ) {
     // Sample stress data for the past 7 days (including today)
     List<FlSpot> stressData = [
       const FlSpot(0, 4), // 6 days ago
@@ -309,8 +389,13 @@ class WellnessToolsScreen extends StatelessWidget {
     ];
 
     // Calculate week average for insights
-    double weekAverage = stressData.map((spot) => spot.y).reduce((a, b) => a + b) / stressData.length;
-    List<double> peaks = stressData.where((spot) => spot.y >= 7).map((spot) => spot.y).toList();
+    double weekAverage =
+        stressData.map((spot) => spot.y).reduce((a, b) => a + b) /
+        stressData.length;
+    List<double> peaks = stressData
+        .where((spot) => spot.y >= 7)
+        .map((spot) => spot.y)
+        .toList();
 
     showDialog(
       context: context,
@@ -339,9 +424,9 @@ class WellnessToolsScreen extends StatelessWidget {
             children: [
               Text(
                 'Past 7 days stress levels',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey[600],
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: Colors.grey[600]),
               ),
               const SizedBox(height: 20),
               Expanded(
@@ -398,8 +483,12 @@ class WellnessToolsScreen extends StatelessWidget {
                           },
                         ),
                       ),
-                      topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                      rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                      topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
+                      rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false),
+                      ),
                     ),
                     borderData: FlBorderData(
                       show: true,
@@ -429,7 +518,8 @@ class WellnessToolsScreen extends StatelessWidget {
                         dotData: FlDotData(
                           show: true,
                           getDotPainter: (spot, percent, barData, index) {
-                            if (index == 6) { // Today's data point
+                            if (index == 6) {
+                              // Today's data point
                               return FlDotCirclePainter(
                                 radius: 6,
                                 color: Colors.red,
@@ -451,7 +541,7 @@ class WellnessToolsScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 16),
-              
+
               // Insights container
               Container(
                 padding: const EdgeInsets.all(12),
@@ -459,7 +549,9 @@ class WellnessToolsScreen extends StatelessWidget {
                   color: _getInsightColor(currentStressLevel).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color: _getInsightColor(currentStressLevel).withOpacity(0.3),
+                    color: _getInsightColor(
+                      currentStressLevel,
+                    ).withOpacity(0.3),
                     width: 1,
                   ),
                 ),
@@ -475,8 +567,15 @@ class WellnessToolsScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: Text(
-                            _getInsightText(currentStressLevel, weekAverage, peaks.length),
-                            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+                            _getInsightText(
+                              currentStressLevel,
+                              weekAverage,
+                              peaks.length,
+                            ),
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ],
@@ -558,11 +657,17 @@ class WellnessToolsScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('Quick relief (right now):'),
-                Text('• Take 3 deep breaths\n• Drink some water\n• Step outside briefly\n'),
+                Text(
+                  '• Take 3 deep breaths\n• Drink some water\n• Step outside briefly\n',
+                ),
                 Text('Short-term (next hour):'),
-                Text('• Take a 5-minute walk\n• Listen to calming music\n• Do gentle stretches\n'),
+                Text(
+                  '• Take a 5-minute walk\n• Listen to calming music\n• Do gentle stretches\n',
+                ),
                 Text('Long-term (today/this week):'),
-                Text('• Plan breaks between tasks\n• Talk to a friend\n• Practice gratitude'),
+                Text(
+                  '• Plan breaks between tasks\n• Talk to a friend\n• Practice gratitude',
+                ),
               ],
             ),
           ),
@@ -577,5 +682,3 @@ class WellnessToolsScreen extends StatelessWidget {
     );
   }
 }
-
-
