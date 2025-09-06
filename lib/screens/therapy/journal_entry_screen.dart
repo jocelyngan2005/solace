@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt;
 import '../../data/journal_entry_service.dart';
 import 'mood_analysis_screen.dart';
 
@@ -26,8 +25,8 @@ class JournalEntryScreen extends StatefulWidget {
 }
 
 class _JournalEntryScreenState extends State<JournalEntryScreen> {
-  double _moodRating = 3.0;
   late String _selectedMood;
+  final TextEditingController _titleController = TextEditingController();
   final TextEditingController _journalController = TextEditingController();
   final List<String> _selectedMoodDescriptions = [];
   double _stressLevel = 5.0;
@@ -37,9 +36,6 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
 
   // Voice recording variables
   bool _isRecording = false;
-  bool _speechEnabled = false;
-  String _recordedText = '';
-  late stt.SpeechToText _speech;
 
   final Map<String, Map<String, dynamic>> _moodData = {
     'Very Low': {
@@ -122,25 +118,35 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
       _stressLevel = widget.initialStressLevel!;
     }
 
-    // Sync slider value with selectedMood
+    // Initialize with today's data if available and no initial values provided
+    if (widget.initialJournalText == null) {
+      final todayTitle = JournalEntryService.getTodayTitle();
+      final todayContent = JournalEntryService.getTodayJournalText();
+      final todayMood = JournalEntryService.getTodayMoodLabel();
+      final todayDescriptions = JournalEntryService.getTodayMoodDescriptions();
+      final todayStress = JournalEntryService.getTodayStressLevel();
+
+      if (todayTitle != null) _titleController.text = todayTitle;
+      if (todayContent != null) _journalController.text = todayContent;
+      if (todayMood != null) _selectedMood = todayMood;
+      if (todayDescriptions != null) _selectedMoodDescriptions.addAll(todayDescriptions);
+      if (todayStress != null) _stressLevel = todayStress;
+    }
+
+    // Sync mood with selectedMood
     switch (_selectedMood) {
       case 'Very Low':
-        _moodRating = 1.0;
         break;
       case 'Low':
-        _moodRating = 2.0;
         break;
       case 'Neutral':
-        _moodRating = 3.0;
         break;
       case 'Good':
-        _moodRating = 4.0;
         break;
       case 'Excellent':
-        _moodRating = 5.0;
         break;
       default:
-        _moodRating = 3.0;
+        break;
     }
   }
 
@@ -239,6 +245,7 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
                       ],
                     ),
                     child: TextField(
+                      controller: _titleController,
                       decoration: InputDecoration(
                         hintText: 'Enter title...',
                         hintStyle: TextStyle(color: Colors.grey[400]),
@@ -775,7 +782,6 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
       onTap: () {
         setState(() {
           _selectedMood = mood;
-          _moodRating = value;
         });
       },
       child: Container(
@@ -817,15 +823,46 @@ class _JournalEntryScreenState extends State<JournalEntryScreen> {
   }
 
   void _completeEntry() async {
+    // Validate required fields
+    if (_titleController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please enter a journal title'),
+          backgroundColor: Colors.red[400],
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+      return;
+    }
+
+    if (_journalController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Please write your journal entry'),
+          backgroundColor: Colors.red[400],
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          margin: const EdgeInsets.all(16),
+        ),
+      );
+      return;
+    }
+
     // Save mood entry completion status with all details
     await JournalEntryService.markMoodEntryCompleted(
       moodLabel: _selectedMood,
-      journalText: _journalController.text.trim().isNotEmpty
-          ? _journalController.text.trim()
-          : null,
+      title: _titleController.text.trim(),
+      journalText: _journalController.text.trim(),
       moodDescriptions: _selectedMoodDescriptions.isNotEmpty
           ? _selectedMoodDescriptions
           : null,
+      stressLevel: _stressLevel,
       moodWhy: null, // No reason tags in new design
     );
 

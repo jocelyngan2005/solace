@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import '../../data/journal_entry_service.dart';
 import 'journal_detail_screen.dart';
 
 class JournalLibraryScreen extends StatefulWidget {
@@ -14,7 +15,7 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   DateTime _currentDate = DateTime.now();
 
   // Sample data - in a real app, this would come from your data service
-  final List<JournalEntry> _journalEntries = _generateSampleData();
+  List<JournalEntry> _journalEntries = [];
 
   // Mood colors mapping - matching journal entry screen
   final Map<String, Color> _moodColors = {
@@ -34,13 +35,30 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     'Excellent': 'assets/moods/excellent.png',
   };
 
-  static List<JournalEntry> _generateSampleData() {
+  List<JournalEntry> _generateSampleData() {
     final List<JournalEntry> entries = [];
     final random = DateTime.now().millisecondsSinceEpoch;
     final moods = ['Very Low', 'Low', 'Neutral', 'Good', 'Excellent'];
 
-    // Generate entries for the past 30 days
-    for (int i = 0; i < 35; i++) {
+    // Add today's entry from JournalEntryService if it exists
+    final todayMood = JournalEntryService.getTodayMoodLabel();
+    final todayTitle = JournalEntryService.getTodayTitle();
+    final todayContent = JournalEntryService.getTodayJournalText();
+    
+    if (todayMood != null && todayTitle != null && todayContent != null) {
+      entries.add(
+        JournalEntry(
+          date: DateTime.now(),
+          mood: todayMood,
+          title: todayTitle,
+          content: todayContent,
+          points: 120,
+        ),
+      );
+    }
+
+    // Generate entries for the past 30 days (skip today if already added)
+    for (int i = todayMood != null ? 1 : 0; i < 35; i++) {
       final date = DateTime.now().subtract(Duration(days: i));
       final moodIndex = (random + i) % moods.length;
       entries.add(
@@ -55,6 +73,25 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
     }
 
     return entries;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _journalEntries = _generateSampleData();
+  }
+
+  void _refreshEntries() {
+    setState(() {
+      _journalEntries = _generateSampleData();
+    });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh entries when returning to this screen
+    _refreshEntries();
   }
 
   @override
@@ -547,8 +584,26 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   void _showDayDetails(DateTime date, JournalEntry? entry) {
     if (entry == null) return;
 
-    // Generate sample mood tags based on the mood
-    List<String> moodTags = _generateMoodTags(entry.mood);
+    // Use actual mood descriptions for today's entry if available, otherwise generate sample ones
+    List<String> moodTags = [];
+    final today = DateTime.now();
+    final isToday = date.year == today.year && 
+                   date.month == today.month && 
+                   date.day == today.day;
+    
+    if (isToday) {
+      // Try to get actual mood descriptions from the service
+      final actualMoodDescriptions = JournalEntryService.getTodayMoodDescriptions();
+      if (actualMoodDescriptions != null && actualMoodDescriptions.isNotEmpty) {
+        moodTags = actualMoodDescriptions;
+      } else {
+        // If no mood descriptions were selected, leave empty
+        moodTags = [];
+      }
+    } else {
+      // For other days, generate sample mood tags based on the mood
+      moodTags = _generateMoodTags(entry.mood);
+    }
     
     // Find current entry index for navigation
     int currentIndex = _journalEntries.indexWhere((e) => 
@@ -598,7 +653,18 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
   }
 
   String _getExpandedContent(JournalEntry entry) {
-    // Return more detailed content based on mood
+    // If this is today's entry from the journal service, return the actual content
+    final today = DateTime.now();
+    if (entry.date.year == today.year && 
+        entry.date.month == today.month && 
+        entry.date.day == today.day) {
+      final serviceContent = JournalEntryService.getTodayJournalText();
+      if (serviceContent != null) {
+        return serviceContent;
+      }
+    }
+    
+    // Return more detailed content based on mood for sample entries
     switch (entry.mood) {
       case 'Very Low':
         return "Today was so frustrating. I came home late after hanging out with friends, and my parents immediately grounded me for the whole weekend. I feel upset because I only wanted a little break after such a stressful week at school. At the same time, I know they just worry about me, but it still feels unfair. I'm torn between feeling angry and understanding their point of view. Hopefully, I can use this time to cool off and maybe catch up on things I've been putting aside.";

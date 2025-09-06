@@ -8,6 +8,7 @@ class JournalEntryService {
   String? _lastMoodEntryDate;
   String? _todayMoodEmoji;
   String? _todayMoodLabel;
+  String? _todayTitle;
   String? _todayJournalText;
   double? _todayStressLevel;
   double? _todayAnxietyLevel;
@@ -29,6 +30,7 @@ class JournalEntryService {
   
   static Future<void> markMoodEntryCompleted({
     String? moodLabel,
+    String? title,
     String? journalText,
     double? stressLevel,
     double? anxietyLevel,
@@ -44,6 +46,10 @@ class JournalEntryService {
     if (moodLabel != null) {
       instance._todayMoodLabel = moodLabel;
       instance._todayMoodEmoji = _moodEmojis[moodLabel];
+    }
+    
+    if (title != null) {
+      instance._todayTitle = title;
     }
     
     if (journalText != null) {
@@ -120,6 +126,11 @@ class JournalEntryService {
   static String? getTodayMoodLabel() {
     final instance = JournalEntryService();
     return instance._todayMoodLabel;
+  }
+  
+  static String? getTodayTitle() {
+    final instance = JournalEntryService();
+    return instance._todayTitle;
   }
   
   static String? getTodayJournalText() {
