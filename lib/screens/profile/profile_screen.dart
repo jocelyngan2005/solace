@@ -53,6 +53,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // Background image
           Positioned.fill(
             child: Image.asset(
               'assets/background/Profile_bg.png',
@@ -60,333 +61,338 @@ class _ProfileScreenState extends State<ProfileScreen> {
               alignment: Alignment.topCenter,
             ),
           ),
-          Container(
-            height: 600,
-            width: double.infinity,
-            margin: EdgeInsets.only(top: 210),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.background,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(42),
-                topRight: Radius.circular(42),
-              ),
-            ),
-          ),
-          Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(16),
+          // Scrollable content
+          SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
+                // Profile section with transparent background
                 Container(
-                  height: 150,
-                  width: 150,
-                  margin: EdgeInsets.only(top: 120),
-                  decoration: BoxDecoration(shape: BoxShape.circle),
-                  child: Image.asset(
-                    'assets/images/Profile_Icon.png',
-                    fit: BoxFit.cover,
+                  width: double.infinity,
+                  padding: EdgeInsets.fromLTRB(16, 140, 16, 0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 150,
+                        width: 150,
+                        decoration: BoxDecoration(shape: BoxShape.circle),
+                        child: Image.asset(
+                          'assets/images/Profile_Icon.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Stacie Raven',
+                            style: TextStyle(
+                              fontSize: 28,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Container(
+                            height: 24,
+                            width: 80,
+                            padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.surface.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              'Level 100',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).colorScheme.surface,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.badge,
+                            size: 14,
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Psychology Student',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Icon(
+                            Icons.person_outline,
+                            size: 14,
+                            color: Theme.of(context).colorScheme.surface,
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            'Member since 2025',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w500,
+                              color: Theme.of(context).colorScheme.surface,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Stacie Raven',
-                      style: TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
+                
+                // White container that covers the background
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.background,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(42),
+                      topRight: Radius.circular(42),
                     ),
-                    SizedBox(width: 8),
-                    Container(
-                      height: 24,
-                      width: 80,
-                      padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Color(0xFFE7DCD8),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Text(
-                        'Level 100',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(16, 24, 16, 100),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        
+                      
+                        Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              _buildWeeklyChallengeSection(),
+
+                              const SizedBox(height: 8),
+                              Divider(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withOpacity(0.2),
+                                thickness: 2,
+                              ),
+                              const SizedBox(height: 8),
+
+                              _buildAchievementsSection(),
+                            ],
+                          ),
                         ),
-                        textAlign: TextAlign.center,
-                      ),
+                        const SizedBox(height: 16),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Text(
+                            'Settings',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Theme.of(context).colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Container(
+                          width: double.infinity,
+                          margin: EdgeInsets.symmetric(horizontal: 16),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(24),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.onSurface.withOpacity(0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Icon(
+                                  Icons.track_changes,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                title: Text(
+                                  'Focus Areas & Goals',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Set wellness priorities and track habits.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    fontSize: 13,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                onTap: () {
+                                  // Navigate to focus areas & goals screen
+                                },
+                              ),
+                              Divider(
+                                indent: 20,
+                                endIndent: 20,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withOpacity(0.2),
+                                height: 1,
+                              ),
+                              ListTile(
+                                leading: Icon(
+                                  Icons.accessibility_outlined,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                title: Text(
+                                  'Personalisation',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Adjust visuals, text, and voice support.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    fontSize: 13,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                onTap: () {
+                                  // Navigate to personalisation screen
+                                },
+                              ),
+                              Divider(
+                                indent: 20,
+                                endIndent: 20,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withOpacity(0.2),
+                                height: 1,
+                              ),
+                              ListTile(
+                                leading: Icon(
+                                  Icons.lock_outline,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                title: Text(
+                                  'Data & Privacy',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Understand what\'s collected and how it\'s used.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    fontSize: 13,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                onTap: () => _showDataInfo(context),
+                              ),
+                              Divider(
+                                indent: 20,
+                                endIndent: 20,
+                                color: Theme.of(
+                                  context,
+                                ).colorScheme.outline.withOpacity(0.2),
+                                height: 1,
+                              ),
+                              ListTile(
+                                leading: Icon(
+                                  Icons.info_outline,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                title: Text(
+                                  'About Solace',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                subtitle: Text(
+                                  'Learn what this app does and why it was built.',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                                    fontSize: 13,
+                                    height: 1.2,
+                                  ),
+                                ),
+                                trailing: Icon(
+                                  Icons.chevron_right,
+                                  color: Theme.of(context).colorScheme.onSurface,
+                                  size: 24,
+                                ),
+                                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                onTap: () => _showAbout(context),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.badge,
-                      size: 14,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Psychology Student',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                    ),
-                    SizedBox(width: 8),
-                    Icon(
-                      Icons.person_outline,
-                      size: 14,
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Member since 2025',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ],
-            ),
-          ),
-          Container(
-            height: 520,
-            width: double.infinity,
-            margin: EdgeInsets.only(top: 380, left: 16, right: 16),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        _buildWeeklyChallengeSection(),
-
-                        const SizedBox(height: 8),
-                        Divider(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.outline.withOpacity(0.2),
-                          thickness: 2,
-                        ),
-                        const SizedBox(height: 8),
-
-                        _buildAchievementsSection(),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      'Settings',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                        color: Theme.of(context).colorScheme.onSurface,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.symmetric(horizontal: 16),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.surface,
-                      borderRadius: BorderRadius.circular(16),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.onSurface.withOpacity(0.1),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        ListTile(
-                          leading: Icon(
-                            Icons.track_changes,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          title: Text(
-                            'Focus Areas & Goals',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Set wellness priorities and track habits.',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: 13,
-                              height: 1.2,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          onTap: () {
-                            // Navigate to focus areas & goals screen
-                          },
-                        ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 20,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.outline.withOpacity(0.2),
-                          height: 1,
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.accessibility_outlined,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          title: Text(
-                            'Personalisation',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Adjust visuals, text, and voice support.',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: 13,
-                              height: 1.2,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          onTap: () {
-                            // Navigate to personalisation screen
-                          },
-                        ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 20,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.outline.withOpacity(0.2),
-                          height: 1,
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.lock_outline,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          title: Text(
-                            'Data & Privacy',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Understand what\'s collected and how it\'s used.',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: 13,
-                              height: 1.2,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          onTap: () => _showDataInfo(context),
-                        ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 20,
-                          color: Theme.of(
-                            context,
-                          ).colorScheme.outline.withOpacity(0.2),
-                          height: 1,
-                        ),
-                        ListTile(
-                          leading: Icon(
-                            Icons.info_outline,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          title: Text(
-                            'About Solace',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 16,
-                            ),
-                          ),
-                          subtitle: Text(
-                            'Learn what this app does and why it was built.',
-                            style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                              fontSize: 13,
-                              height: 1.2,
-                            ),
-                          ),
-                          trailing: Icon(
-                            Icons.chevron_right,
-                            color: Theme.of(context).colorScheme.onSurface,
-                            size: 24,
-                          ),
-                          contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                          onTap: () => _showAbout(context),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 56),
-                ],
-              ),
             ),
           ),
         ],
