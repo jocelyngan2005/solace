@@ -31,14 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   late WeeklyChallengeService _challengeService;
 
   final List<String> _themes = ['Pastel Blue', 'Soft Lavender', 'Warm Beige'];
-  final List<String> _allFocusAreas = [
-    'Sleep',
-    'Anxiety',
-    'Productivity',
-    'Social',
-    'Academic',
-    'Self-esteem',
-  ];
 
   @override
   void initState() {
@@ -654,50 +646,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 Text(
                   'Preview text at ${_fontSize.round()}pt',
                   style: TextStyle(fontSize: _fontSize, color: Colors.grey.shade600),
-                ),
-                
-                const SizedBox(height: 20),
-                
-                // Focus Areas
-                const Text(
-                  '🎯 Focus Areas',
-                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Select areas you want to focus on for better personalized content.',
-                  style: TextStyle(fontSize: 13, color: Colors.grey),
-                ),
-                const SizedBox(height: 8),
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: _allFocusAreas.map((area) {
-                    final isSelected = _focusAreas.contains(area);
-                    return FilterChip(
-                      label: Text(area, style: const TextStyle(fontSize: 12)),
-                      selected: isSelected,
-                      selectedColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                      checkmarkColor: Theme.of(context).colorScheme.primary,
-                      backgroundColor: Colors.grey.shade100,
-                      onSelected: (selected) {
-                        setStateDialog(() {
-                          if (selected) {
-                            _focusAreas.add(area);
-                          } else {
-                            _focusAreas.remove(area);
-                          }
-                        });
-                        setState(() {
-                          if (selected) {
-                            _focusAreas.add(area);
-                          } else {
-                            _focusAreas.remove(area);
-                          }
-                        });
-                      },
-                    );
-                  }).toList(),
                 ),
                 
                 const SizedBox(height: 20),

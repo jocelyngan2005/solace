@@ -368,7 +368,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Sleep Hours tracker card
-  Widget _buildSleepHoursTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildSleepHoursTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -499,7 +502,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Bedtime Patterns tracker card
-  Widget _buildBedtimePatternsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildBedtimePatternsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     String targetBed = _bedTimeGoal != null
         ? _bedTimeGoal!.format(context)
         : '23:00';
@@ -552,7 +558,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                                     color: habit['color'],
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  textAlign: TextAlign.start,
+                              textAlign: TextAlign.start,
                             ),
                             Text(
                               'Target wake-up: $targetWake',
@@ -561,7 +567,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                                     color: habit['color'],
                                     fontWeight: FontWeight.bold,
                                   ),
-                                  textAlign: TextAlign.start,
+                              textAlign: TextAlign.start,
                             ),
                           ],
                         ),
@@ -657,7 +663,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Nap Breaks tracker card
-  Widget _buildNapBreaksTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildNapBreaksTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -804,7 +813,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Meals tracker card
-  Widget _buildMealsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildMealsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final mealOptions = ['Breakfast', 'Lunch', 'Dinner', 'Snack'];
     final Color chipColor = habit['color'];
 
@@ -937,7 +949,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Water tracker card
-  Widget _buildWaterTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildWaterTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1055,7 +1070,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Fruits tracker card
-  Widget _buildFruitsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildFruitsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1173,7 +1191,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Steps tracker card
-  Widget _buildStepsTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildStepsTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     bool _linkedToPhone = false;
 
     return StatefulBuilder(
@@ -1355,7 +1376,10 @@ class _HabitTrackerState extends State<HabitTracker> {
   }
 
   // Exercise tracker card
-  Widget _buildExerciseTrackerCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildExerciseTrackerCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final TextEditingController typeController = TextEditingController();
     final TextEditingController durationController = TextEditingController();
 
@@ -1799,7 +1823,10 @@ class _HabitTrackerState extends State<HabitTracker> {
     );
   }
 
-  Widget _buildDynamicHabitCard(BuildContext context, Map<String, dynamic> habit) {
+  Widget _buildDynamicHabitCard(
+    BuildContext context,
+    Map<String, dynamic> habit,
+  ) {
     final habitName = habit['name'];
     switch (habitName) {
       case 'Sleep Hours':
@@ -1827,6 +1854,16 @@ class _HabitTrackerState extends State<HabitTracker> {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
     return '${twoDigits(duration.inHours)}:${twoDigits(duration.inMinutes.remainder(60))}';
   }
+
+  final List<String> _focusAreas = [];
+  final List<String> _allFocusAreas = [
+    'Sleep',
+    'Anxiety',
+    'Productivity',
+    'Social',
+    'Academic',
+    'Self-esteem',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -1859,7 +1896,62 @@ class _HabitTrackerState extends State<HabitTracker> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                
+                Text(
+                  'Focus Areas',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
+                // Focus Areas
+                const Text(
+                  'Select areas you want to focus on for better personalized content.',
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 6,
+                  runSpacing: 4,
+                  children: _allFocusAreas.map((area) {
+                    final isSelected = _focusAreas.contains(area);
+                    return FilterChip(
+                      label: Text(area, style: const TextStyle(fontSize: 12)),
+                      selected: isSelected,
+                      selectedColor: Theme.of(
+                        context,
+                      ).colorScheme.primary.withOpacity(0.2),
+                      checkmarkColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: Colors.grey.shade100,
+                      onSelected: (selected) {
+                        setState(() {
+                          if (selected) {
+                            _focusAreas.add(area);
+                          } else {
+                            _focusAreas.remove(area);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+
+                const SizedBox(height: 32),
+
+                Text(
+                  'Habit Tracking',
+                  style: TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+
+                const SizedBox(height: 16),
+
                 Text(
                   'Sleep & Wellness',
                   style: TextStyle(
@@ -1870,7 +1962,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Sleep Hours
                 _buildMinimalHabitCard(
                   context,
@@ -1881,9 +1973,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   color: const Color(0xFF8FA2FF),
                   onTap: () => _showTrackingDialog(context, _sleepHabits[0]),
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Bedtime Patterns
                 _buildMinimalHabitCard(
                   context,
@@ -1894,9 +1986,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   color: const Color(0xFFA18FFF),
                   onTap: () => _showTrackingDialog(context, _sleepHabits[1]),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 Text(
                   'Health & Nutrition',
                   style: TextStyle(
@@ -1907,7 +1999,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Meals
                 _buildMinimalHabitCard(
                   context,
@@ -1918,9 +2010,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   color: const Color(0xFFFFCE5D),
                   onTap: () => _showTrackingDialog(context, _healthHabits[0]),
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Water Intake
                 _buildMinimalHabitCard(
                   context,
@@ -1931,9 +2023,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   color: const Color(0xFF8FA2FF),
                   onTap: () => _showTrackingDialog(context, _healthHabits[1]),
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 Text(
                   'Movement & Exercise',
                   style: TextStyle(
@@ -1944,7 +2036,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Steps
                 _buildMinimalHabitCard(
                   context,
@@ -1955,9 +2047,9 @@ class _HabitTrackerState extends State<HabitTracker> {
                   color: const Color(0xFF95A663),
                   onTap: () => _showTrackingDialog(context, _movementHabits[0]),
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Exercise
                 _buildMinimalHabitCard(
                   context,
@@ -1968,7 +2060,7 @@ class _HabitTrackerState extends State<HabitTracker> {
                   color: const Color(0xFFA18FFF),
                   onTap: () => _showTrackingDialog(context, _movementHabits[1]),
                 ),
-                
+
                 const SizedBox(height: 32),
               ],
             ),
@@ -2075,15 +2167,11 @@ class _HabitTrackerState extends State<HabitTracker> {
                 color: const Color(0xFFF5F5F5),
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: Icon(
-                icon,
-                color: Colors.black87,
-                size: 24,
-              ),
+              child: Icon(icon, color: Colors.black87, size: 24),
             ),
-            
+
             const SizedBox(width: 16),
-            
+
             // Content
             Expanded(
               child: Column(
@@ -2126,19 +2214,14 @@ class _HabitTrackerState extends State<HabitTracker> {
                 ],
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // Arrow
-            Icon(
-              Icons.chevron_right,
-              color: Colors.black87,
-              size: 20,
-            ),
+            Icon(Icons.chevron_right, color: Colors.black87, size: 20),
           ],
         ),
       ),
     );
   }
-
 }
