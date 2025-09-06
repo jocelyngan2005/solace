@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import '../../widgets/dashboard_card.dart';
 
 class ResourcesScreen extends StatelessWidget {
   const ResourcesScreen({super.key});
@@ -8,80 +7,50 @@ class ResourcesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mental Health Resources'),
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Professional Help
-            DashboardCard(
-              title: '🏥 Professional Support',
-              child: Column(
-                children: [
-                  _buildResourceItem(
-                    context,
-                    'University Counseling Services',
-                    'Free mental health services for students',
-                    '03-7967-3333',
-                    Icons.local_hospital,
-                    Colors.red,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildResourceItem(
-                    context,
-                    'Student Affairs Office',
-                    'Academic coaching and student support',
-                    'student_affairs@university.edu',
-                    Icons.school,
-                    Colors.blue,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildResourceItem(
-                    context,
-                    'Learning Support Unit',
-                    'Academic accommodations and learning assistance',
-                    '03-7967-5000',
-                    Icons.accessibility,
-                    Colors.green,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildCounselorDirectoryCard(context),
-                ],
+            // Crisis Support
+            Text(
+              'Crisis Support',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
               ),
             ),
-            
-            const SizedBox(height: 18),
-            
-            // Crisis Resources
-            DashboardCard(
-              title: '🆘 Crisis Support',
+            const SizedBox(height: 8),
+            Card(
               child: Column(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                      color: Colors.red[50],
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.red[200]!),
+                      color: Colors.redAccent,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(color: Colors.white),
                     ),
                     child: Column(
                       children: [
                         const Text(
-                          'If you\'re in immediate danger, call 999',
+                          'If you\'re in immediate danger, call',
                           style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: Colors.red,
+                          color: Colors.white,
                           ),
                         ),
                         const SizedBox(height: 8),
                         SizedBox(
                           width: 148,
                           child: ElevatedButton.icon(
-                          icon: const Icon(Icons.phone, color: Colors.white),
+                          icon: const Icon(Icons.phone, color: Colors.red),
                           label: const Text('Call 999'),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            foregroundColor: Colors.white,
+                            backgroundColor: Colors.white,
+                            foregroundColor: Colors.red,
                             shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(16),
                             ),
@@ -99,10 +68,12 @@ class ResourcesScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 12),
+                        const Divider(color: Colors.white), 
                         const Text(
                           'Suicide helplines:',
                           style: TextStyle(
-                            fontWeight: FontWeight.bold,                          
+                            fontWeight: FontWeight.bold,    
+                            color: Colors.white,                      
                           ),
                         ),
                         const SizedBox(height: 4),
@@ -118,40 +89,68 @@ class ResourcesScreen extends StatelessWidget {
               ),
             ),
             
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             
             // Location-based Help (Simulated)
-            DashboardCard(
-              title: '📍 Local Resources',
+            Text(
+              'Professional Support Around Me',
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.surface,
+              borderRadius: BorderRadius.circular(24),
+              border: Border.all(color: Colors.grey[300]!),
+              ),
+              child: Card(
+              elevation: 0,
+              color: Colors.transparent,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               child: Column(
                 children: [
-                  _buildResourceItem(
-                    context,
-                    'University Health Center',
-                    '500m away • Open Monday-Friday 8AM-5PM',
-                    '03-7967-2000',
-                    Icons.local_hospital,
-                    Colors.red,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildResourceItem(
-                    context,
-                    'Student Mental Health Unit',
-                    '300m away • Walk-in hours: 9AM-4PM',
-                    'student_mental_health@university.edu',
-                    Icons.psychology,
-                    Colors.purple,
-                  ),
-                  const SizedBox(height: 12),
-                  _buildResourceItem(
-                    context,
-                    'Campus Recreation Center',
-                    '200m away • Free fitness and wellness programs',
-                    '03-7967-3000',
-                    Icons.fitness_center,
-                    Colors.orange,
-                  ),
+                _buildCounselorDirectoryCard(context),
+                Divider(color: Theme.of(context).colorScheme.outline.withOpacity(0.6)), 
+                const SizedBox(height: 4),  
+                _buildResourceItem(
+                  context,
+                  'University Health Center',
+                  '500m away • Monday-Friday 8AM-5PM',
+                  '03-7967-2000',
+                  Icons.local_hospital,
+                ),
+                Divider(color: Theme.of(context).colorScheme.outline.withOpacity(0.6)), 
+                const SizedBox(height: 4),                
+                _buildResourceItem(
+                  context,
+                  'Student Mental Health Unit',
+                  '300m away • 9AM-4PM',
+                  'student_mental_health@university.edu',
+                  Icons.psychology,
+                ),
+                Divider(color: Theme.of(context).colorScheme.outline.withOpacity(0.6)), 
+                const SizedBox(height: 4),   
+                _buildResourceItem(
+                  context,
+                  'Campus Recreation Center',
+                  '200m away • 6AM-10PM',
+                  '03-7967-3000',
+                  Icons.fitness_center,
+                ),
+                Divider(color: Theme.of(context).colorScheme.outline.withOpacity(0.6)), 
+                const SizedBox(height: 4),   
+                _buildResourceItem(
+                  context,
+                  'Student Affairs Office',
+                  '300m away • Monday-Friday 9AM-6PM',
+                  'student_affairs@university.edu',
+                  Icons.school,
+                ),
                 ],
+              ),
               ),
             ),
             
@@ -215,39 +214,46 @@ class ResourcesScreen extends StatelessWidget {
 
   Widget _buildCounselorDirectoryCard(BuildContext context) {
     return Card(
-      elevation: 2,
+      elevation: 0, // No shadow
+      color: Theme.of(context).colorScheme.surface,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: InkWell(
         onTap: () => _showCounselorDirectory(context),
         borderRadius: BorderRadius.circular(12),
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.symmetric(horizontal: 0, vertical: 8),
           child: Row(
             children: [
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: const Icon(Icons.people, color: Colors.purple, size: 20),
+                child: Icon(Icons.people, color: Theme.of(context).colorScheme.onSurface, size: 20),
               ),
               const SizedBox(width: 12),
-              const Expanded(
+              Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Campus Counselor Directory',
-                      style: TextStyle(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       'View available counselors and their contact details',
-                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
                     ),
                   ],
                 ),
               ),
+              const SizedBox(width: 8),
               const Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
             ],
           ),
@@ -256,7 +262,7 @@ class ResourcesScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildResourceItem(BuildContext context, String title, String description, String contact, IconData icon, Color color) {
+  Widget _buildResourceItem(BuildContext context, String title, String description, String contact, IconData icon) {
     final isPhoneNumber = contact.startsWith('03-') ||
         contact.startsWith('01-') ||
         contact.startsWith('04-') ||
@@ -272,10 +278,10 @@ class ResourcesScreen extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Icon(icon, color: color, size: 20),
+          child: Icon(icon, color: Theme.of(context).colorScheme.onSurface, size: 20),
         ),
         const SizedBox(width: 12),
         Expanded(
@@ -284,11 +290,15 @@ class ResourcesScreen extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
               ),
               Text(
                 description,
-                style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
               ),
               if (contact.isNotEmpty)
                 Row(
@@ -330,12 +340,12 @@ class ResourcesScreen extends StatelessWidget {
         Expanded(
           child: Text(
             '$name: $phoneNumber',
-            style: const TextStyle(fontWeight: FontWeight.w600),
+            style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
           ),
         ),
         IconButton(
           onPressed: () => _copyToClipboard(context, phoneNumber),
-          icon: Icon(Icons.copy, size: 16, color: Colors.grey[600]),
+          icon: Icon(Icons.copy, size: 16, color: Colors.grey[100]),
           tooltip: 'Copy phone number',
           padding: EdgeInsets.zero,
           constraints: const BoxConstraints(),

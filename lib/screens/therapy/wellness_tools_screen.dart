@@ -7,6 +7,7 @@ import 'positive_affirmation_screen.dart';
 import 'breathing_exercises_screen.dart';
 import '../../widgets/habit_tracker.dart';
 import '../../data/journal_entry_service.dart';
+import 'resources_screen.dart'; 
 
 class WellnessToolsScreen extends StatelessWidget {
   const WellnessToolsScreen({super.key});
@@ -114,6 +115,21 @@ class WellnessToolsScreen extends StatelessWidget {
             () => Navigator.push(
               context,
               MaterialPageRoute(builder: (context) => const HabitTracker()),
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+
+          // Mental Health Resources 
+          _buildToolCard(
+            context,
+            'Mental Health Resources',
+            'Access a variety of mental health resources',
+            Icons.menu_book,
+            Colors.indigo,
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const ResourcesScreen()),
             ),
           ),
           
