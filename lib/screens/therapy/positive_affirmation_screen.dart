@@ -140,7 +140,6 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
     
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Positive Affirmations'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -163,20 +162,69 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
             children: [
               // Header
               Text(
-            'Daily Affirmations',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+            'Positive Affirmations',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
           const SizedBox(height: 8),
           Text(
             'Personalized positive thoughts for you',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+            style: Theme.of(context).textTheme.bodyMedium
           ),
               
-              const SizedBox(height: 24),
+              const SizedBox(height: 16),
+
+              // Daily Reminder Toggle
+              Flexible(
+                child: Card(
+                  elevation: 1,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  color: Theme.of(context).colorScheme.surface,
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.notifications_active,
+                          color: Theme.of(context).colorScheme.tertiary,
+                        ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'Daily Reminders',
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            Text(
+                              'Get positive affirmations throughout the day',
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                          ],
+                        ),
+                      ),
+                      Switch(
+                        value: false,
+                        onChanged: (value) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Notification settings would open here')),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              ),
+              
+              const SizedBox(height: 16),
               
               // Mood Selector
               Text(
@@ -250,139 +298,88 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
                 ),
               ),
               
-              const SizedBox(height: 28),
-              
-              // Affirmation Card
-              Expanded(
-                flex: 3, // Give more space to the affirmation card
+                const SizedBox(height: 28),
+                
+                // Affirmation Card
+                SizedBox(
+                height: 240, // Fixed height for the card
                 child: Card(
-                  elevation: 2,
+                  elevation: 8, // Increased elevation for more shadow
+                  color: Theme.of(context).colorScheme.surface,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(16),
                   ),
                   child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(28),
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          category.color.withOpacity(0.1),
-                          category.color.withOpacity(0.05),
-                        ],
-                      ),
-                      borderRadius: BorderRadius.circular(16),
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(28),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                      blurRadius: 18,
+                      offset: const Offset(0, 0),
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          Icons.format_quote,
-                          size: 42,
-                          color: category.color.withOpacity(0.7),
+                    ],
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                    Icon(
+                      Icons.format_quote,
+                      size: 42,
+                      color: category.color.withOpacity(0.7),
+                    ),
+                    const SizedBox(height: 16),
+                    Expanded(
+                      child: Center(
+                      child: Text(
+                        currentAffirmation,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                        fontWeight: FontWeight.w500,
+                        height: 1.2,
+                        color: Theme.of(context).colorScheme.onSurface,
                         ),
-                        
-                        const SizedBox(height: 16),
-                        
-                        Flexible(
-                          child: Text(
-                            currentAffirmation,
-                            textAlign: TextAlign.center,
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                              fontWeight: FontWeight.w500,
-                              height: 1.2,
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                          ),
-                        ),
-                        
-                        const SizedBox(height: 24),
-                        
-                        // Action Buttons
+                      ),
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+                    ],
+                  ),
+                  ),
+                ),
+                ),
+              const SizedBox(height: 16),
+              // Action Buttons
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [                            
+                            _buildActionButton(
+                              icon: Icons.refresh,
+                              label: 'New',
+                              color: Theme.of(context).colorScheme.onSurface,
+                              onTap: _generateNewAffirmation,
+                            ),
+                            const SizedBox(width: 12),
                             _buildActionButton(
                               icon: favoriteAffirmations.contains(currentAffirmation)
                                 ? Icons.favorite
                                 : Icons.favorite_border,
                               label: 'Favorite',
-                              color: Colors.red,
+                              color: Theme.of(context).colorScheme.tertiary,
                               onTap: _toggleFavorite,
                             ),
-                            _buildActionButton(
-                              icon: Icons.refresh,
-                              label: 'New',
-                              color: Colors.purple,
-                              onTap: _generateNewAffirmation,
-                            ),
+                            const SizedBox(width: 12),
                             _buildActionButton(
                               icon: Icons.share,
                               label: 'Share',
-                              color: Colors.blue,
+                              color: Theme.of(context).colorScheme.onSurface,
                               onTap: _shareAffirmation,
                             ),
                           ],
                         ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              
-              const SizedBox(height: 16), // Reduced spacing
-              
-              // Daily Reminder Toggle
-              Flexible(
-                child: Card(
-                  elevation: 1,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  child: Container(
-                    padding: const EdgeInsets.all(16),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.notifications_active,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Text(
-                              'Daily Reminders',
-                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            Text(
-                              'Get positive affirmations throughout the day',
-                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Switch(
-                        value: false,
-                        onChanged: (value) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Notification settings would open here')),
-                          );
-                        },
-                        activeColor: Theme.of(context).colorScheme.primary,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              ),
             ],
           ),
         ),
@@ -401,15 +398,15 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color,
               shape: BoxShape.circle,
             ),
             child: Icon(
               icon,
-              color: color,
-              size: 24,
+              color: Theme.of(context).colorScheme.onPrimary,
+              size: 16,
             ),
           ),
         ],

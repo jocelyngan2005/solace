@@ -16,24 +16,21 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
     GroundingCategory(
       name: 'Sensory Grounding',
       description: '5-4-3-2-1 technique using your five senses',
-      icon: Icons.visibility,
-      color: Colors.green,
+      icon: Icons.visibility_outlined,
       technique: 'Use sight, touch, hearing, smell, and taste to ground yourself in the present moment',
       page: const SensoryGroundingPage(),
     ),
     GroundingCategory(
       name: 'Physical Grounding',
       description: 'Temperature, muscle tension, and touch-based techniques',
-      icon: Icons.front_hand_rounded,
-      color: Colors.blue,
+      icon: Icons.front_hand_outlined,
       technique: 'Ice cubes, progressive muscle relaxation, and finger grounding exercises',
       page: const PhysicalGroundingPage(),
     ),
     GroundingCategory(
       name: 'Cognitive Grounding',
       description: 'Mental games and exercises to redirect focus',
-      icon: Icons.psychology,
-      color: Colors.pink,
+      icon: Icons.psychology_outlined,
       technique: 'Categories, alphabet games, and simple math problems',
       page: const MiniGamesPage(),
     ),
@@ -41,7 +38,6 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
       name: 'Movement Grounding',
       description: 'Gentle movement and body awareness exercises',
       icon: Icons.directions_walk,
-      color: Colors.orange,
       technique: 'Mindful walking, stretching, and bilateral tapping',
       page: const MovementGroundingPage(),
     ),
@@ -51,7 +47,6 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Grounding Toolkit'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
@@ -65,61 +60,44 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [              
-              // Information Card
-              Card(
-                elevation: 2,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
+              // Header
+              Text(
+                'Grounding Toolkit',
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
                 ),
-                color: const Color(0xFFB9998D), 
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [                    
-                          Text(
-                            '💡 When to use grounding techniques:',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                      const SizedBox(height: 12),
-                      Text(
-                        '• When feeling anxious or overwhelmed\n'
-                        '• During panic attacks or high stress\n'
-                        '• When your mind is racing\n'
-                        '• To reconnect with the present moment\n'
-                        '• Before important events or exams',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onPrimary,
-                          height: 1.5,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              
+              ),              
               const SizedBox(height: 24),
               
               // Techniques Grid
-              Text(
-                'Choose Your Technique',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                  Expanded(
+                    child: Text(
+                    'Choose a grounding technique to calm your mind',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  GestureDetector(
+                    onTap: () => _showGroundingInfoDialog(context),
+                    child: const Icon(
+                      Icons.info_outline,
+                      color: Color(0xFF848767),
+                      size: 18,
+                    ),
+                  ),
+                  ],
                 ),
-              ),
+
               const SizedBox(height: 16),
               
+              // Techniques List
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    mainAxisSpacing: 16,
-                    crossAxisSpacing: 16,
-                    childAspectRatio: 0.6,
-                  ),
+                child: ListView.builder(
                   itemCount: categories.length,
                   itemBuilder: (context, index) {
                     final category = categories[index];
@@ -135,61 +113,188 @@ class _GroundingTechniquesPageState extends State<GroundingTechniquesPage> {
   }
   
   Widget _buildTechniqueCard(GroundingCategory category) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: InkWell(
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => category.page),
-          );
-        },
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Icon
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: category.color.withOpacity(0.1),
-                  shape: BoxShape.circle,
+    return Container(
+      margin: const EdgeInsets.only(bottom: 4),
+      child: Card(
+        elevation: 6, // Increased elevation for shadow
+        shadowColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.15), // Custom shadow color
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(32),
+        ),
+        child: InkWell(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => category.page),
+            );
+          },
+          borderRadius: BorderRadius.circular(32),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                // Icon container
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    category.icon,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    size: 24,
+                  ),
                 ),
-                child: Icon(
-                  category.icon,
-                  color: category.color,
-                  size: 28,
+                
+                const SizedBox(width: 16),
+                
+                // Technique Info
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        category.name,
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        category.description,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                          height: 1.4,
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              
-              const SizedBox(height: 16),
-              
-              // Title
-              Text(
-                category.name,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
+                const SizedBox(width: 12),
+                // Arrow
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  child: const Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                  ),
                 ),
-              ),
-              
-              const SizedBox(height: 8),
-              
-              // Description
-              Text(
-                category.description,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  height: 1.4,
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
+      ),
+    );
+  }
+  
+  void _showGroundingInfoDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 400),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // Header
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.secondary,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      topRight: Radius.circular(16),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.lightbulb_outline,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 24,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          'When to use grounding techniques',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        onPressed: () => Navigator.pop(context),
+                        icon: Icon(
+                          Icons.close,
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          size: 16,
+                        ),
+                        padding: EdgeInsets.all(2),
+                        constraints: const BoxConstraints(),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // Content
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Grounding techniques help you reconnect with the present moment and calm your nervous system. Use them:',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          height: 1.5,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      _buildInfoItem(context, Icons.psychology, 'When feeling anxious or overwhelmed'),
+                      _buildInfoItem(context, Icons.emergency, 'During panic attacks or high stress'),
+                      _buildInfoItem(context, Icons.speed, 'When your mind is racing'),
+                      _buildInfoItem(context, Icons.center_focus_strong, 'To reconnect with the present moment'),
+                      _buildInfoItem(context, Icons.event, 'Before important events or exams'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+  
+  Widget _buildInfoItem(BuildContext context, IconData icon, String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: 16,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                height: 1.4,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -199,7 +304,6 @@ class GroundingCategory {
   final String name;
   final String description;
   final IconData icon;
-  final Color color;
   final String technique;
   final Widget page;
 
@@ -207,7 +311,6 @@ class GroundingCategory {
     required this.name,
     required this.description,
     required this.icon,
-    required this.color,
     required this.technique,
     required this.page,
   });
