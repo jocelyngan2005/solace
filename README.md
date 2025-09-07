@@ -18,6 +18,8 @@ Prototype: https://www.figma.com/design/leFYlfvw5etlQUYErLUJN3/solace---your-min
 
 Pitch deck: https://www.canva.com/design/DAGyR7nvk1M/_dnVnDbizpvY0KNnmEDRDA/edit?utm_content=DAGyR7nvk1M&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton 
 
+Video Presentation : https://youtu.be/TZ4KXeNrBEU
+
 ## 👥 Target Users
 
 - **Primary**: University & college students (undergraduates and postgraduates)
