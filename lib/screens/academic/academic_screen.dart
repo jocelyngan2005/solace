@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../widgets/dashboard_card.dart';
+import '../../data/academic_workload_service.dart';
 
 class AcademicScreen extends StatefulWidget {
   const AcademicScreen({super.key});
@@ -273,30 +274,18 @@ class _AcademicScreenState extends State<AcademicScreen> with TickerProviderStat
   }
 
   Widget _buildWeekOverview() {
+    final weekData = AcademicWorkloadService.getCurrentWeekOverview();
+    
     return Row(
-      children: [
-        Expanded(
-          child: _buildWeekDay('M', 'High', Colors.red),
-        ),
-        Expanded(
-          child: _buildWeekDay('T', 'Med', Colors.orange),
-        ),
-        Expanded(
-          child: _buildWeekDay('W', 'High', Colors.red),
-        ),
-        Expanded(
-          child: _buildWeekDay('T', 'Low', Colors.green),
-        ),
-        Expanded(
-          child: _buildWeekDay('F', 'Med', Colors.orange),
-        ),
-        Expanded(
-          child: _buildWeekDay('S', 'Low', Colors.green),
-        ),
-        Expanded(
-          child: _buildWeekDay('S', 'Low', Colors.green),
-        ),
-      ],
+      children: weekData.map((dayData) {
+        return Expanded(
+          child: _buildWeekDay(
+            dayData['day'],
+            dayData['workload'],
+            dayData['color'],
+          ),
+        );
+      }).toList(),
     );
   }
 
