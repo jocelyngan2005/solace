@@ -17,7 +17,7 @@ class ResourcesScreen extends StatelessWidget {
           children: [
             // Crisis Support
             Text(
-              'Crisis Support',
+              'Crisis Helplines',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.w600,
               ),
@@ -52,46 +52,42 @@ class ResourcesScreen extends StatelessWidget {
                           ),
                           ],
                         ),
-                        const SizedBox(height: 8),
-                        SizedBox(
-                          width: 100,
-                          child: ElevatedButton.icon(
-                          icon: const Icon(Icons.phone, color: Colors.redAccent),
-                          label: const Text('Call 999'),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.redAccent,
-                            shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(16),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 8),
-                          ),
-                          onPressed: () {
-                            // You can use url_launcher to actually call, but here just show a snackbar
-                            ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text('Dialing 999...'),
-                              duration: Duration(seconds: 2),
-                            ),
-                            );
-                          },
-                          ),
-                        ),
                         const SizedBox(height: 12),
-                        const Divider(color: Colors.white), 
-                        const Text(
-                          '24hr helplines:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,    
-                            color: Colors.white,                      
-                          ),
+                        Row(
+                            children: [
+                            Expanded(
+                              child: Text( 
+                              '999',
+                              style: const TextStyle(fontWeight: FontWeight.w600, color: Colors.white),
+                              ),
+                            ),
+                            IconButton(
+                              onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                content: Text('Dialing 999...'),
+                                duration: Duration(seconds: 2),
+                                behavior: SnackBarBehavior.fixed,
+                                ),
+                              );
+                              },
+                              icon: Icon(Icons.phone, size: 18, color: Colors.grey[100]),
+                              tooltip: 'Call 999',
+                              padding: EdgeInsets.zero,
+                              constraints: const BoxConstraints(),
+                            ),
+                          ],
                         ),
+                        const Divider(color: Colors.white),                        
                         const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Befrienders KL', '03-7627-2929'),
+                        const Divider(color: Colors.white), 
                         const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Talian Kasih', '15999'),
+                        const Divider(color: Colors.white), 
                         const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Life Line Association', '15995'),
+                        const Divider(color: Colors.white), 
                         const SizedBox(height: 4),
                         _buildCrisisContactItem(context, 'Malaysian Mental Health Association', '03-2780-6803'),
                       ],

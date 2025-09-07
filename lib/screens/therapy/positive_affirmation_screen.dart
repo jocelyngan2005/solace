@@ -16,7 +16,7 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
   final Map<String, AffirmationCategory> affirmationCategories = {
     'stressed': AffirmationCategory(
       name: 'Stressed',
-      color: const Color(0xFF8B5FBF),
+      color: const Color(0xFF1D006F),
       icon: Icons.sentiment_neutral,
       affirmations: [
         'You are capable of handling challenges, one step at a time.',
@@ -31,7 +31,7 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
     ),
     'anxious': AffirmationCategory(
       name: 'Anxious',
-      color: const Color(0xFF5FB3BF),
+      color:  const Color(0xFFA23900),
       icon: Icons.sentiment_dissatisfied,
       affirmations: [
         'You are safe in this moment. Ground yourself in the present.',
@@ -46,7 +46,7 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
     ),
     'overwhelmed': AffirmationCategory(
       name: 'Overwhelmed',
-      color: const Color(0xFFBF7A5F),
+      color: const Color(0xFF4B3426),
       icon: Icons.sentiment_very_dissatisfied,
       affirmations: [
         'You don\'t have to do everything at once. Focus on one thing.',
@@ -61,7 +61,7 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
     ),
     'sad': AffirmationCategory(
       name: 'Sad',
-      color: const Color(0xFF7FB35F),
+      color: const Color(0xFFA27A00),
       icon: Icons.sentiment_very_dissatisfied,
       affirmations: [
         'It\'s okay to feel sad. Your emotions are valid.',
@@ -74,9 +74,9 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
         'Even in darkness, there is always a light waiting to shine.',
       ],
     ),
-    'confident': AffirmationCategory(
-      name: 'Need Confidence',
-      color: const Color(0xFFBF5F8B),
+    'unconfident': AffirmationCategory(
+      name: 'Unconfident',
+      color: const Color(0xFF5A6B37),
       icon: Icons.sentiment_satisfied,
       affirmations: [
         'You are enough, exactly as you are right now.',
@@ -178,7 +178,7 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
               // Daily Reminder Toggle
               Flexible(
                 child: Card(
-                  elevation: 1,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),
@@ -200,13 +200,15 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
                             Text(
                               'Daily Reminders',
                               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Theme.of(context).colorScheme.onSurface,
+                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
                             Text(
                               'Get positive affirmations throughout the day',
-                              style: Theme.of(context).textTheme.bodySmall,
+                              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context).colorScheme.outline,
+                              ),
                             ),
                           ],
                         ),
@@ -259,8 +261,8 @@ class _PositiveAffirmationPageState extends State<PositiveAffirmationPage> {
                         child: Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                           decoration: BoxDecoration(
-                            color: isSelected ? moodCategory.color.withOpacity(0.15) : Colors.white,
-                            borderRadius: BorderRadius.circular(12),
+                            color: isSelected ? moodCategory.color.withOpacity(0.15) : Theme.of(context).colorScheme.surface,
+                            borderRadius: BorderRadius.circular(24),
                             border: Border.all(
                               color: isSelected ? moodCategory.color : Colors.grey[300]!,
                               width: 2,

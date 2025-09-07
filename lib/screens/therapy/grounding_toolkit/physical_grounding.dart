@@ -610,7 +610,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
         // Current step
         Container(
           width: double.infinity,
-          constraints: const BoxConstraints(minHeight: 300),
+          constraints: const BoxConstraints(minHeight: 480),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.primary,
@@ -638,7 +638,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                 ),
               ),
               
-              const SizedBox(height: 40),
+              const SizedBox(height: 60),
               
               // Visual Timer (only for temperature and muscle techniques)
               if (selectedTechnique == 'temperature' || selectedTechnique == 'muscle') ...[
@@ -683,7 +683,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                     ),
                   ],
                 ),
-                const SizedBox(height: 40),                
+                const SizedBox(height: 60),                
                 // Control Panel
                 Container(
                   padding: const EdgeInsets.all(16),
