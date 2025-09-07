@@ -201,14 +201,6 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          if (isActive)
-            IconButton(
-              icon: const Icon(Icons.stop),
-              onPressed: _resetExercise,
-              tooltip: 'Stop',
-            ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -219,6 +211,13 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
               children: [
               
               if (!isActive) ...[
+                Text(
+                    'Use gentle movement to reconnect with your body. Select a technique below to begin:',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ), 
+                  const SizedBox(height: 24), 
                 // Exercise Selector                
                 ...exercises.entries.map((entry) {
                   final key = entry.key;
@@ -292,7 +291,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                                           ),
                                           const SizedBox(width: 4),
                                           Text(
-                                            '${ex.duration ~/ 60} minute${ex.duration >= 120 ? 's' : ''}',
+                                            '${ex.duration ~/ 60.0} minute${ex.duration >= 120 ? 's' : ''}',
                                             style: Theme.of(context).textTheme.bodySmall?.copyWith(
                                               color: Theme.of(context).colorScheme.outline,
                                               fontWeight: FontWeight.w500,
@@ -307,7 +306,7 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                                           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                                           height: 1.4,
                                         ),
-                                        maxLines: 2,
+                                        maxLines: 3,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
@@ -333,71 +332,6 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
                 }),
                 
                 const SizedBox(height: 18),
-                
-                // Preview Instructions
-                Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 8,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Icon(Icons.list_alt, color: exercise.color),
-                          const SizedBox(width: 8),
-                          Text(
-                            'What you\'ll do:',
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      ...exercise.instructions.take(3).map((instruction) => 
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 4),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: 4,
-                                height: 4,
-                                margin: const EdgeInsets.only(top: 8, right: 8),
-                                decoration: BoxDecoration(
-                                  color: exercise.color,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              Expanded(child: Text(instruction)),
-                            ],
-                          ),
-                        ),
-                      ),
-                      if (exercise.instructions.length > 3)
-                        Text(
-                          '...and ${exercise.instructions.length - 3} more steps',
-                          style: TextStyle(
-                            color: exercise.color,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                    ],
-                  ),
-                ),
-                
-                const SizedBox(height: 18),
-                
                 // Start Button
                 SizedBox(
                   width: double.infinity,
@@ -434,36 +368,35 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
     
     return Column(
       children: [
-        // Timer and Progress
+        // Progress indicator
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
-              ),
-            ],
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
           ),
           child: Column(
             children: [
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    exercise.name,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
+                  // Use Flexible to prevent overflow on small screens
+                  Flexible(
+                    child: Text(
+                      exercise.name,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
+                  const SizedBox(width: 8),
                   Text(
                     _formatTime(countdown),
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      color: exercise.color,
-                      fontWeight: FontWeight.bold,
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
                 ],
@@ -471,24 +404,21 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
               const SizedBox(height: 16),
               LinearProgressIndicator(
                 value: (exercise.duration - countdown) / exercise.duration,
-                backgroundColor: exercise.color.withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation<Color>(exercise.color),
+                backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary),
                 minHeight: 8,
               ),
             ],
           ),
         ),
-        
-        const SizedBox(height: 32),
-        
-        // Current Instruction
+        // Current step
         Container(
           width: double.infinity,
           constraints: const BoxConstraints(minHeight: 300),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.surface,
-            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
             boxShadow: [
               BoxShadow(
                 color: exercise.color.withOpacity(0.1),
@@ -497,89 +427,89 @@ class _MovementGroundingPageState extends State<MovementGroundingPage>
               ),
             ],
           ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // Animated Icon
-                AnimatedBuilder(
-                  animation: _pulseAnimation,
-                  builder: (context, child) {
-                    return Transform.scale(
-                      scale: _pulseAnimation.value,
-                      child: Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: exercise.color.withOpacity(0.1),
-                          shape: BoxShape.circle,
-                        ),
-                        child: Icon(
-                          exercise.icon,
-                          size: 48,
-                          color: exercise.color,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(height: 16),
+              // Instructions first
+              Text(
+                'Step ${currentStep + 1} of ${exercise.instructions.length}',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onPrimary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              Text(
+                currentStep < exercise.instructions.length 
+                  ? exercise.instructions[currentStep]
+                  : 'Exercise Complete!',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w500,
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              
+              const SizedBox(height: 50),
+              
+              // Animated Icon in the middle
+              AnimatedBuilder(
+                animation: _pulseAnimation,
+                builder: (context, child) {
+                  return Transform.scale(
+                    scale: _pulseAnimation.value,
+                    child: Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        exercise.icon,
+                        size: 48,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              
+              const SizedBox(height: 50),
+              
+              // Breathing reminder for certain exercises
+              if (selectedExercise == 'walking' || selectedExercise == 'stretch')
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.air,
+                        color: Theme.of(context).colorScheme.onPrimary,
+                        size: 14,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Remember to breathe naturally',
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
                         ),
                       ),
-                    );
-                  },
-                ),
-                
-                const SizedBox(height: 32),
-                
-                // Step indicator
-                Text(
-                  'Step ${currentStep + 1} of ${exercise.instructions.length}',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: exercise.color,
-                    fontWeight: FontWeight.w600,
+                    ],
                   ),
                 ),
-                
-                const SizedBox(height: 16),
-                
-                // Current instruction
-                Text(
-                  currentStep < exercise.instructions.length 
-                    ? exercise.instructions[currentStep]
-                    : 'Exercise Complete!',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w500,
-                    height: 1.6,
-                  ),
-                ),
-                
-                const SizedBox(height: 32),
-                
-                // Breathing reminder for certain exercises
-                if (selectedExercise == 'walking' || selectedExercise == 'stretch')
-                  Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: exercise.color.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(
-                          Icons.air,
-                          color: exercise.color,
-                          size: 14,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Remember to breathe naturally',
-                          style: TextStyle(
-                            color: exercise.color,
-                            fontWeight: FontWeight.w500,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-              ],
-            ),
+            ],
           ),
+        ),
         
         const SizedBox(height: 24),
         

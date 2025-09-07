@@ -18,6 +18,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
   Timer? stepTimer;
   int countdown = 0;
   int stepDuration = 8; // seconds per step
+  bool isPaused = false;
   late AnimationController _timerController;
   late Animation<double> _timerAnimation;
   
@@ -25,7 +26,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
     'temperature': PhysicalTechnique(
       name: 'Temperature Reset',
       description: 'Use temperature to bring focus to the present',
-      icon: Icons.ac_unit,
+      icon: Icons.thermostat_outlined,
       color: Color(0xFFA596F5),
       steps: [
         'Find something cold to hold (ice cube, cold water, etc.)',
@@ -145,7 +146,9 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
 
     // Reset and start the timer animation
     _timerController.reset();
-    _timerController.forward();
+    if (!isPaused) {
+      _timerController.forward();
+    }
     
     // Start countdown
     setState(() {
@@ -154,8 +157,13 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
     
     stepTimer?.cancel();
     stepTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      if (!isActive) {
-        timer.cancel();
+      if (!isActive || isPaused) {
+        if (isPaused) {
+          _timerController.stop();
+        }
+        if (!isActive) {
+          timer.cancel();
+        }
         return;
       }
       
@@ -175,15 +183,125 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
 
     // Auto-advance after the step duration
     Timer(Duration(seconds: stepDuration), () {
-      if (isActive && currentStep < technique.steps.length - 1) {
+      if (isActive && !isPaused && currentStep < technique.steps.length - 1) {
         setState(() {
           currentStep++;
         });
         _runStepByStep(technique);
-      } else if (isActive) {
+      } else if (isActive && !isPaused) {
         _completeExercise();
       }
     });
+  }
+
+  void _pauseResume() {
+    setState(() {
+      isPaused = !isPaused;
+    });
+    
+    if (isPaused) {
+      _timerController.stop();
+      stepTimer?.cancel();
+    } else {
+      // Resume animation from current position
+      _timerController.forward();
+      
+      // Resume step timer
+      stepTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (!isActive || isPaused) {
+          if (isPaused) {
+            _timerController.stop();
+          }
+          if (!isActive) {
+            timer.cancel();
+          }
+          return;
+        }
+        
+        setState(() {
+          countdown--;
+        });
+        
+        if (countdown <= 0) {
+          timer.cancel();
+          // Auto-advance to next step
+          final technique = techniques[selectedTechnique]!;
+          if (currentStep < technique.steps.length - 1) {
+            setState(() {
+              currentStep++;
+            });
+            _runStepByStep(technique);
+          } else {
+            _completeExercise();
+          }
+        }
+      });
+    }
+  }
+
+  void _adjustStepDuration() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        int tempDuration = stepDuration;
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            return AlertDialog(
+              title: const Text('Adjust Step Duration'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text('Current duration: $tempDuration seconds'),
+                  const SizedBox(height: 16),
+                  Slider(
+                    value: tempDuration.toDouble(),
+                    min: 3,
+                    max: 15,
+                    divisions: 12,
+                    label: '$tempDuration seconds',
+                    onChanged: (value) {
+                      setDialogState(() {
+                        tempDuration = value.round();
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      stepDuration = tempDuration;
+                      countdown = stepDuration;
+                      _timerController.duration = Duration(seconds: stepDuration);
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Apply'),
+                ),
+              ],
+            );
+          },
+        );
+      },
+    );
+  }
+
+  void _resetCurrentStep() {
+    setState(() {
+      countdown = stepDuration;
+      isPaused = false;
+    });
+    _timerController.reset();
+    _timerController.forward();
+    
+    stepTimer?.cancel();
+    final technique = techniques[selectedTechnique]!;
+    _runStepByStep(technique);
   }
 
   void _nextFingerStep() {
@@ -244,6 +362,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
       isActive = false;
       currentStep = 0;
       countdown = 0;
+      isPaused = false;
       userResponses.clear();
     });
     exerciseTimer?.cancel();
@@ -264,23 +383,23 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: () => Navigator.pop(context),
         ),
-        actions: [
-          if (isActive)
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: _resetExercise,
-              tooltip: 'Reset',
-            ),
-        ],
       ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8),
+            padding: const EdgeInsets.all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [                
-                if (!isActive) ...[                  
+                if (!isActive) ...[            
+                  // info 
+                  Text(
+                    'Use your body to anchor yourself in the present moment. Select a technique below to begin:',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ), 
+                  const SizedBox(height: 24),     
                   ...techniques.entries.map((entry) {
                     final key = entry.key;
                     final tech = entry.value;
@@ -439,8 +558,11 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(12),
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12),
+              topRight: Radius.circular(12),
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.05),
@@ -458,8 +580,9 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                   Flexible(
                   child: Text(
                     technique.name,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -468,7 +591,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                   Text(
                   'Step ${currentStep + 1}/${technique.steps.length}',
                   style: TextStyle(
-                    color: technique.color,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     fontWeight: FontWeight.w600,
                   ),
                   ),
@@ -477,35 +600,46 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
               const SizedBox(height: 16),
               LinearProgressIndicator(
                 value: (currentStep + 1) / technique.steps.length,
-                backgroundColor: technique.color.withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation<Color>(technique.color),
+                backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary),
                 minHeight: 8,
               ),
             ],
           ),
         ),
-        
-        const SizedBox(height: 24),
-        
         // Current step
         Container(
           width: double.infinity,
           constraints: const BoxConstraints(minHeight: 300),
           padding: const EdgeInsets.all(32),
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.only(bottomLeft: Radius.circular(12), bottomRight: Radius.circular(12)),
             boxShadow: [
               BoxShadow(
-                color: technique.color.withOpacity(0.1),
-                blurRadius: 20,
-                offset: const Offset(0, 8),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                blurRadius: 0,
+                offset: const Offset(0, 0),
               ),
             ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Instructions first
+              Text(
+                currentStep < technique.steps.length 
+                  ? technique.steps[currentStep]
+                  : 'Exercise Complete!',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w500, 
+                  color: Theme.of(context).colorScheme.onPrimary,
+                ),
+              ),
+              
+              const SizedBox(height: 40),
+              
               // Visual Timer (only for temperature and muscle techniques)
               if (selectedTechnique == 'temperature' || selectedTechnique == 'muscle') ...[
                 Stack(
@@ -513,16 +647,16 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                   children: [
                     // Timer circle
                     SizedBox(
-                      width: 120,
-                      height: 120,
+                      width: 160,
+                      height: 160,
                       child: AnimatedBuilder(
                         animation: _timerAnimation,
                         builder: (context, child) {
                           return CircularProgressIndicator(
                             value: _timerAnimation.value,
                             strokeWidth: 8,
-                            backgroundColor: technique.color.withOpacity(0.2),
-                            valueColor: AlwaysStoppedAnimation<Color>(technique.color),
+                            backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
+                            valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onPrimary),
                           );
                         },
                       ),
@@ -534,21 +668,74 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                         Text(
                           '$countdown',
                           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: technique.color,
+                            fontWeight: FontWeight.w300,
+                            color: Theme.of(context).colorScheme.onPrimary,
+                            fontSize: 48,
                           ),
                         ),
                         Text(
                           'seconds',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: technique.color,
+                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            color: Theme.of(context).colorScheme.onPrimary,
                           ),
                         ),
                       ],
                     ),
                   ],
                 ),
-                const SizedBox(height: 32),
+                const SizedBox(height: 40),                
+                // Control Panel
+                Container(
+                  padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(16),
+                    ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      // Adjust button                      
+                          IconButton(
+                            onPressed: _adjustStepDuration,
+                            icon: Icon(
+                              Icons.tune,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
+                              padding: const EdgeInsets.all(12),
+                            ),
+                          ),
+                      
+                      // Play/Pause button
+                    
+                          IconButton(
+                            onPressed: _pauseResume,
+                            icon: Icon(
+                              isPaused ? Icons.play_arrow : Icons.pause,
+                              color: Theme.of(context).colorScheme.primary,
+                              size: 28,
+                            ),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.onPrimary,
+                              padding: const EdgeInsets.all(16),
+                            ),
+                          ),
+                      // Reset button                     
+                          IconButton(
+                            onPressed: _resetCurrentStep,
+                            icon: Icon(
+                              Icons.refresh,
+                              color: Theme.of(context).colorScheme.onPrimary,
+                            ),
+                            style: IconButton.styleFrom(
+                              backgroundColor: Theme.of(context).colorScheme.onPrimary.withOpacity(0.1),
+                              padding: const EdgeInsets.all(12),
+                            ),
+                          ),
+                        ],
+                      ),
+                ),
               ] else ...[
                 Container(
                   padding: const EdgeInsets.all(24),
@@ -562,19 +749,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                     color: technique.color,
                   ),
                 ),
-                const SizedBox(height: 32),
               ],
-              
-              Text(
-                currentStep < technique.steps.length 
-                  ? technique.steps[currentStep]
-                  : 'Exercise Complete!',
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w500,
-                  height: 1.6,
-                ),
-              ),
               
               const SizedBox(height: 32),
               
@@ -583,7 +758,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: technique.color.withOpacity(0.1),
+                    color: Theme.of(context).colorScheme.onPrimary.withOpacity(0.2),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Row(
@@ -591,14 +766,14 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                     children: [
                       Icon(
                         Icons.vibration,
-                        color: technique.color,
+                        color: Theme.of(context).colorScheme.onPrimary,
                         size: 16,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Feel the vibration feedback',
                         style: TextStyle(
-                          color: technique.color,
+                          color: Theme.of(context).colorScheme.onPrimary,
                           fontWeight: FontWeight.w500,
                         ),
                       ),
@@ -682,7 +857,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
           ),
         ),
         
-        const SizedBox(height: 24),
+        const SizedBox(height: 16),
         
         if (currentStep < fingerPrompts.length)
           Container(
@@ -690,13 +865,12 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
             constraints: const BoxConstraints(minHeight: 400),
             padding: const EdgeInsets.all(32),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(20),
               boxShadow: [
                 BoxShadow(
                   color: technique.color.withOpacity(0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, 8),
+                  blurRadius: 25,
                 ),
               ],
             ),
@@ -704,15 +878,15 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Container(
-                  padding: const EdgeInsets.all(24),
+                  padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: technique.color.withOpacity(0.1),
+                    color: technique.color,
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
-                    Icons.back_hand,
-                    size: 48,
-                    color: technique.color,
+                    Icons.back_hand_outlined,
+                    size: 40,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
                 
@@ -761,7 +935,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                     onPressed: () => _addFingerResponse('(Skipped)'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: technique.color,
-                      foregroundColor: Colors.white,
+                      foregroundColor: Theme.of(context).colorScheme.onPrimary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -777,7 +951,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
               boxShadow: [
                 BoxShadow(
@@ -798,7 +972,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                 ),
                 const SizedBox(height: 16),
                 Container(
-                  height: 200,
+                  height: 280,
                   child: ListView.builder(
                     itemCount: userResponses.length,
                     itemBuilder: (context, index) {
@@ -806,7 +980,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: technique.color.withOpacity(0.1),
+                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Column(
@@ -816,7 +990,7 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                               fingerPrompts[index],
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
-                                color: technique.color,
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
                             const SizedBox(height: 4),
@@ -833,11 +1007,11 @@ class _PhysicalGroundingPageState extends State<PhysicalGroundingPage>
                   child: ElevatedButton(
                     onPressed: _completeExercise,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: technique.color,
-                      foregroundColor: Colors.white,
+                      backgroundColor: const Color(0xFFFFCE5D),
+                      foregroundColor: Theme.of(context).colorScheme.surface,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(16),
                       ),
                     ),
                     child: const Text('Complete Exercise'),

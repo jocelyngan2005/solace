@@ -107,10 +107,6 @@ class _SensoryGroundingPageState extends State<SensoryGroundingPage> {
           ],
         ),
         actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Close'),
-          ),
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);

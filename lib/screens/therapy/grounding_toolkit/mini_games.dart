@@ -228,6 +228,9 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
+            style: TextButton.styleFrom(
+              foregroundColor: Theme.of(context).colorScheme.onSurface,
+            ),
             child: const Text('Close'),
           ),
           ElevatedButton(
@@ -235,6 +238,9 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               Navigator.pop(context);
               _resetGame();
             },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.onSurface,
+            ),
             child: const Text('Play Again'),
           ),
         ],
@@ -494,15 +500,15 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
       children: [
         // Game Header
         Container(
-          padding: const EdgeInsets.all(20),
+          padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
           decoration: BoxDecoration(
             color: Theme.of(context).colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 10,
-                offset: const Offset(0, 2),
+                color: Colors.grey.withOpacity(0.05),
+                blurRadius: 2,
+                offset: const Offset(0, 0),
               ),
             ],
           ),
@@ -523,13 +529,13 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
-                  color: game.color.withOpacity(0.1),
+                  color: const Color(0xFFB9998D).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   currentCategory,
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    color: game.color,
+                    color: const Color(0xFFB9998D),
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -538,7 +544,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               Text(
                 '${categoryAnswers.length} items named',
                 style: TextStyle(
-                  color: game.color,
+                  color: const Color(0xFFB9998D),
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -561,7 +567,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: game.color, width: 2),
+                    borderSide: BorderSide(color: const Color(0xFFB9998D), width: 2),
                   ),
                 ),
                 onSubmitted: (_) => _addCategoryAnswer(),
@@ -571,7 +577,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
             ElevatedButton(
               onPressed: _addCategoryAnswer,
               style: ElevatedButton.styleFrom(
-                backgroundColor: game.color,
+                backgroundColor: Theme.of(context).colorScheme.onSurface,
                 foregroundColor: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -628,7 +634,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                             vertical: 8,
                           ),
                           decoration: BoxDecoration(
-                            color: game.color.withOpacity(0.1),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.05),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Row(
@@ -637,7 +643,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                                 '${index + 1}.',
                                 style: TextStyle(
                                   fontWeight: FontWeight.w600,
-                                  color: game.color,
+                                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
                                 ),
                               ),
                               const SizedBox(width: 8),
@@ -663,14 +669,14 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
             child: ElevatedButton(
               onPressed: _completeGame,
               style: ElevatedButton.styleFrom(
-                backgroundColor: game.color,
+                backgroundColor: const Color(0xFFFFCE5D),
                 foregroundColor: Theme.of(context).colorScheme.surface,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(24),
                 ),
               ),
-              child: const Text('Complete Game'),
+              child: const Text('Done!'),
             ),
           ),
       ],
@@ -714,7 +720,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: game.color.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Center(
@@ -723,7 +729,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
                     style: TextStyle(
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
-                      color: game.color,
+                      color: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -731,14 +737,14 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
               const SizedBox(height: 16),
               LinearProgressIndicator(
                 value: alphabetIndex / 26,
-                backgroundColor: game.color.withOpacity(0.2),
-                valueColor: AlwaysStoppedAnimation<Color>(game.color),
+                backgroundColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+                valueColor: AlwaysStoppedAnimation<Color>(Theme.of(context).colorScheme.onSurface),
               ),
               const SizedBox(height: 8),
               Text(
                 '${alphabetIndex + 1} / 26',
                 style: TextStyle(
-                  color: game.color,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -771,14 +777,14 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
             ElevatedButton(
               onPressed: _addAlphabetAnswer,
               style: ElevatedButton.styleFrom(
-                backgroundColor: game.color,
+                backgroundColor: Theme.of(context).colorScheme.onSurface,
                 foregroundColor: Theme.of(context).colorScheme.surface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
                 padding: const EdgeInsets.all(16),
               ),
-              child: const Icon(Icons.arrow_forward),
+              child: const Icon(Icons.add),
             ),
           ],
         ),
@@ -788,7 +794,7 @@ class _MiniGamesPageState extends State<MiniGamesPage> {
         // Skip button
         TextButton(
           onPressed: _skipAlphabetLetter,
-          child: Text('Skip $currentLetter'),
+          child: Text('Skip $currentLetter', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
         ),
         
         const SizedBox(height: 20),

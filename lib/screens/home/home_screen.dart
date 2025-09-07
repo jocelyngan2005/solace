@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../widgets/mood_chart.dart';
 import '../../data/journal_entry_service.dart';
-import '../therapy/breathing_exercises_screen.dart';
 import '../therapy/journal_library_screen.dart';
 import '../therapy/journal_entry_screen.dart';
+import '../therapy/resources_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -784,7 +784,8 @@ class _HomeScreenState extends State<HomeScreen>
       width: double.infinity,
       child: ElevatedButton(
         onPressed: () {
-          // Handle help action
+          // Navigate to ResourcesScreen
+          Navigator.push(context, MaterialPageRoute(builder: (context) => ResourcesScreen()));
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFFFFB347),
