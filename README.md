@@ -4,16 +4,19 @@
 
 **Solace** is a comprehensive mental health mobile application designed specifically for university and college students. It provides private, judgment-free mental health support through self-care tools, mood tracking, wellness exercises, and academic-aware features to help students cope with the demands of university life.
 
-## 📱 Prototype 
-Prototype: https://www.figma.com/design/leFYlfvw5etlQUYErLUJN3/solace---your-mindfulness-partner?node-id=0-1&t=8OicmM59rKQtfJF8-1
-Pitch deck: https://www.canva.com/design/DAGyR7nvk1M/_dnVnDbizpvY0KNnmEDRDA/edit?utm_content=DAGyR7nvk1M&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+## 🎯 Track: Student Lifestyle
 
-## 🎯 Problem Statement
+### Problem Statement
+**Mental Health Support for Students**
 
-Many students don’t seek help because counseling resources are limited or they fear stigma. This challenge will explore creating tools for self care, mental health support and helping students cope with the demands of university life. 
-
+Many students don’t seek help because counseling resources are limited or they fear stigma. This challenge will explore creating tools for self care, mental health support and helping students cope with the demands of university life.
 
 **Solace** addresses these challenges by providing a private, accessible platform that integrates seamlessly with student life while promoting proactive mental health care.
+
+## 📱 Prototype 
+Prototype: https://www.figma.com/design/leFYlfvw5etlQUYErLUJN3/solace---your-mindfulness-partner?node-id=0-1&t=8OicmM59rKQtfJF8-1
+
+Pitch deck: https://www.canva.com/design/DAGyR7nvk1M/_dnVnDbizpvY0KNnmEDRDA/edit?utm_content=DAGyR7nvk1M&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton 
 
 ## 👥 Target Users
 
@@ -64,19 +67,6 @@ Many students don’t seek help because counseling resources are limited or they
 - **State Management**: StatefulWidget with ValueNotifier
 - **Charts & Visualization**: fl_chart 0.68.0
 - **Internationalization**: intl 0.19.0
-
-### Key Dependencies
-```yaml
-dependencies:
-  flutter: sdk: flutter
-  table_calendar: ^3.0.9      # Calendar integration
-  fl_chart: ^0.68.0           # Data visualization
-  intl: ^0.19.0              # Date/time formatting
-  image_picker: ^1.2.0        # Profile image selection
-  google_fonts: ^6.3.1       # Typography
-  speech_to_text: ^7.3.0     # Voice input
-  material_symbols_icons: ^4.2872.0  # Extended icon set
-```
 
 ### Backend (Planned)
 - **Authentication**: Firebase Auth
@@ -155,26 +145,6 @@ flutter build apk --release
 flutter build ios --release
 ```
 
-## 📊 App Architecture
-
-```
-lib/
-├── main.dart                 # App entry point
-├── data/                    # Data models and services
-│   └── journal_entry_service.dart
-├── screens/                 # UI screens
-│   ├── home/               # Dashboard and overview
-│   ├── therapy/            # Wellness tools and activities
-│   ├── academic/           # Academic-related features
-│   ├── profile/            # User profile and settings
-│   └── main_navigation.dart
-├── widgets/                # Reusable UI components
-│   ├── habit_tracker.dart
-│   └── mood_chart.dart
-└── theme/                  # App theming and styling
-    └── app_theme.dart
-```
-
 ## 🔐 Privacy & Ethics
 
 - **Data Protection**: All mood entries and journal content are encrypted
@@ -196,26 +166,23 @@ We welcome contributions from developers, mental health professionals, and UX de
 
 ## 🗺️ Roadmap
 
-### Phase 1: Core Features ✅
+### Prototype Phase: Core Features ✅
 - [x] Mood tracking and analysis
 - [x] Journal entry system
 - [x] Basic wellness tools
 - [x] Breathing exercises
-- [x] Mindfulness activities
+- [x] Professional support and resources 
+- [x] Gamification and habit tracking
 
-### Phase 2: Enhanced Features 🚧
+### Building Phase: Enhanced Features 🚧
 - [ ] Firebase backend integration
 - [ ] Push notifications
-- [ ] Advanced analytics
-- [ ] Social features (anonymous community)
-- [ ] AI-powered recommendations
-
-### Phase 3: Advanced Features 📋
+- [ ] Advanced AI analytics
 - [ ] Google Calendar integration
+- [ ] AI-powered recommendations
+- [ ] Multi-language support
 - [ ] Wearable device integration
 - [ ] Offline-first architecture
-- [ ] Multi-language support
-- [ ] Professional dashboard
 
 ## 📄 License
 
