@@ -1,12 +1,12 @@
-# 🌟 Solace - Mental Health Support for Students
+# 🌟 Solace
 
 > *A safe space where every feeling matters and support is always within reach.*
 
-**Solace** is a comprehensive mental health mobile application designed specifically for university and college students. It provides private, judgment-free mental health support through self-care tools, mood tracking, wellness exercises, and academic-aware features to help students cope with the demands of university life.
+**Solace** is a comprehensive mental health mobile application designed specifically for university and college students. It provides private, judgment-free mental health support through self-care tools, mood tracking, wellness exercises, and academic-aware features.
 
 ## 🎯 Track: Student Lifestyle
 
-### Problem Statement
+### Problem Statement:
 **Mental Health Support for Students**
 
 Many students don’t seek help because counseling resources are limited or they fear stigma. This challenge will explore creating tools for self care, mental health support and helping students cope with the demands of university life.
@@ -41,14 +41,13 @@ Video Presentation : https://youtu.be/TZ4KXeNrBEU
 
 ### 🧘 Wellness & Coping Tools
 - **Guided Breathing Exercises**: Multiple breathing techniques (4-7-8, Box Breathing, Deep Belly, Calming Breath)
-- **Mindfulness & Meditation**: Guided meditation sessions with customizable soundtracks
 - **Grounding Techniques**: 5-4-3-2-1 sensory grounding and body scan exercises
-- **Positive Affirmations**: Daily motivational messages and self-compassion practices
+- **Positive Affirmations**: Personalized daily motivational messages
 
 ### 🔗 Professional Support
 - **Mental Health Resources**: Curated links to professional support services
 - **Crisis Support**: Quick access to emergency mental health resources
-- **AI Chatbot**: Intelligent conversational support
+- **AI Chatbot**: Intelligent and empathetic conversational support
 
 ### ♿ Accessibility & Personalization
 - **Accessibility-First Design**: Screen reader support, dyslexia-friendly fonts
@@ -65,10 +64,6 @@ Video Presentation : https://youtu.be/TZ4KXeNrBEU
 
 ### Frontend
 - **Framework**: Flutter 3.9.0
-- **UI Components**: Material Design 3 with custom theming
-- **State Management**: StatefulWidget with ValueNotifier
-- **Charts & Visualization**: fl_chart 0.68.0
-- **Internationalization**: intl 0.19.0
 
 ### Backend (Planned)
 - **Authentication**: Firebase Auth
@@ -78,12 +73,12 @@ Video Presentation : https://youtu.be/TZ4KXeNrBEU
 
 ### AI/ML Integration (Planned)
 - **Sentiment Analysis**: ML-based mood pattern recognition
-- **Recommendation Engine**: Personalized wellness activity suggestions
 - **AI Chatbot**: LLM-powered conversational support
 
 ### APIs & Integrations (Planned)
 - **Google Calendar API**: Academic calendar integration
-- **Device Health APIs**: Optional sleep/activity tracking
+- **Google Maps API**: Connect to nearby counselling
+- **Gemini AI API**: AI chatbot, mood analysis and personalized advices
 - **Push Notifications**: Firebase Cloud Messaging
 
 ## 🎨 Design Principles
@@ -94,23 +89,18 @@ Video Presentation : https://youtu.be/TZ4KXeNrBEU
 - Minimalist interface to reduce cognitive load
 
 ### ♿ **Accessibility First**
-- WCAG 2.1 AA compliance
 - Screen reader optimization
-- High contrast mode support
-- Dyslexia-friendly typography options
+- Dyslexia-friendly typography
 - Voice input alternatives
 
 ### 🔒 **Privacy by Design**
 - End-to-end encryption for sensitive data
 - Local data storage with optional cloud sync
 - Anonymous usage analytics only
-- GDPR-compliant data handling
 
 ### 🎯 **Student-Centric UX**
 - Academic calendar awareness
 - Quick access to essential features
-- Offline functionality for core features
-- Minimal battery and data usage
 
 ## 🚀 Getting Started
 
@@ -157,14 +147,7 @@ flutter build ios --release
 
 ## 🤝 Contributing
 
-We welcome contributions from developers, mental health professionals, and UX designers! Here's how you can help:
-
-### Development Guidelines
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions from developers, mental health professionals, and UX designers! 
 
 ## 🗺️ Roadmap
 
@@ -173,18 +156,17 @@ We welcome contributions from developers, mental health professionals, and UX de
 - [x] Journal entry system
 - [x] Basic wellness tools
 - [x] Breathing exercises
-- [x] Professional support and resources 
+- [x] Mental health resources 
 - [x] Gamification and habit tracking
+
 
 ### Building Phase: Enhanced Features 🚧
 - [ ] Firebase backend integration
 - [ ] Push notifications
 - [ ] Advanced AI analytics
-- [ ] Google Calendar integration
+- [ ] Google Calendar and Google Maps integration
 - [ ] AI-powered recommendations
 - [ ] Multi-language support
-- [ ] Wearable device integration
-- [ ] Offline-first architecture
 
 ## 📄 License
 
