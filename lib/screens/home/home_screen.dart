@@ -152,14 +152,18 @@ class _HomeScreenState extends State<HomeScreen>
                                     vertical: 4,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.secondary.withOpacity(0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
                                     'Level 100',
                                     style: TextStyle(
                                       fontSize: 12,
-                                      color: Theme.of(context).colorScheme.secondary,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.secondary,
                                     ),
                                   ),
                                 ),
@@ -172,26 +176,40 @@ class _HomeScreenState extends State<HomeScreen>
                                   child: Row(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Icon( Icons.menu_book_rounded, color: Theme.of(context).colorScheme.primary, size: 18),
+                                      Icon(
+                                        Icons.menu_book_rounded,
+                                        color: Theme.of(
+                                          context,
+                                        ).colorScheme.primary,
+                                        size: 18,
+                                      ),
                                       const SizedBox(width: 4),
                                       Text(
                                         '80%',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Theme.of(context).colorScheme.onSurface,
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.onSurface,
                                         ),
                                       ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                Icon( Icons.emoji_emotions, color: Colors.amber, size: 18),
+                                Icon(
+                                  Icons.emoji_emotions,
+                                  color: Colors.amber,
+                                  size: 18,
+                                ),
                                 const SizedBox(width: 4),
                                 Text(
                                   'Happy',
                                   style: TextStyle(
                                     fontSize: 12,
-                                    color: Theme.of(context).colorScheme.onSurface,
+                                    color: Theme.of(
+                                      context,
+                                    ).colorScheme.onSurface,
                                   ),
                                 ),
                               ],
@@ -317,7 +335,7 @@ class _HomeScreenState extends State<HomeScreen>
                   // Motivational Quote
                   _buildMotivationalQuoteCard(),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
 
                   // Mindfulness Metrics
                   _buildMindfulnessMetricsSection(),
@@ -327,7 +345,7 @@ class _HomeScreenState extends State<HomeScreen>
                   // Mood Tracker
                   _buildMoodTrackerSection(),
 
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 32),
 
                   // Academic Overview
                   _buildAcademicOverviewSection(),
@@ -348,41 +366,54 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildMotivationalQuoteCard() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFB8E6B8), Color(0xFFA8D5A8)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Motivational Quote of the Day',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
+          ),
         ),
-        borderRadius: BorderRadius.circular(32),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Motivational Quote of the Day',
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF2D5016),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(24),
+          decoration: BoxDecoration(
+            image: const DecorationImage(
+              image: AssetImage('assets/images/check-in.jpg'),
+              fit: BoxFit.cover,
+              alignment: Alignment.topCenter,
             ),
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.4),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          const Text(
-            'Progress is progress,\nno matter how small.',
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
-              color: Color(0xFF2D5016),
-              height: 1.3,
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Progress is progress,\nno matter how small.',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF2D5016),
+                  height: 1.3,
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
           ),
-          const SizedBox(height: 16),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -390,12 +421,12 @@ class _HomeScreenState extends State<HomeScreen>
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Mindfulness Metrics',
           style: TextStyle(
             fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black87,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
         ),
         const SizedBox(height: 16),
@@ -409,6 +440,14 @@ class _HomeScreenState extends State<HomeScreen>
                 decoration: BoxDecoration(
                   color: const Color(0xFF7FB069),
                   borderRadius: BorderRadius.circular(28),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.4),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                      offset: const Offset(0, 5),
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -467,6 +506,14 @@ class _HomeScreenState extends State<HomeScreen>
                   decoration: BoxDecoration(
                     color: const Color(0xFF8B7ED8),
                     borderRadius: BorderRadius.circular(28),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.4),
+                        spreadRadius: 1,
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -540,13 +587,13 @@ class _HomeScreenState extends State<HomeScreen>
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withOpacity(0.4),
             spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+            blurRadius: 10,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -555,25 +602,41 @@ class _HomeScreenState extends State<HomeScreen>
         children: [
           Row(
             children: [
-              const Icon(Icons.emoji_emotions, color: Colors.amber, size: 20),
+              Icon(
+                Icons.emoji_emotions,
+                color: Theme.of(context).colorScheme.onSurface,
+                size: 20,
+              ),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 'Mood Tracker',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 20),
           // Mood chart with emojis
           SizedBox(height: 120, child: const MoodChart()),
-          const SizedBox(height: 16),
-          const Text(
-            'Your mood has been trending up this week, keep building on that momentum with some mindful breaks.',
-            style: TextStyle(fontSize: 12, color: Colors.grey, height: 1.4),
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.background,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              'Your mood has been trending up this week, keep building on that momentum with some mindful breaks.',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurface,
+                height: 1.6,
+              ),
+            ),
           ),
         ],
       ),
@@ -581,69 +644,92 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Widget _buildAcademicOverviewSection() {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Academic Overview',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Theme.of(context).colorScheme.onSurface,
           ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Academic Overview',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
+        ),
+        const SizedBox(height: 16),
+        Container(
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(32),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.4),
+                spreadRadius: 1,
+                blurRadius: 10,
+                offset: const Offset(0, 5),
+              ),
+            ],
           ),
-          const SizedBox(height: 16),
-          Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Icon(Icons.school, color: Colors.black87, size: 20),
-              const SizedBox(width: 8),
-              const Text(
-                'Upcoming Deadlines',
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.black87,
+              Row(
+                children: [
+                  Icon(
+                    Icons.school,
+                    color: Theme.of(context).colorScheme.onSurface,
+                    size: 20,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Upcoming Deadlines',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildDeadlineItem('Psychology Essay', 'urgent', 'Due in 1 day'),
+              _buildDeadlineItem('Philosophy Essay', 'urgent', 'Due in 2 day'),
+              _buildDeadlineItem('English Essay', '', 'Due in 7 day'),
+              _buildDeadlineItem('Humanities Essay', '', 'Due in 10 day'),
+              const SizedBox(height: 16),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.background,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Exam week is approaching!',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Remember to balance study time with rest.',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context).colorScheme.onSurface,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 16),
-          _buildDeadlineItem('Psychology Essay', 'urgent', 'Due in 1 day'),
-          _buildDeadlineItem('Philosophy Essay', 'urgent', 'Due in 2 day'),
-          _buildDeadlineItem('English Essay', '', 'Due in 7 day'),
-          _buildDeadlineItem('Humanities Essay', '', 'Due in 10 day'),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: const Color(0xFFFFF3CD),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: const Text(
-              'Exam week is approaching!\nRemember to balance study time with rest.',
-              style: TextStyle(
-                fontSize: 12,
-                color: Color(0xFF856404),
-                height: 1.4,
-              ),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -704,7 +790,7 @@ class _HomeScreenState extends State<HomeScreen>
           backgroundColor: const Color(0xFFFFB347),
           padding: const EdgeInsets.symmetric(vertical: 16),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(32),
           ),
           elevation: 0,
         ),

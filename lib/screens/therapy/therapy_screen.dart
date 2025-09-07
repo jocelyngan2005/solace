@@ -63,15 +63,15 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(20),
+              color: Color(0xFFE7DCD8).withOpacity(0.3),
+              borderRadius: BorderRadius.circular(32),
             ),
             child: Column(
               children: [
                 Icon(
                   Icons.psychology_rounded,
                   size: 80,
-                  color: Theme.of(context).colorScheme.primary,
+                  color: Theme.of(context).colorScheme.onSurface,
                 ),
                 const SizedBox(height: 24),
                 Text(
@@ -97,8 +97,9 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(32),
                       ),
+                      backgroundColor: Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                 ),
@@ -107,7 +108,7 @@ class _TherapyScreenState extends State<TherapyScreen> with RouteAware {
                   onPressed: () {
                     _showWhyRequired(context);
                   },
-                  child: const Text('Why is this required?'),
+                  child: Text('Why is this required?', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
                 ),
               ],
             ),

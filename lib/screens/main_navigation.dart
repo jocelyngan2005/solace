@@ -72,10 +72,14 @@ class _MainNavigationState extends State<MainNavigation> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(24),
+            topRight: Radius.circular(24),
+          ),
           boxShadow: [
             BoxShadow(
               color: Colors.black12,
-              blurRadius: 2,
+              blurRadius: 3,
               spreadRadius: 0,
               offset: const Offset(0, -1), // Upward shadow
             ),
@@ -131,8 +135,8 @@ class _MainNavigationState extends State<MainNavigation> {
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
+              color: Colors.black.withOpacity(0.2),
+              blurRadius: 10,
               offset: const Offset(0, 0),
             ),
           ],

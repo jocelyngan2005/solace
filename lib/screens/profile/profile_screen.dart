@@ -1,15 +1,5 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../widgets/dashboard_card.dart';
-import '../../data/badges.dart';
-import '../../data/user_progress.dart';
-import '../../data/gamification_service.dart';
-import '../../data/gamification_controller.dart';
-import '../../data/weekly_challenge_service.dart';
-import '../../widgets/animations/achievement_unlock_animation.dart';
 import '../../widgets/habit_tracker.dart';
-import 'achievements_screen.dart';
-import 'weekly_challenges_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -20,26 +10,11 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   String _selectedTheme = 'Pastel Blue';
-  final List<String> _focusAreas = ['Sleep', 'Anxiety'];
   double _fontSize = 16.0;
   bool _screenReaderEnabled = false;
   bool _notificationsEnabled = true;
 
-  // User progress data
-  final UserProgress _userProgress = UserProgress();
-  late GamificationController _gamificationController;
-  late WeeklyChallengeService _challengeService;
-
   final List<String> _themes = ['Pastel Blue', 'Soft Lavender', 'Warm Beige'];
-
-  @override
-  void initState() {
-    super.initState();
-    _gamificationController = GamificationController();
-    _gamificationController.initialize(_userProgress);
-    _challengeService = WeeklyChallengeService();
-    _challengeService.initialize();
-  }
 
   @override
   Widget build(BuildContext context) {
