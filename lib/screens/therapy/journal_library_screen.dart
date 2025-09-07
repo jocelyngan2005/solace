@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../../data/journal_entry_service.dart';
+import '../../data/academic_workload_service.dart';
 import 'journal_detail_screen.dart';
 
 class JournalLibraryScreen extends StatefulWidget {
@@ -392,20 +393,9 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
       final date = DateTime(_currentDate.year, _currentDate.month, day);
       final entry = _getEntryForDate(date);
       
-      // Check if this is today and if there's actually an entry
-      final today = DateTime.now();
-      final isToday = date.year == today.year && 
-                     date.month == today.month && 
-                     date.day == today.day;
-      
-      // For today, check if user has actually completed a journal entry
-      bool hasActualEntry = entry != null;
-      if (isToday) {
-        final todayMood = JournalEntryService.getTodayMoodLabel();
-        final todayTitle = JournalEntryService.getTodayTitle();
-        final todayContent = JournalEntryService.getTodayJournalText();
-        hasActualEntry = todayMood != null && todayTitle != null && todayContent != null;
-      }
+      // Get academic workload for this date
+      final workload = AcademicWorkloadService.getWorkloadForDate(date);
+      final workloadColor = AcademicWorkloadService.getWorkloadColor(workload);
 
       currentWeek.add(
         Expanded(
@@ -416,36 +406,21 @@ class _JournalLibraryScreenState extends State<JournalLibraryScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Mood circle
+                  // Academic workload circle
                   Container(
                     width: 35,
                     height: 35,
                     decoration: BoxDecoration(
-                      color: hasActualEntry
-                          ? _moodColors[entry!.mood] ?? Colors.grey[300]
-                          : Colors.grey[200],
+                      color: workloadColor.withOpacity(0.7),
                       shape: BoxShape.circle,
                     ),
-                    child: hasActualEntry
-                        ? ClipOval(
-                            child: Image.asset(
-                              _moodImages[entry!.mood] ??
-                                  'assets/moods/neutral.png',
-                              width: 24,
-                              height: 24,
-                              fit: BoxFit.cover,
-                            ),
-                          )
-                        : null,
                   ),
                   const SizedBox(height: 4),
                   // Day number below the circle
                   Text(
                     day.toString(),
                     style: TextStyle(
-                      color: hasActualEntry
-                          ? Theme.of(context).colorScheme.onSurface
-                          : Colors.grey[600],
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),
